@@ -22,7 +22,7 @@ import org.jeecg.common.system.api.ISysBaseAPI;
 import org.jeecg.common.system.vo.ComboModel;
 import org.jeecg.common.system.vo.DictModel;
 import org.jeecg.common.system.vo.LoginUser;
-import org.jeecg.common.system.vo.SysOrganModel;
+import org.jeecg.common.system.vo.SysOrgModel;
 import org.jeecg.common.util.IPUtils;
 import org.jeecg.common.util.SpringContextUtils;
 import org.jeecg.common.util.oConvertUtils;
@@ -31,7 +31,7 @@ import org.jeecg.modules.message.service.ISysMessageTemplateService;
 import org.jeecg.modules.message.websocket.WebSocket;
 import org.jeecg.modules.system.entity.*;
 import org.jeecg.modules.system.mapper.*;
-import org.jeecg.modules.system.service.ISysOrganService;
+import org.jeecg.modules.system.service.ISysOrgService;
 import org.jeecg.modules.system.service.ISysDictService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +63,7 @@ public class SysBaseApiImpl implements ISysBaseAPI {
 	@Autowired
 	private SysUserRoleMapper sysUserRoleMapper;
 	@Autowired
-	private ISysOrganService sysOrganService;
+	private ISysOrgService sysOrgService;
 	@Autowired
 	private ISysDictService sysDictService;
 	@Resource
@@ -75,7 +75,7 @@ public class SysBaseApiImpl implements ISysBaseAPI {
 	@Resource
 	private SysRoleMapper roleMapper;
 	@Resource
-	private SysOrganMapper organMapper;
+	private SysOrgMapper orgMapper;
 	
 	@Override
 	public void addLog(String LogContent, Integer logType, Integer operatetype) {
@@ -144,21 +144,21 @@ public class SysBaseApiImpl implements ISysBaseAPI {
 	}
 
 	@Override
-	public List<String> getOrganIdsByUsername(String username) {
-		List<SysOrgan> list = sysOrganService.queryOrgansByUsername(username);
+	public List<String> getOrgIdsByUsername(String username) {
+		List<SysOrg> list = sysOrgService.queryOrgsByUsername(username);
 		List<String> result = new ArrayList<>(list.size());
-		for (SysOrgan organ : list) {
-			result.add(organ.getId());
+		for (SysOrg org : list) {
+			result.add(org.getId());
 		}
 		return result;
 	}
 
 	@Override
 	public List<String> getOrgNamesByUsername(String username) {
-		List<SysOrgan> list = sysOrganService.queryOrgansByUsername(username);
+		List<SysOrg> list = sysOrgService.queryOrgsByUsername(username);
 		List<String> result = new ArrayList<>(list.size());
-		for (SysOrgan organ : list) {
-			result.add(organ.getOrgName());
+		for (SysOrg org : list) {
+			result.add(org.getOrgName());
 		}
 		return result;
 	}
@@ -180,8 +180,8 @@ public class SysBaseApiImpl implements ISysBaseAPI {
 	}
 
 	@Override
-	public List<DictModel> queryAllOrganBackDictModel() {
-		return sysDictService.queryAllOrganBackDictModel();
+	public List<DictModel> queryAllOrgBackDictModel() {
+		return sysDictService.queryAllOrgBackDictModel();
 	}
 
 	@Override
@@ -427,26 +427,26 @@ public class SysBaseApiImpl implements ISysBaseAPI {
 	}
 
 	@Override
-	public String getOrganIdsByOrgCode(String orgCode) {
-		return organMapper.queryOrganIdByOrgCode(orgCode);
+	public String getOrgIdsByOrgCode(String orgCode) {
+		return orgMapper.queryOrgIdByOrgCode(orgCode);
 	}
 
 	@Override
-	public DictModel getParentOrganId(String organId) {
-		SysOrgan organ = organMapper.getParentOrganId(organId);
-		DictModel model = new DictModel(organ.getId(),organ.getParentId());
+	public DictModel getParentOrgId(String orgId) {
+		SysOrg org = orgMapper.getParentOrgId(orgId);
+		DictModel model = new DictModel(org.getId(),org.getParentId());
 		return model;
 	}
 
 	@Override
-	public List<SysOrganModel> getAllSysOrgan() {
-		List<SysOrganModel> organModelList = new ArrayList<SysOrganModel>();
-		List<SysOrgan> organList = organMapper.selectList(new QueryWrapper<SysOrgan>().eq("del_flag","0"));
-		for(SysOrgan organ : organList){
-			SysOrganModel model = new SysOrganModel();
-			BeanUtils.copyProperties(organ,model);
-			organModelList.add(model);
+	public List<SysOrgModel> getAllSysOrg() {
+		List<SysOrgModel> orgModelList = new ArrayList<SysOrgModel>();
+		List<SysOrg> orgList = orgMapper.selectList(new QueryWrapper<SysOrg>().eq("del_flag","0"));
+		for(SysOrg org : orgList){
+			SysOrgModel model = new SysOrgModel();
+			BeanUtils.copyProperties(org,model);
+			orgModelList.add(model);
 		}
-		return organModelList;
+		return orgModelList;
 	}
 }

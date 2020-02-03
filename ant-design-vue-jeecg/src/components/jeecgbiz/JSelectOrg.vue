@@ -1,28 +1,28 @@
 <template>
   <div class="components-input-demo-presuffix">
     <!---->
-    <a-input @click="openModal" placeholder="请点击选择部门" v-model="organNames" readOnly :disabled="disabled">
+    <a-input @click="openModal" placeholder="请点击选择部门" v-model="orgNames" readOnly :disabled="disabled">
       <a-icon slot="prefix" type="cluster" title="部门选择控件"/>
-      <a-icon v-if="organIds" slot="suffix" type="close-circle" @click="handleEmpty" title="清空"/>
+      <a-icon v-if="orgIds" slot="suffix" type="close-circle" @click="handleEmpty" title="清空"/>
     </a-input>
 
-    <j-select-organ-modal
-      ref="innerOrganSelectModal"
+    <j-select-org-modal
+      ref="innerOrgSelectModal"
       :modal-width="modalWidth"
       :multi="multi"
       :rootOpened="rootOpened"
-      :organ-id="organIds"
+      :org-id="orgIds"
       @ok="handleOK"
       @initComp="initComp"/>
   </div>
 </template>
 
 <script>
-  import JSelectOrganModal from './modal/JSelectOragnModal'
+  import JSelectOrgModal from './modal/JSelectOrgModal'
   export default {
-    name: 'JSelectOrgan',
+    name: 'JSelectOrg',
     components:{
-      JSelectOrganModal
+      JSelectOrgModal
     },
     props:{
       modalWidth:{
@@ -59,41 +59,41 @@
       return {
         visible:false,
         confirmLoading:false,
-        organNames:"",
-        organIds:''
+        orgNames:"",
+        orgIds:''
       }
     },
     mounted(){
-      this.organIds = this.value
+      this.orgIds = this.value
     },
     watch:{
       value(val){
         if (this.customReturnField === 'id') {
-          this.organIds = val
+          this.orgIds = val
         }
       }
     },
     methods:{
-      initComp(organNames){
-        this.organNames = organNames
+      initComp(orgNames){
+        this.orgNames = orgNames
       },
       openModal(){
-        this.$refs.innerOrganSelectModal.show()
+        this.$refs.innerOrgSelectModal.show()
       },
       handleOK(rows, idstr) {
         let value = ''
         if (!rows && rows.length <= 0) {
-          this.organNames = ''
-          this.organIds = ''
+          this.orgNames = ''
+          this.orgIds = ''
         } else {
           value = rows.map(row => row[this.customReturnField]).join(',')
-          this.organNames = rows.map(row => row['organName']).join(',')
-          this.organIds = idstr
+          this.orgNames = rows.map(row => row['orgName']).join(',')
+          this.orgIds = idstr
         }
         this.$emit("change", value)
       },
-      getOrganNames(){
-        return this.organNames
+      getOrgNames(){
+        return this.orgNames
       },
       handleEmpty(){
         this.handleOK('')

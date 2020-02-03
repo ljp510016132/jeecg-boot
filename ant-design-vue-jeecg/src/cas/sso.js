@@ -53,7 +53,7 @@ function validateSt(ticket,service,callback){
     service:service
   };
   store.dispatch('ValidateLogin',params).then(res => {
-    //this.organConfirm(res)
+    //this.orgConfirm(res)
     if(res.success){
       loginSuccess(callback);
     }else{

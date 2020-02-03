@@ -1,6 +1,6 @@
 package org.jeecg.modules.system.model;
 
-import org.jeecg.modules.system.entity.SysOrgan;
+import org.jeecg.modules.system.entity.SysOrg;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,14 +16,14 @@ import java.util.Objects;
  * @Author Steve
  * @Since 2019-01-22 
  */
-public class SysOrganTreeModel implements Serializable{
+public class SysOrgTreeModel implements Serializable{
 	
     private static final long serialVersionUID = 1L;
     
-    /** 对应SysOrgan中的id字段,前端数据树中的key*/
+    /** 对应SysOrg中的id字段,前端数据树中的key*/
     private String key;
 
-    /** 对应SysOrgan中的id字段,前端数据树中的value*/
+    /** 对应SysOrg中的id字段,前端数据树中的value*/
     private String value;
 
     /** 对应org_name字段,前端数据树中的title*/
@@ -31,7 +31,7 @@ public class SysOrganTreeModel implements Serializable{
 
 
     private boolean isLeaf;
-    // 以下所有字段均与SysOrgan相同
+    // 以下所有字段均与SysOrg相同
     
     private String id;
 
@@ -73,37 +73,37 @@ public class SysOrganTreeModel implements Serializable{
 
     private Date updateTime;
 
-    private List<SysOrganTreeModel> children = new ArrayList<>();
+    private List<SysOrgTreeModel> children = new ArrayList<>();
 
 
     /**
-     * 将SysOrgan对象转换成SysOrganTreeModel对象
-     * @param sysOrgan
+     * 将SysOrg对象转换成SysOrgTreeModel对象
+     * @param sysOrg
      */
-	public SysOrganTreeModel(SysOrgan sysOrgan) {
-		this.key = sysOrgan.getId();
-        this.value = sysOrgan.getId();
-        this.title = sysOrgan.getOrgName();
-        this.id = sysOrgan.getId();
-        this.parentId = sysOrgan.getParentId();
-        this.orgName = sysOrgan.getOrgName();
-        this.orgNameEn = sysOrgan.getOrgNameEn();
-        this.orgNameAbbr = sysOrgan.getOrgNameAbbr();
-        this.orgOrder = sysOrgan.getOrgOrder();
-        this.description = sysOrgan.getDescription();
-        this.orgCategory = sysOrgan.getOrgCategory();
-        this.orgType = sysOrgan.getOrgType();
-        this.orgCode = sysOrgan.getOrgCode();
-        this.mobile = sysOrgan.getMobile();
-        this.fax = sysOrgan.getFax();
-        this.address = sysOrgan.getAddress();
-        this.memo = sysOrgan.getMemo();
-        this.status = sysOrgan.getStatus();
-        this.delFlag = sysOrgan.getDelFlag();
-        this.createBy = sysOrgan.getCreateBy();
-        this.createTime = sysOrgan.getCreateTime();
-        this.updateBy = sysOrgan.getUpdateBy();
-        this.updateTime = sysOrgan.getUpdateTime();
+	public SysOrgTreeModel(SysOrg sysOrg) {
+		this.key = sysOrg.getId();
+        this.value = sysOrg.getId();
+        this.title = sysOrg.getOrgName();
+        this.id = sysOrg.getId();
+        this.parentId = sysOrg.getParentId();
+        this.orgName = sysOrg.getOrgName();
+        this.orgNameEn = sysOrg.getOrgNameEn();
+        this.orgNameAbbr = sysOrg.getOrgNameAbbr();
+        this.orgOrder = sysOrg.getOrgOrder();
+        this.description = sysOrg.getDescription();
+        this.orgCategory = sysOrg.getOrgCategory();
+        this.orgType = sysOrg.getOrgType();
+        this.orgCode = sysOrg.getOrgCode();
+        this.mobile = sysOrg.getMobile();
+        this.fax = sysOrg.getFax();
+        this.address = sysOrg.getAddress();
+        this.memo = sysOrg.getMemo();
+        this.status = sysOrg.getStatus();
+        this.delFlag = sysOrg.getDelFlag();
+        this.createBy = sysOrg.getCreateBy();
+        this.createTime = sysOrg.getCreateTime();
+        this.updateBy = sysOrg.getUpdateBy();
+        this.updateTime = sysOrg.getUpdateTime();
     }
 
     public boolean getIsLeaf() {
@@ -152,11 +152,11 @@ public class SysOrganTreeModel implements Serializable{
         this.id = id;
     }
 
-    public List<SysOrganTreeModel> getChildren() {
+    public List<SysOrgTreeModel> getChildren() {
         return children;
     }
 
-    public void setChildren(List<SysOrganTreeModel> children) {
+    public void setChildren(List<SysOrgTreeModel> children) {
         if (children==null){
             this.isLeaf=true;
         }
@@ -319,7 +319,7 @@ public class SysOrganTreeModel implements Serializable{
         this.updateTime = updateTime;
     }
 
-    public SysOrganTreeModel() { }
+    public SysOrgTreeModel() { }
 
     /**
      * 重写equals方法
@@ -332,7 +332,7 @@ public class SysOrganTreeModel implements Serializable{
         if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-        SysOrganTreeModel model = (SysOrganTreeModel) o;
+        SysOrgTreeModel model = (SysOrgTreeModel) o;
         return Objects.equals(id, model.id) &&
                 Objects.equals(parentId, model.parentId) &&
                 Objects.equals(orgName, model.orgName) &&

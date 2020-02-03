@@ -3,19 +3,19 @@ package org.jeecg.common.system.vo;
 /**
  * lvdandan 部门机构model
  */
-public class SysOrganModel {
+public class SysOrgModel {
     /**ID*/
     private String id;
     /**父机构ID*/
     private String parentId;
     /**机构/部门名称*/
-    private String organName;
+    private String orgName;
     /**英文名*/
-    private String organNameEn;
+    private String orgNameEn;
     /**缩写*/
-    private String organNameAbbr;
+    private String orgNameAbbr;
     /**排序*/
-    private Integer organOrder;
+    private Integer orgOrder;
     /**描述*/
     private Object description;
     /**机构类别 1组织机构，2岗位*/
@@ -50,35 +50,35 @@ public class SysOrganModel {
     }
 
     public String getOrgName() {
-        return organName;
+        return orgName;
     }
 
-    public void setOrgName(String organName) {
-        this.organName = organName;
+    public void setOrgName(String orgName) {
+        this.orgName = orgName;
     }
 
     public String getOrgNameEn() {
-        return organNameEn;
+        return orgNameEn;
     }
 
-    public void setOrgNameEn(String organNameEn) {
-        this.organNameEn = organNameEn;
+    public void setOrgNameEn(String orgNameEn) {
+        this.orgNameEn = orgNameEn;
     }
 
     public String getOrgNameAbbr() {
-        return organNameAbbr;
+        return orgNameAbbr;
     }
 
-    public void setOrgNameAbbr(String organNameAbbr) {
-        this.organNameAbbr = organNameAbbr;
+    public void setOrgNameAbbr(String orgNameAbbr) {
+        this.orgNameAbbr = orgNameAbbr;
     }
 
     public Integer getOrgOrder() {
-        return organOrder;
+        return orgOrder;
     }
 
-    public void setOrgOrder(Integer organOrder) {
-        this.organOrder = organOrder;
+    public void setOrgOrder(Integer orgOrder) {
+        this.orgOrder = orgOrder;
     }
 
     public Object getDescription() {

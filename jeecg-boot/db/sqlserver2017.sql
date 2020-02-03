@@ -2963,7 +2963,7 @@ GO
 INSERT INTO [dbo].[onl_cgform_field]  VALUES (N'f7e7eb84ddc34d7e09d10af213ac6667', N'402860816bff91c0016bff91d2810005', N'create_time', N'创建时间', N'create_time', N'0', N'1', N'Date', N'0', N'0', N'', N'', N'', N'', N'date', N'', N'120', NULL, N'0', N'', N'', N'0', N'1', N'1', N'group', N'', N'', N'11', N'admin', N'2019-07-19 18:05:55.0000000', N'2019-07-17 18:54:35.0000000', N'admin')
 GO
 
-INSERT INTO [dbo].[onl_cgform_field]  VALUES (N'f81d7103c0c857e5c744cda2bc4c000a', N'402860816bff91c0016bff91ca7e0002', N'cert_organizations', N'发证机关', N'cert_organizations', N'0', N'1', N'string', N'255', N'0', N'', N'', N'', N'', N'text', N'', N'120', NULL, N'0', N'', N'', N'0', N'1', N'1', N'group', N'', N'', N'6', N'admin', N'2019-07-19 18:07:13.0000000', N'2019-07-17 18:54:33.0000000', N'admin')
+INSERT INTO [dbo].[onl_cgform_field]  VALUES (N'f81d7103c0c857e5c744cda2bc4c000a', N'402860816bff91c0016bff91ca7e0002', N'cert_orgizations', N'发证机关', N'cert_orgizations', N'0', N'1', N'string', N'255', N'0', N'', N'', N'', N'', N'text', N'', N'120', NULL, N'0', N'', N'', N'0', N'1', N'1', N'group', N'', N'', N'6', N'admin', N'2019-07-19 18:07:13.0000000', N'2019-07-17 18:54:33.0000000', N'admin')
 GO
 
 INSERT INTO [dbo].[onl_cgform_field]  VALUES (N'f82db8edef5babf741914b0fa221329b', N'4028839a6de2ebd3016de2ebd3870000', N'bpm_status', N'流程状态', N'bpm_status', N'0', N'1', N'string', N'2', N'0', NULL, NULL, NULL, NULL, N'text', NULL, N'120', NULL, N'0', NULL, NULL, N'0', N'1', N'1', N'group', NULL, NULL, N'16', NULL, NULL, N'2019-10-19 15:29:30.0000000', N'admin')

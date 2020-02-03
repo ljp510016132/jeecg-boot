@@ -7,7 +7,7 @@
     :maskClosable="closable">
     <template slot="footer">
       <a-button v-if="closable" @click="close">关闭</a-button>
-      <a-button type="primary" @click="organOk">确认</a-button>
+      <a-button type="primary" @click="orgOk">确认</a-button>
     </template>
 
     <a-form>
@@ -22,13 +22,13 @@
           </template>
           <a-avatar style="backgroundColor:#87d068" icon="gold" />
         </a-tooltip>
-        <a-select v-model="organSelected" :class="{'valid-error':validate_status=='error'}" placeholder="请选择登录部门" style="margin-left:10px;width: 80%">
+        <a-select v-model="orgSelected" :class="{'valid-error':validate_status=='error'}" placeholder="请选择登录部门" style="margin-left:10px;width: 80%">
           <a-icon slot="suffixIcon" type="gold" />
           <a-select-option
-            v-for="d in organList"
+            v-for="d in orgList"
             :key="d.id"
             :value="d.orgCode">
-            {{ d.organName }}
+            {{ d.orgName }}
           </a-select-option>
         </a-select>
       </a-form-item>
@@ -46,7 +46,7 @@
   import { USER_INFO } from "@/store/mutation-types"
 
   export default {
-    name: 'OrganSelect',
+    name: 'OrgSelect',
     props:{
       title:{
         type:String,
@@ -67,7 +67,7 @@
     watch:{
       username(val){
         if(val){
-          this.loadOrganList()
+          this.loadOrgList()
         }
       }
     },
@@ -75,36 +75,36 @@
       return {
         currTitle:this.title,
         visible:false,
-        organList:[],
-        organSelected:"",
+        orgList:[],
+        orgSelected:"",
         validate_status:"",
-        currOrganName:"",
+        currOrgName:"",
       }
     },
     created(){
-      //this.loadOrganList()
+      //this.loadOrgList()
     },
     methods:{
-      loadOrganList(){
+      loadOrgList(){
         return new Promise(resolve => {
-          let url = "/sys/user/getCurrentUserOrgans"
-          this.currOrganName=''
+          let url = "/sys/user/getCurrentUserOrgs"
+          this.currOrgName=''
           getAction(url).then(res=>{
             if(res.success){
-              let organs = res.result.list
+              let orgs = res.result.list
               let orgCode = res.result.orgCode
-              if(organs && organs.length>0){
-                for(let i of organs){
+              if(orgs && orgs.length>0){
+                for(let i of orgs){
                   if(i.orgCode == orgCode){
-                    this.currOrganName = i.organName
+                    this.currOrgName = i.orgName
                     break
                   }
                 }
               }
-              this.organSelected = orgCode
-              this.organList  = organs
-              if(this.currOrganName){
-                this.currTitle ="部门切换（当前部门 : "+this.currOrganName+"）"
+              this.orgSelected = orgCode
+              this.orgList  = orgs
+              if(this.currOrgName){
+                this.currTitle ="部门切换（当前部门 : "+this.currOrgName+"）"
               }
 
             }
@@ -113,43 +113,43 @@
         })
       },
       close(){
-        this.organClear()
+        this.orgClear()
       },
-      organOk(){
-        if(!this.organSelected){
+      orgOk(){
+        if(!this.orgSelected){
           this.validate_status='error'
           return false
         }
         let obj = {
-          orgCode:this.organSelected,
+          orgCode:this.orgSelected,
           username:this.username
         }
-        putAction("/sys/selectOrgan",obj).then(res=>{
+        putAction("/sys/selectOrg",obj).then(res=>{
           if(res.success){
             const userInfo = res.result.userInfo;
             Vue.ls.set(USER_INFO, userInfo, 7 * 24 * 60 * 60 * 1000);
             store.commit('SET_INFO', userInfo);
             //console.log("---切换组织机构---userInfo-------",store.getters.userInfo.orgCode);
-            this.organClear()
+            this.orgClear()
           }
         })
       },
       show(){
-        //如果组件传值username此处就不用loadOrganList了
-        this.loadOrganList().then(()=>{
+        //如果组件传值username此处就不用loadOrgList了
+        this.loadOrgList().then(()=>{
           this.visible=true
-          if(!this.organList || this.organList.length<=0){
+          if(!this.orgList || this.orgList.length<=0){
             this.$message.warning("您尚未设置部门信息!")
-            this.organClear()
+            this.orgClear()
           }
         })
       },
-      organClear(){
-        this.organList=[]
-        this.organSelected=""
+      orgClear(){
+        this.orgList=[]
+        this.orgSelected=""
         this.visible=false
         this.validate_status=''
-        this.currOrganName=""
+        this.currOrgName=""
       },
     }
 

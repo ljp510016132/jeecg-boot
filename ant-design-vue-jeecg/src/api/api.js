@@ -50,11 +50,11 @@ const getPermissionRuleList = (params)=>getAction("/sys/permission/getPermRuleLi
 const queryPermissionRule = (params)=>getAction("/sys/permission/queryPermissionRule",params);
 
 // 部门管理
-const queryOrganTreeList = (params)=>getAction("/sys/sysOrgan/queryTreeList",params);
-const queryIdTree = (params)=>getAction("/sys/sysOrgan/queryIdTree",params);
-const queryParentName   = (params)=>getAction("/sys/sysOrgan/queryParentName",params);
-const searchByKeywords   = (params)=>getAction("/sys/sysOrgan/searchBy",params);
-const deleteByOrganId   = (params)=>deleteAction("/sys/sysOrgan/delete",params);
+const queryOrgTreeList = (params)=>getAction("/sys/sysOrg/queryTreeList",params);
+const queryIdTree = (params)=>getAction("/sys/sysOrg/queryIdTree",params);
+const queryParentName   = (params)=>getAction("/sys/sysOrg/queryParentName",params);
+const searchByKeywords   = (params)=>getAction("/sys/sysOrg/searchBy",params);
+const deleteByOrgId   = (params)=>deleteAction("/sys/sysOrg/delete",params);
 
 //日志管理
 //const getLogList = (params)=>getAction("/sys/log/list",params);
@@ -120,11 +120,11 @@ export {
   loadAllRoleIds,
   getPermissionRuleList,
   queryPermissionRule,
-  queryOrganTreeList,
+  queryOrgTreeList,
   queryIdTree,
   queryParentName,
   searchByKeywords,
-  deleteByOrganId,
+  deleteByOrgId,
   deleteLog,
   deleteLogList,
   addDict,

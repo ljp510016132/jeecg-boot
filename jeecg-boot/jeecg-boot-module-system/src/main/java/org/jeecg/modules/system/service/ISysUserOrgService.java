@@ -4,8 +4,8 @@ package org.jeecg.modules.system.service;
 import java.util.List;
 
 import org.jeecg.modules.system.entity.SysUser;
-import org.jeecg.modules.system.entity.SysUserOrgan;
-import org.jeecg.modules.system.model.OrganIdModel;
+import org.jeecg.modules.system.entity.SysUserOrg;
+import org.jeecg.modules.system.model.OrgIdModel;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -17,7 +17,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @Author ZhiLin
  *
  */
-public interface ISysUserOrganService extends IService<SysUserOrgan> {
+public interface ISysUserOrgService extends IService<SysUserOrg> {
 	
 
 	/**
@@ -25,7 +25,7 @@ public interface ISysUserOrganService extends IService<SysUserOrgan> {
 	 * @param userId
 	 * @return
 	 */
-	List<OrganIdModel> queryOrganIdsOfUser(String userId);
+	List<OrgIdModel> queryOrgIdsOfUser(String userId);
 	
 
 	/**

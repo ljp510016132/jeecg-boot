@@ -22,7 +22,7 @@
         :checkStrictly="true"
         @check="onCheck"
         :dropdownStyle="{maxHeight:'200px',overflow:'auto'}"
-        :treeData="organTree"
+        :treeData="orgTree"
         placeholder="请选择上级部门"
         >
       </a-tree>
@@ -38,7 +38,7 @@
   import { queryIdTree } from '@/api/api'
   import userModal from './UserModal'
   export default {
-    name: "OrganWindow",
+    name: "OrgWindow",
     components: {
       userModal,
     },
@@ -46,11 +46,11 @@
       return {
         checkedKeys:[], // 存储选中的部门id
         userId:"", // 存储用户id
-        model:{}, // 存储SysUserOrgansVO表
-        userOrganModel:{userId:'',organIdList:[]}, // 存储用户id一对多部门信息的对象
-        organList:[], // 存储部门信息
+        model:{}, // 存储SysUserOrgsVO表
+        userOrgModel:{userId:'',orgIdList:[]}, // 存储用户id一对多部门信息的对象
+        orgList:[], // 存储部门信息
         modalWidth:400,
-        organTree:[],
+        orgTree:[],
         title:"操作",
         visible: false,
         labelCol: {
@@ -70,18 +70,18 @@
       }
     },
     methods: {
-      add (checkedOrganKeys,userId) {
-        this.checkedKeys = checkedOrganKeys;
+      add (checkedOrgKeys,userId) {
+        this.checkedKeys = checkedOrgKeys;
         this.userId = userId;
         this.edit({});
       },
       edit (record) {
-        this.organList = [];
-        this.queryOrganTree();
+        this.orgList = [];
+        this.queryOrgTree();
         this.form.resetFields();
         this.visible = true;
         this.model = Object.assign({}, record);
-        let filedsVal = pick(this.model,'id','userId','organIdList');
+        let filedsVal = pick(this.model,'id','userId','orgIdList');
         this.$nextTick(() => {
           this.form.setFieldsValue(filedsVal);
         });
@@ -89,7 +89,7 @@
       close () {
         this.$emit('close');
         this.visible = false;
-        this.organList = [];
+        this.orgList = [];
         this.checkedKeys = [];
       },
       handleSubmit () {
@@ -102,20 +102,20 @@
               getAction(this.url.userId).then((res)=>{
                 if(res.success){
                   let formData = {userId:res.result,
-                  organIdList:this.organList}
+                  orgIdList:this.orgList}
                   console.log(formData)
                   that.$emit('ok', formData);
                 }
               }).finally(() => {
-                that.organList = [];
+                that.orgList = [];
                 that.confirmLoading = false;
                 that.close();
               })
             }else {
               let formData = {userId:this.userId,
-                organIdList:this.organList}
+                orgIdList:this.orgList}
               console.log(formData)
-              that.organList = [];
+              that.orgList = [];
               that.$emit('ok', formData);
               that.confirmLoading = false;
               that.close();
@@ -129,23 +129,23 @@
 
       // 选择部门时作用的API
       onCheck(checkedKeys, info){
-        this.organList = [];
+        this.orgList = [];
         this.checkedKeys = checkedKeys.checked;
         let checkedNodes = info.checkedNodes;
         for (let i = 0; i < checkedNodes.length; i++) {
           let de = checkedNodes[i].data.props;
-          let organ = {key:"",value:"",title:""};
-          organ.key = de.value;
-          organ.value = de.value;
-          organ.title = de.title;
-          this.organList.push(organ);
+          let org = {key:"",value:"",title:""};
+          org.key = de.value;
+          org.value = de.value;
+          org.title = de.title;
+          this.orgList.push(org);
         }
         console.log('onCheck', checkedKeys, info);
       },
-      queryOrganTree(){
+      queryOrgTree(){
         queryIdTree().then((res)=>{
           if(res.success){
-            this.organTree = res.result;
+            this.orgTree = res.result;
           }
         })
       },

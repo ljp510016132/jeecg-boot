@@ -46,7 +46,7 @@ public interface SysDictMapper extends BaseMapper<SysDict> {
 	 * 查询所有部门 作为字典信息 id -->value,orgName -->text
 	 * @return
 	 */
-	public List<DictModel> queryAllOrganBackDictModel();
+	public List<DictModel> queryAllOrgBackDictModel();
 	
 	/**
 	 * 查询所有用户  作为字典信息 username -->value,realname -->text

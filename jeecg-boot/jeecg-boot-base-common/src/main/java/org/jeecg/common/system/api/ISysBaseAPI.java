@@ -7,7 +7,7 @@ import java.util.Map;
 import org.jeecg.common.system.vo.ComboModel;
 import org.jeecg.common.system.vo.DictModel;
 import org.jeecg.common.system.vo.LoginUser;
-import org.jeecg.common.system.vo.SysOrganModel;
+import org.jeecg.common.system.vo.SysOrgModel;
 
 /**
  * @Description: 底层共通业务API，提供其他独立模块调用
@@ -51,7 +51,7 @@ public interface ISysBaseAPI {
 	 * @param username
 	 * @return 部门 id
 	 */
-	List<String> getOrganIdsByUsername(String username);
+	List<String> getOrgIdsByUsername(String username);
 
 	/**
 	 * 通过用户账号查询部门 name
@@ -87,10 +87,10 @@ public interface ISysBaseAPI {
     List<DictModel> queryTableDictItemsByCode(String table, String text, String code);
     
     /**
-   	 * 查询所有部门 作为字典信息 id -->value,organName -->text
+   	 * 查询所有部门 作为字典信息 id -->value,orgName -->text
    	 * @return
    	 */
-   	public List<DictModel> queryAllOrganBackDictModel();
+   	public List<DictModel> queryAllOrgBackDictModel();
    	
 	/**
 	 * 发送系统消息
@@ -179,19 +179,19 @@ public interface ISysBaseAPI {
 	 * @param orgCode
 	 * @return
 	 */
-	public String getOrganIdsByOrgCode(String orgCode);
+	public String getOrgIdsByOrgCode(String orgCode);
 
 	/**
 	 * 查询上一级部门
 	 * @param departId
 	 * @return
 	 */
-	public DictModel getParentOrganId(String departId);
+	public DictModel getParentOrgId(String departId);
 
 	/**
 	 * 查询所有部门
 	 * @return
 	 */
-	public List<SysOrganModel> getAllSysOrgan();
+	public List<SysOrgModel> getAllSysOrg();
 	
 }

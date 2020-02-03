@@ -53,7 +53,7 @@
           <a-icon type="setting"/>
           <span>密码修改</span>
         </a-menu-item>
-        <a-menu-item key="5" @click="updateCurrentOrgan">
+        <a-menu-item key="5" @click="updateCurrentOrg">
           <a-icon type="cluster"/>
           <span>切换部门</span>
         </a-menu-item>
@@ -77,7 +77,7 @@
       </a>
     </span>
     <user-password ref="userPassword"></user-password>
-    <organ-select ref="organSelect" :closable="true" title="部门切换"></organ-select>
+    <org-select ref="orgSelect" :closable="true" title="部门切换"></org-select>
     <setting-drawer ref="settingDrawer" :closable="true" title="系统设置"></setting-drawer>
   </div>
 </template>
@@ -86,7 +86,7 @@
   import HeaderNotice from './HeaderNotice'
   import UserPassword from './UserPassword'
   import SettingDrawer from "@/components/setting/SettingDrawer";
-  import OrganSelect from './OrganSelect'
+  import OrgSelect from './OrgSelect'
   import { mapActions, mapGetters,mapState } from 'vuex'
   import { mixinDevice } from '@/utils/mixin.js'
 
@@ -103,7 +103,7 @@
     components: {
       HeaderNotice,
       UserPassword,
-      OrganSelect,
+      OrgSelect,
       SettingDrawer
     },
     props: {
@@ -169,8 +169,8 @@
         let username = this.userInfo().username
         this.$refs.userPassword.show(username)
       },
-      updateCurrentOrgan(){
-        this.$refs.organSelect.show()
+      updateCurrentOrg(){
+        this.$refs.orgSelect.show()
       },
       systemSetting(){
         this.$refs.settingDrawer.showDrawer()

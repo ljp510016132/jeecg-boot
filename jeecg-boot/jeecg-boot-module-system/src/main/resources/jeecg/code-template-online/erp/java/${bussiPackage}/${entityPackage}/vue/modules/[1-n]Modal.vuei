@@ -16,7 +16,7 @@
 <#assign form_select_multi = false>
 <#assign form_select_search = false>
 <#assign form_popup = false>
-<#assign form_sel_organ = false>
+<#assign form_sel_org = false>
 <#assign form_sel_user = false>
 <#assign form_file = false>
 <#assign form_editor = false>
@@ -47,9 +47,9 @@
             dest-fields="${po.dictText}"
             code="${po.dictTable}"
             @callback="popupCallback"/>
-	<#elseif po.classType =='sel_organ'>
-		<#assign form_sel_organ=true>
-          <j-select-organ v-decorator="['${po.fieldName}']" :trigger-change="true"/>
+	<#elseif po.classType =='sel_org'>
+		<#assign form_sel_org=true>
+          <j-select-org v-decorator="['${po.fieldName}']" :trigger-change="true"/>
 	<#elseif po.classType =='sel_user'>
 		<#assign form_sel_user = true>
           <j-select-user-by-dep v-decorator="['${po.fieldName}']" :trigger-change="true"/>
@@ -107,8 +107,8 @@
   <#if form_file>
   import JUpload from '@/components/jeecg/JUpload'
   </#if>
-  <#if form_sel_organ>
-  import JSelectOrgan from '@/components/jeecgbiz/JSelectOrgan'
+  <#if form_sel_org>
+  import JSelectOrg from '@/components/jeecgbiz/JSelectOrg'
   </#if>
   <#if form_sel_user>
   import JSelectUserByDep from '@/components/jeecgbiz/JSelectUserByDep'
@@ -138,8 +138,8 @@
     <#if form_file>
       JUpload,
     </#if>
-    <#if form_sel_organ>
-      JSelectOrgan,
+    <#if form_sel_org>
+      JSelectOrg,
     </#if>
     <#if form_sel_user>
       JSelectUserByDep,

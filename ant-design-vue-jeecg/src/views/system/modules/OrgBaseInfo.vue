@@ -5,7 +5,7 @@
         :labelCol="labelCol"
         :wrapperCol="wrapperCol"
         label="机构名称">
-        <a-input style="border:0px;" placeholder="" v-decorator="['organName', {}]"/>
+        <a-input style="border:0px;" placeholder="" v-decorator="['orgName', {}]"/>
       </a-form-item>
       <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="上级部门">
         <a-tree-select
@@ -43,7 +43,7 @@
         :labelCol="labelCol"
         :wrapperCol="wrapperCol"
         label="排序">
-        <a-input-number style="border:0px;" v-decorator="[ 'organOrder',{}]"/>
+        <a-input-number style="border:0px;" v-decorator="[ 'orgOrder',{}]"/>
       </a-form-item>
       <a-form-item
         :labelCol="labelCol"
@@ -71,11 +71,11 @@
   import {queryIdTree} from '@/api/api'
 
   export default {
-    name: 'OrganBaseInfo',
+    name: 'OrgBaseInfo',
     components: {},
     data() {
       return {
-        organTree: [],
+        orgTree: [],
         id: '',
         model: {},
         visible: false,
@@ -114,7 +114,7 @@
         console.log("record:");
         console.log(record);
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(record, 'orgCategory','organName', 'parentId', 'orgCode', 'organOrder', 'mobile', 'fax', 'address', 'memo'));
+          this.form.setFieldsValue(pick(record, 'orgCategory','orgName', 'parentId', 'orgCode', 'orgOrder', 'mobile', 'fax', 'address', 'memo'));
         });
       },
       clearForm() {

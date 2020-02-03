@@ -3,13 +3,13 @@ package org.jeecg.modules.system.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jeecg.modules.system.entity.SysOrgan;
+import org.jeecg.modules.system.entity.SysOrg;
 import org.jeecg.modules.system.entity.SysUser;
-import org.jeecg.modules.system.entity.SysUserOrgan;
-import org.jeecg.modules.system.mapper.SysUserOrganMapper;
-import org.jeecg.modules.system.model.OrganIdModel;
-import org.jeecg.modules.system.service.ISysOrganService;
-import org.jeecg.modules.system.service.ISysUserOrganService;
+import org.jeecg.modules.system.entity.SysUserOrg;
+import org.jeecg.modules.system.mapper.SysUserOrgMapper;
+import org.jeecg.modules.system.model.OrgIdModel;
+import org.jeecg.modules.system.service.ISysOrgService;
+import org.jeecg.modules.system.service.ISysUserOrgService;
 import org.jeecg.modules.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,9 +25,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
  *@since 2019-02-22
  */
 @Service
-public class SysUserOrganServiceImpl extends ServiceImpl<SysUserOrganMapper, SysUserOrgan> implements ISysUserOrganService {
+public class SysUserOrgServiceImpl extends ServiceImpl<SysUserOrgMapper, SysUserOrg> implements ISysUserOrgService {
 	@Autowired
-	private ISysOrganService sysOrganService;
+	private ISysOrgService sysOrgService;
 	@Autowired
 	private ISysUserService sysUserService;
 	
@@ -36,23 +36,23 @@ public class SysUserOrganServiceImpl extends ServiceImpl<SysUserOrganMapper, Sys
 	 * 根据用户id查询部门信息
 	 */
 	@Override
-	public List<OrganIdModel> queryOrganIdsOfUser(String userId) {
-		LambdaQueryWrapper<SysUserOrgan> queryUDep = new LambdaQueryWrapper<SysUserOrgan>();
-		LambdaQueryWrapper<SysOrgan> queryDep = new LambdaQueryWrapper<SysOrgan>();
+	public List<OrgIdModel> queryOrgIdsOfUser(String userId) {
+		LambdaQueryWrapper<SysUserOrg> queryUDep = new LambdaQueryWrapper<SysUserOrg>();
+		LambdaQueryWrapper<SysOrg> queryDep = new LambdaQueryWrapper<SysOrg>();
 		try {
-			queryUDep.eq(SysUserOrgan::getUserId, userId);
+			queryUDep.eq(SysUserOrg::getUserId, userId);
 			List<String> orgIdList = new ArrayList<>();
-			List<OrganIdModel> orgIdModelList = new ArrayList<>();
-			List<SysUserOrgan> userDepList = this.list(queryUDep);
+			List<OrgIdModel> orgIdModelList = new ArrayList<>();
+			List<SysUserOrg> userDepList = this.list(queryUDep);
 			if(userDepList != null && userDepList.size() > 0) {
-			for(SysUserOrgan userOrgan : userDepList) {
-					orgIdList.add(userOrgan.getOrgId());
+			for(SysUserOrg userOrg : userDepList) {
+					orgIdList.add(userOrg.getOrgId());
 				}
-			queryDep.in(SysOrgan::getId, orgIdList);
-			List<SysOrgan> depList = sysOrganService.list(queryDep);
+			queryDep.in(SysOrg::getId, orgIdList);
+			List<SysOrg> depList = sysOrgService.list(queryDep);
 			if(depList != null || depList.size() > 0) {
-				for(SysOrgan organ : depList) {
-					orgIdModelList.add(new OrganIdModel().convertByUserOrgan(organ));
+				for(SysOrg org : depList) {
+					orgIdModelList.add(new OrgIdModel().convertByUserOrg(org));
 				}
 			}
 			return orgIdModelList;
@@ -71,12 +71,12 @@ public class SysUserOrganServiceImpl extends ServiceImpl<SysUserOrganMapper, Sys
 	 */
 	@Override
 	public List<SysUser> queryUserByOrgId(String orgId) {
-		LambdaQueryWrapper<SysUserOrgan> queryUDep = new LambdaQueryWrapper<SysUserOrgan>();
-		queryUDep.eq(SysUserOrgan::getOrgId, orgId);
+		LambdaQueryWrapper<SysUserOrg> queryUDep = new LambdaQueryWrapper<SysUserOrg>();
+		queryUDep.eq(SysUserOrg::getOrgId, orgId);
 		List<String> userIdList = new ArrayList<>();
-		List<SysUserOrgan> uDepList = this.list(queryUDep);
+		List<SysUserOrg> uDepList = this.list(queryUDep);
 		if(uDepList != null && uDepList.size() > 0) {
-			for(SysUserOrgan uDep : uDepList) {
+			for(SysUserOrg uDep : uDepList) {
 				userIdList.add(uDep.getUserId());
 			}
 			List<SysUser> userList = (List<SysUser>) sysUserService.listByIds(userIdList);

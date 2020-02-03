@@ -19,7 +19,7 @@
             :checkStrictly="true"
             @select="onDepSelect"
             :dropdownStyle="{maxHeight:'200px',overflow:'auto'}"
-            :treeData="organTree"
+            :treeData="orgTree"
           />
         </a-card>
       </a-col>
@@ -53,7 +53,7 @@
 
 <script>
   import {filterObj} from '@/utils/util'
-  import {queryOrganTreeList, getUserList, queryUserByOrgId} from '@/api/api'
+  import {queryOrgTreeList, getUserList, queryUserByOrgId} from '@/api/api'
 
   export default {
     name: 'JSelectUserByOrgModal',
@@ -122,7 +122,7 @@
           order: 'desc'
         },
         selectedOrgIds: [],
-        organTree: [],
+        orgTree: [],
         visible: false,
         form: this.$form.createForm(this)
       }
@@ -190,7 +190,7 @@
       },
       showModal() {
         this.visible = true;
-        this.queryOrganTree();
+        this.queryOrgTree();
         this.loadData();
         this.form.resetFields();
       },
@@ -277,10 +277,10 @@
           }
         })
       },
-      queryOrganTree() {
-        queryOrganTreeList().then((res) => {
+      queryOrgTree() {
+        queryOrgTreeList().then((res) => {
           if (res.success) {
-            this.organTree = res.result;
+            this.orgTree = res.result;
           }
         })
       },

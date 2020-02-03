@@ -9,7 +9,7 @@
 
 	<!-- 根据部门Id查询 -->
 	<select id="getUserByOrgId" resultType="org.jeecg.modules.system.entity.SysUser">
-		select * from sys_user where del_flag = '0' and id in (select user_id from sys_user_organ where org_id=#{organId})
+		select * from sys_user where del_flag = '0' and id in (select user_id from sys_user_org where org_id=#{orgId})
 		<if test="username!=null and username!=''">
 			and username = #{username}
 		</if>
@@ -24,7 +24,7 @@
 	</select>
 	
 	<!--  修改用户部门code -->
-	<update id="updateUserOrgan">
+	<update id="updateUserOrg">
 		UPDATE sys_user SET org_code = #{orgCode} where username = #{username}
 	</update>
 
@@ -41,13 +41,13 @@
 	<!-- SQL片段：getUserByOrgCode 的 FROM 和 WHERE 部分 -->
 	<sql id="getUserByOrgCodeFromSql">
 		FROM
-		sys_organ
+		sys_org
 		-- 关联查询出该部门有哪些用户
-		INNER JOIN sys_user_organ ON sys_user_organ.org_id = sys_organ.id
+		INNER JOIN sys_user_org ON sys_user_org.org_id = sys_org.id
 		-- 关联查询出该用户的详细信息
-		INNER JOIN sys_user ON sys_user.id = sys_user_organ.user_id
+		INNER JOIN sys_user ON sys_user.id = sys_user_org.user_id
 		WHERE
-		sys_organ.org_code LIKE '${orgCode}%'
+		sys_org.org_code LIKE '${orgCode}%'
 
 		<if test="userParams != null">
 			<if test="userParams.realname != null and userParams.realname != ''">
@@ -60,7 +60,7 @@
 	</sql>
 
 	<!-- 根据 orgCode 查询用户，包括子部门下的用户 -->
-	<select id="getUserByOrgCode" resultType="org.jeecg.modules.system.model.SysUserSysOrganModel">
+	<select id="getUserByOrgCode" resultType="org.jeecg.modules.system.model.SysUserSysOrgModel">
 		SELECT
 			sys_user.id AS "sys_user.id",
 			sys_user.realname AS "sys_user.realname",
@@ -69,11 +69,11 @@
 			sys_user.telephone AS "sys_user.telephone",
 			sys_user.email AS "sys_user.email",
 			sys_user.phone AS "sys_user.phone",
-			sys_organ.id AS "sys_organ.id",
-			sys_organ.org_name AS "sys_organ.org_name"
+			sys_org.id AS "sys_org.id",
+			sys_org.org_name AS "sys_org.org_name"
 		<include refid="getUserByOrgCodeFromSql"/>
 		ORDER BY
-			sys_organ.org_code ASC
+			sys_org.org_code ASC
 	</select>
 
 	<!-- 查询 getUserByOrgCode 的总数-->

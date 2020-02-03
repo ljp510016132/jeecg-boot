@@ -1,4 +1,4 @@
-# JSelectOrgan 部门选择组件
+# JSelectOrg 部门选择组件
 选择部门组件,存储部门ID,显示部门名称
 
 ## 参数配置
@@ -15,17 +15,17 @@
 <template>
   <a-form :form="form">
     <a-form-item label="部门选择v-decorator" style="width: 300px">
-      <j-select-organ v-decorator="['bumen']"/>
+      <j-select-org v-decorator="['bumen']"/>
       {{ getFormFieldValue('bumen') }}
     </a-form-item>
 
     <a-form-item label="部门选择v-model" style="width: 300px">
-      <j-select-organ v-model="bumen"/>
+      <j-select-org v-model="bumen"/>
       {{ bumen }}
     </a-form-item>
 
     <a-form-item label="部门多选v-model" style="width: 300px">
-      <j-select-organ v-model="bumens" :multi="true"/>
+      <j-select-org v-model="bumens" :multi="true"/>
       {{ bumens }}
     </a-form-item>
 
@@ -33,9 +33,9 @@
 </template>
 
 <script>
-  import JSelectOrgan from '@/components/jeecgbiz/JSelectOrgan'
+  import JSelectOrg from '@/components/jeecgbiz/JSelectOrg'
   export default {
-    components: {JSelectOrgan},
+    components: {JSelectOrg},
     data() {
       return {
         form: this.$form.createForm(this),

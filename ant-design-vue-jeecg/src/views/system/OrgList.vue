@@ -36,7 +36,7 @@
               @rightClick="rightHandle"
               :selectedKeys="selectedKeys"
               :checkedKeys="checkedKeys"
-              :treeData="organTree"
+              :treeData="orgTree"
               :checkStrictly="checkStrictly"
               :expandedKeys="iExpandedKeys"
               :autoExpandParent="autoExpandParent"
@@ -78,7 +78,7 @@
             :labelCol="labelCol"
             :wrapperCol="wrapperCol"
             label="机构名称">
-            <a-input placeholder="请输入机构/组织名称" v-decorator="['organName', validatorRules.organName ]"/>
+            <a-input placeholder="请输入机构/组织名称" v-decorator="['orgName', validatorRules.orgName ]"/>
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="上级组织">
             <a-tree-select
@@ -122,7 +122,7 @@
             :labelCol="labelCol"
             :wrapperCol="wrapperCol"
             label="排序">
-            <a-input-number v-decorator="[ 'organOrder',{'initialValue':0}]"/>
+            <a-input-number v-decorator="[ 'orgOrder',{'initialValue':0}]"/>
           </a-form-item>
           <a-form-item
             :labelCol="labelCol"
@@ -149,20 +149,20 @@
         </div>
       </a-card>
     </a-col>
-    <organ-modal ref="organModal" @ok="loadTree"></organ-modal>
+    <org-modal ref="orgModal" @ok="loadTree"></org-modal>
   </a-row>
 </template>
 <script>
-  import OrganModal from './modules/OrganModal'
+  import OrgModal from './modules/OrgModal'
   import pick from 'lodash.pick'
-  import {queryOrganTreeList, searchByKeywords, deleteByOrganId} from '@/api/api'
+  import {queryOrgTreeList, searchByKeywords, deleteByOrgId} from '@/api/api'
   import {httpAction, deleteAction} from '@/api/manage'
   import {JeecgListMixin} from '@/mixins/JeecgListMixin'
   // 表头
   const columns = [
     {
       title: '机构名称',
-      dataIndex: 'organName'
+      dataIndex: 'orgName'
     },
     {
       title: '机构类型',
@@ -188,7 +188,7 @@
     {
       title: '排序',
       align: 'center',
-      dataIndex: 'organOrder'
+      dataIndex: 'orgOrder'
     },
     {
       title: '操作',
@@ -198,10 +198,10 @@
     }
   ]
   export default {
-    name: 'OrganList',
+    name: 'OrgList',
     mixins: [JeecgListMixin],
     components: {
-      OrganModal
+      OrgModal
     },
     data() {
       return {
@@ -213,12 +213,12 @@
         disable: true,
         treeData: [],
         visible: false,
-        organTree: [],
+        orgTree: [],
         rightClickSelectedKey: '',
         hiding: true,
         model: {},
         dropTrigger: '',
-        organ: {},
+        org: {},
         columns: columns,
         disableSubmit: false,
         checkedKeys: [],
@@ -243,17 +243,17 @@
           edges: []
         },
         validatorRules: {
-          organName: {rules: [{required: true, message: '请输入机构/组织名称!'}]},
+          orgName: {rules: [{required: true, message: '请输入机构/组织名称!'}]},
           orgCode: {rules: [{required: true, message: '请输入机构编码!'}]},
           orgCategory: {rules: [{required: true, message: '请输入机构类型!'}]},
           mobile: {rules: [{validator: this.validateMobile}]}
         },
         url: {
-          delete: '/sys/sysOrgan/delete',
-          edit: '/sys/sysOrgan/edit',
-          deleteBatch: '/sys/sysOrgan/deleteBatch',
-          exportXlsUrl: "sys/sysOrgan/exportXls",
-          importExcelUrl: "sys/sysOrgan/importExcel",
+          delete: '/sys/sysOrg/delete',
+          edit: '/sys/sysOrg/edit',
+          deleteBatch: '/sys/sysOrg/deleteBatch',
+          exportXlsUrl: "sys/sysOrg/exportXls",
+          importExcelUrl: "sys/sysOrg/importExcel",
         },
         orgCategoryDisabled:false,
       }
@@ -270,13 +270,13 @@
       loadTree() {
         var that = this
         that.treeData = []
-        that.organTree = []
-        queryOrganTreeList().then((res) => {
+        that.orgTree = []
+        queryOrgTreeList().then((res) => {
           if (res.success) {
             for (let i = 0; i < res.result.length; i++) {
               let temp = res.result[i]
               that.treeData.push(temp)
-              that.organTree.push(temp)
+              that.orgTree.push(temp)
               that.setThisExpandedKeys(temp)
               that.getAllKeys(temp);
               // console.log(temp.id)
@@ -358,10 +358,10 @@
         if (value) {
           searchByKeywords({keyWord: value}).then((res) => {
             if (res.success) {
-              that.organTree = []
+              that.orgTree = []
               for (let i = 0; i < res.result.length; i++) {
                 let temp = res.result[i]
-                that.organTree.push(temp)
+                that.orgTree.push(temp)
               }
             } else {
               that.$message.warning(res.message)
@@ -414,7 +414,7 @@
           this.orgCategoryDisabled = false;
         }
         this.form.getFieldDecorator('fax', {initialValue: ''})
-        this.form.setFieldsValue(pick(record, 'organName','orgCategory', 'orgCode', 'organOrder', 'mobile', 'fax', 'address', 'memo'))
+        this.form.setFieldsValue(pick(record, 'orgName','orgCategory', 'orgCode', 'orgOrder', 'mobile', 'fax', 'address', 'memo'))
       },
       getCurrSelectedTitle() {
         return !this.currSelected.title ? '' : this.currSelected.title
@@ -471,23 +471,23 @@
       },
       handleAdd(num) {
         if (num == 1) {
-          this.$refs.organModal.add()
-          this.$refs.organModal.title = '新增'
+          this.$refs.orgModal.add()
+          this.$refs.orgModal.title = '新增'
         } else if (num == 2) {
           let key = this.currSelected.key
           if (!key) {
             this.$message.warning('请先选中一条记录!')
             return false
           }
-          this.$refs.organModal.add(this.selectedKeys)
-          this.$refs.organModal.title = '新增'
+          this.$refs.orgModal.add(this.selectedKeys)
+          this.$refs.orgModal.title = '新增'
         } else {
-          this.$refs.organModal.add(this.rightClickSelectedKey)
-          this.$refs.organModal.title = '新增'
+          this.$refs.orgModal.add(this.rightClickSelectedKey)
+          this.$refs.orgModal.title = '新增'
         }
       },
       handleDelete() {
-        deleteByOrganId({id: this.rightClickSelectedKey}).then((resp) => {
+        deleteByOrgId({id: this.rightClickSelectedKey}).then((resp) => {
           if (resp.success) {
             this.$message.success('删除成功!')
             this.loadTree()

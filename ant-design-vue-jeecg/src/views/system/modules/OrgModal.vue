@@ -18,13 +18,13 @@
           label="机构名称"
           :hidden="false"
           hasFeedback >
-          <a-input id="organName" placeholder="请输入机构/部门名称" v-decorator="['organName', validatorRules.organName ]"/>
+          <a-input id="orgName" placeholder="请输入机构/部门名称" v-decorator="['orgName', validatorRules.orgName ]"/>
         </a-form-item>
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :hidden="seen" label="上级部门" hasFeedback>
         <a-tree-select
           style="width:100%"
           :dropdownStyle="{maxHeight:'200px',overflow:'auto'}"
-          :treeData="organTree"
+          :treeData="orgTree"
           v-model="model.parentId"
           placeholder="请选择上级部门"
           :disabled="condition">
@@ -74,7 +74,7 @@
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
           label="排序">
-          <a-input-number v-decorator="[ 'organOrder',{'initialValue':0}]" />
+          <a-input-number v-decorator="[ 'orgOrder',{'initialValue':0}]" />
         </a-form-item>
         <a-form-item
           :labelCol="labelCol"
@@ -94,14 +94,14 @@
   import pick from 'lodash.pick'
   import ATextarea from 'ant-design-vue/es/input/TextArea'
   export default {
-    name: "SysOrganModal",
+    name: "SysOrgModal",
     components: { ATextarea },
     data () {
       return {
-        organTree:[],
+        orgTree:[],
         orgTypeData:[],
         phoneWarning:'',
-        organName:"",
+        orgName:"",
         title:"操作",
         seen:false,
         visible: false,
@@ -122,12 +122,12 @@
         confirmLoading: false,
         form: this.$form.createForm(this),
         validatorRules:{
-        organName:{rules: [{ required: true, message: '请输入机构/部门名称!' }]},
+        orgName:{rules: [{ required: true, message: '请输入机构/部门名称!' }]},
         orgCode:{rules: [{ required: true, message: '请输入机构编码!' }]},
          mobile:{rules: [{validator:this.validateMobile}]}
         },
         url: {
-          add: "/sys/sysOrgan/add",
+          add: "/sys/sysOrg/add",
         },
         dictDisabled:true,
       }
@@ -139,24 +139,24 @@
         var that = this;
         queryIdTree().then((res)=>{
           if(res.success){
-            that.organTree = [];
+            that.orgTree = [];
             for (let i = 0; i < res.result.length; i++) {
               let temp = res.result[i];
-              that.organTree.push(temp);
+              that.orgTree.push(temp);
             }
           }
 
         })
       },
-      add (organ) {
-        if(organ){
+      add (org) {
+        if(org){
           this.seen = false;
           this.dictDisabled = false;
         }else{
           this.seen = true;
           this.dictDisabled = true;
         }
-        this.edit(organ);
+        this.edit(org);
       },
       edit (record) {
           this.form.resetFields();
@@ -170,7 +170,7 @@
             this.model.orgCategory = '2';
           }
           this.$nextTick(() => {
-            this.form.setFieldsValue(pick(this.model,'orgCategory','organName','organNameEn','organNameAbbr','organOrder','description','orgType','orgCode','mobile','fax','address','memo','status','delFlag'))
+            this.form.setFieldsValue(pick(this.model,'orgCategory','orgName','orgNameEn','orgNameAbbr','orgOrder','description','orgType','orgCode','mobile','fax','address','memo','status','delFlag'))
           });
       },
       close () {

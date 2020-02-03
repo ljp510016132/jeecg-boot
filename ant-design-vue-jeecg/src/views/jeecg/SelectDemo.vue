@@ -40,19 +40,19 @@
         <a-row :gutter="24">
           <a-col :span="12">
             <a-form-item label="选择部门 自定义返回值">
-              <j-select-organ v-decorator="['organId']" :trigger-change="true" customReturnField="organName"></j-select-organ>
+              <j-select-org v-decorator="['orgId']" :trigger-change="true" customReturnField="orgName"></j-select-org>
             </a-form-item>
           </a-col>
-          <a-col :span="12">选中的部门ID(v-decorator):{{ getOrganIdValue() }}</a-col>
+          <a-col :span="12">选中的部门ID(v-decorator):{{ getOrgIdValue() }}</a-col>
         </a-row>
 
         <a-row :gutter="24">
           <a-col :span="12">
             <a-form-item label="选择部门">
-              <j-select-organ v-model="organId" :multi="true"></j-select-organ>
+              <j-select-org v-model="orgId" :multi="true"></j-select-org>
             </a-form-item>
           </a-col>
-          <a-col :span="12">选中的部门ID(v-model):{{ organId }}</a-col>
+          <a-col :span="12">选中的部门ID(v-model):{{ orgId }}</a-col>
         </a-row>
 
         <!--  通过部门选择用户控件 -->
@@ -271,7 +271,7 @@
 <script>
 
   import JDictSelectTag from '../../components/dict/JDictSelectTag.vue'
-  import JSelectOrgan from '@/components/jeecgbiz/JSelectOrgan'
+  import JSelectOrg from '@/components/jeecgbiz/JSelectOrg'
   import JSelectUserByOrg from '@/components/jeecgbiz/JSelectUserByOrg'
   import JSelectMultiUser from '@/components/jeecgbiz/JSelectMultiUser'
   import JSelectRole from '@/components/jeecgbiz/JSelectRole'
@@ -292,7 +292,7 @@
     components: {
       JTreeDict,
       JDictSelectTag,
-      JSelectOrgan,
+      JSelectOrg,
       JSelectUserByOrg,
       JSelectMultiUser,
       JSelectRole,
@@ -307,7 +307,7 @@
         selectedDepUsers: '',
         formData: {},
         form: this.$form.createForm(this),
-        organId: '4f1765520d6346f9bd9c79e2479e5b12,57197590443c44f083d42ae24ef26a2c',
+        orgId: '4f1765520d6346f9bd9c79e2479e5b12,57197590443c44f083d42ae24ef26a2c',
         userIds: 'admin',
         multiUser: 'admin,jeecg',
         jcheckbox: {
@@ -372,8 +372,8 @@ sayHi('hello, world!')`
     methods: {
       handleChange() {
       },
-      getOrganIdValue() {
-        return this.form.getFieldValue('organId')
+      getOrgIdValue() {
+        return this.form.getFieldValue('orgId')
       },
       selectOK: function(data) {
         this.selectList = data

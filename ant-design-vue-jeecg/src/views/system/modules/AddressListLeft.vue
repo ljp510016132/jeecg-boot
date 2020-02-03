@@ -17,7 +17,7 @@
 </template>
 
 <script>
-  import { queryOrganTreeList, searchByKeywords } from '@/api/api'
+  import { queryOrgTreeList, searchByKeywords } from '@/api/api'
 
   export default {
     name: 'AddressListLeft',
@@ -37,8 +37,8 @@
     methods: {
 
       queryTreeData(keyword) {
-        this.commonRequestThen(queryOrganTreeList({
-          organName: keyword ? keyword : undefined
+        this.commonRequestThen(queryOrgTreeList({
+          orgName: keyword ? keyword : undefined
         }))
       },
 

@@ -486,12 +486,12 @@ online用 实际开发请使用components/dict/JMultiSelectTag
   <a-form>
     <a-form-item label="树形下拉测试" style="width: 300px">
       <j-tree-select
-        v-model="organId"
+        v-model="orgId"
         placeholder="请选择部门"
-        dict="sys_organ,organ_name,id"
+        dict="sys_org,org_name,id"
         pidField="parent_id">
       </j-tree-select>
-      {{ organId }}
+      {{ orgId }}
     </a-form-item>
   </a-form >
 </template>
@@ -502,7 +502,7 @@ online用 实际开发请使用components/dict/JMultiSelectTag
     components: {JTreeSelect},
     data() {
       return {
-        organId:""
+        orgId:""
       }
     }
   }

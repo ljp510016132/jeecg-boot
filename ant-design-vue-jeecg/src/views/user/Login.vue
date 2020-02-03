@@ -125,12 +125,12 @@
     <a-modal
       title="登录部门选择"
       :width="450"
-      :visible="organVisible"
+      :visible="orgVisible"
       :closable="false"
       :maskClosable="false">
 
       <template slot="footer">
-        <a-button type="primary" @click="organOk">确认</a-button>
+        <a-button type="primary" @click="orgOk">确认</a-button>
       </template>
 
       <a-form>
@@ -145,13 +145,13 @@
             </template>
             <a-avatar style="backgroundColor:#87d068" icon="gold" />
           </a-tooltip>
-          <a-select @change="organChange" :class="{'valid-error':validate_status=='error'}" placeholder="请选择登录部门" style="margin-left:10px;width: 80%">
+          <a-select @change="orgChange" :class="{'valid-error':validate_status=='error'}" placeholder="请选择登录部门" style="margin-left:10px;width: 80%">
             <a-icon slot="suffixIcon" type="gold" />
             <a-select-option
-              v-for="d in organList"
+              v-for="d in orgList"
               :key="d.id"
               :value="d.orgCode">
-              {{ d.organName }}
+              {{ d.orgName }}
             </a-select-option>
           </a-select>
         </a-form-item>
@@ -212,9 +212,9 @@
         inputCodeContent:"",
         inputCodeNull:true,
 
-        organList:[],
-        organVisible:false,
-        organSelected:"",
+        orgList:[],
+        orgVisible:false,
+        orgSelected:"",
         currentUsername:"",
         validate_status:""
       }
@@ -262,7 +262,7 @@
               loginParams.checkKey = checkParams.checkKey
 
               that.Login(loginParams).then((res) => {
-                this.organConfirm(res)
+                this.orgConfirm(res)
               }).catch((err) => {
                 that.requestFailed(err);
               });
@@ -281,7 +281,7 @@
               loginParams.remember_me = values.rememberMe
               that.PhoneLogin(loginParams).then((res) => {
                 console.log(res.result);
-                this.organConfirm(res)
+                this.orgConfirm(res)
               }).catch((err) => {
                 that.requestFailed(err);
               })
@@ -391,21 +391,21 @@
           this.inputCodeNull=false
         }
       },
-      organConfirm(res){
+      orgConfirm(res){
         if(res.success){
-          let multi_organ = res.result.multi_organ
+          let multi_org = res.result.multi_org
           //0:无部门 1:一个部门 2:多个部门
-          // if(multi_organ==0){
+          // if(multi_org==0){
           //   this.loginSuccess()
           //   this.$notification.warn({
           //     message: '提示',
           //     description: `您尚未归属部门,请确认账号信息`,
           //     duration:3
           //   });
-          // }else if(multi_organ==2){
-          //   this.organVisible=true
+          // }else if(multi_org==2){
+          //   this.orgVisible=true
           //   this.currentUsername=this.form.getFieldValue("username")
-          //   this.organList = res.result.organs
+          //   this.orgList = res.result.orgs
           // }else {
             this.loginSuccess()
           // }
@@ -414,41 +414,41 @@
           this.Logout();
         }
       },
-      organOk(){
-        if(!this.organSelected){
+      orgOk(){
+        if(!this.orgSelected){
           this.validate_status='error'
           return false
         }
        let obj = {
-          orgCode:this.organSelected,
+          orgCode:this.orgSelected,
           username:this.form.getFieldValue("username")
         }
-        putAction("/sys/selectOrgan",obj).then(res=>{
+        putAction("/sys/selectOrg",obj).then(res=>{
           if(res.success){
             const userInfo = res.result.userInfo;
             Vue.ls.set(USER_INFO, userInfo, 7 * 24 * 60 * 60 * 1000);
             store.commit('SET_INFO', userInfo);
             //console.log("---切换组织机构---userInfo-------",store.getters.userInfo.orgCode);
-            this.organClear()
+            this.orgClear()
             this.loginSuccess()
           }else{
             this.requestFailed(res)
             this.Logout().then(()=>{
-              this.organClear()
+              this.orgClear()
             });
           }
         })
       },
-      organClear(){
-        this.organList=[]
-        this.organSelected=""
+      orgClear(){
+        this.orgList=[]
+        this.orgSelected=""
         this.currentUsername=""
-        this.organVisible=false
+        this.orgVisible=false
         this.validate_status=''
       },
-      organChange(value){
+      orgChange(value){
         this.validate_status='success'
-        this.organSelected = value
+        this.orgSelected = value
       },
     getRouterData(){
       this.$nextTick(() => {

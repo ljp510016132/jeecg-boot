@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.jeecg.common.aspect.annotation.Dict;
-import org.jeecg.modules.system.model.SysOrganTreeModel;
+import org.jeecg.modules.system.model.SysOrgTreeModel;
 import org.jeecgframework.poi.excel.annotation.Excel;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -24,8 +24,8 @@ import java.util.Objects;
  * @Since  2019-01-22
  */
 @Data
-@TableName("sys_organ")
-public class SysOrgan implements Serializable {
+@TableName("sys_org")
+public class SysOrg implements Serializable {
     private static final long serialVersionUID = 1L;
     
 	/**ID*/
@@ -70,7 +70,7 @@ public class SysOrgan implements Serializable {
 	private String memo;
 	/**状态（1启用，0不启用）*/
 	@Excel(name="状态",width=15)
-	@Dict(dicCode = "organ_status")
+	@Dict(dicCode = "org_status")
 	private String status;
 	/**删除状态（0，正常，1已删除）*/
 	@Excel(name="删除状态",width=15)
@@ -103,27 +103,27 @@ public class SysOrgan implements Serializable {
         if (!super.equals(o)) {
 			return false;
 		}
-        SysOrgan organ = (SysOrgan) o;
-        return Objects.equals(id, organ.id) &&
-                Objects.equals(parentId, organ.parentId) &&
-                Objects.equals(orgName, organ.orgName) &&
-                Objects.equals(orgNameEn, organ.orgNameEn) &&
-                Objects.equals(orgNameAbbr, organ.orgNameAbbr) &&
-                Objects.equals(orgOrder, organ.orgOrder) &&
-                Objects.equals(description, organ.description) &&
-                Objects.equals(orgCategory, organ.orgCategory) &&
-                Objects.equals(orgType, organ.orgType) &&
-                Objects.equals(orgCode, organ.orgCode) &&
-                Objects.equals(mobile, organ.mobile) &&
-                Objects.equals(fax, organ.fax) &&
-                Objects.equals(address, organ.address) &&
-                Objects.equals(memo, organ.memo) &&
-                Objects.equals(status, organ.status) &&
-                Objects.equals(delFlag, organ.delFlag) &&
-                Objects.equals(createBy, organ.createBy) &&
-                Objects.equals(createTime, organ.createTime) &&
-                Objects.equals(updateBy, organ.updateBy) &&
-                Objects.equals(updateTime, organ.updateTime);
+        SysOrg org = (SysOrg) o;
+        return Objects.equals(id, org.id) &&
+                Objects.equals(parentId, org.parentId) &&
+                Objects.equals(orgName, org.orgName) &&
+                Objects.equals(orgNameEn, org.orgNameEn) &&
+                Objects.equals(orgNameAbbr, org.orgNameAbbr) &&
+                Objects.equals(orgOrder, org.orgOrder) &&
+                Objects.equals(description, org.description) &&
+                Objects.equals(orgCategory, org.orgCategory) &&
+                Objects.equals(orgType, org.orgType) &&
+                Objects.equals(orgCode, org.orgCode) &&
+                Objects.equals(mobile, org.mobile) &&
+                Objects.equals(fax, org.fax) &&
+                Objects.equals(address, org.address) &&
+                Objects.equals(memo, org.memo) &&
+                Objects.equals(status, org.status) &&
+                Objects.equals(delFlag, org.delFlag) &&
+                Objects.equals(createBy, org.createBy) &&
+                Objects.equals(createTime, org.createTime) &&
+                Objects.equals(updateBy, org.updateBy) &&
+                Objects.equals(updateTime, org.updateTime);
     }
 
     /**

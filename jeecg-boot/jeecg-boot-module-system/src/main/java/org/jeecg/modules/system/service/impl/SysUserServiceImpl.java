@@ -16,7 +16,7 @@ import org.jeecg.common.util.PasswordUtil;
 import org.jeecg.common.util.oConvertUtils;
 import org.jeecg.modules.system.entity.*;
 import org.jeecg.modules.system.mapper.*;
-import org.jeecg.modules.system.model.SysUserSysOrganModel;
+import org.jeecg.modules.system.model.SysUserSysOrgModel;
 import org.jeecg.modules.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -44,11 +44,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 	@Autowired
 	private SysUserRoleMapper sysUserRoleMapper;
 	@Autowired
-	private SysUserOrganMapper sysUserOrganMapper;
+	private SysUserOrgMapper sysUserOrgMapper;
 	@Autowired
 	private ISysBaseAPI sysBaseAPI;
 	@Autowired
-	private SysOrganMapper sysOrganMapper;
+	private SysOrgMapper sysOrgMapper;
 
     @Override
     @CacheEvict(value = {CacheConstant.SYS_USERS_CACHE}, allEntries = true)
@@ -88,9 +88,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 		//1.删除用户
 		this.removeById(userId);
 		//2.删除用户部门关联关系
-		LambdaQueryWrapper<SysUserOrgan> query = new LambdaQueryWrapper<SysUserOrgan>();
-		query.eq(SysUserOrgan::getUserId, userId);
-		sysUserOrganMapper.delete(query);
+		LambdaQueryWrapper<SysUserOrg> query = new LambdaQueryWrapper<SysUserOrg>();
+		query.eq(SysUserOrg::getUserId, userId);
+		sysUserOrgMapper.delete(query);
 		//3.删除用户角色关联关系
 		//TODO
 		return false;
@@ -103,10 +103,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 		//1.删除用户
 		this.removeByIds(Arrays.asList(userIds.split(",")));
 		//2.删除用户部门关系
-		LambdaQueryWrapper<SysUserOrgan> query = new LambdaQueryWrapper<SysUserOrgan>();
+		LambdaQueryWrapper<SysUserOrg> query = new LambdaQueryWrapper<SysUserOrg>();
 		for(String id : userIds.split(",")) {
-			query.eq(SysUserOrgan::getUserId, id);
-			this.sysUserOrganMapper.delete(query);
+			query.eq(SysUserOrg::getUserId, id);
+			this.sysUserOrgMapper.delete(query);
 		}
 		//3.删除用户角色关系
 		//TODO
@@ -193,7 +193,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 	@Override
 	public SysUserCacheInfo getCacheUser(String username) {
 		SysUserCacheInfo info = new SysUserCacheInfo();
-		info.setOneOrgan(true);
+		info.setOneOrg(true);
 //		SysUser user = userMapper.getUserByName(username);
 //		info.setSysUserCode(user.getUsername());
 //		info.setSysUserName(user.getRealname());
@@ -207,7 +207,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 		}
 		
 		//多部门支持in查询
-		List<SysOrgan> list = sysOrganMapper.queryUserOrgans(user.getId());
+		List<SysOrg> list = sysOrgMapper.queryUserOrgs(user.getId());
 		List<String> sysMultiOrgCode = new ArrayList<String>();
 		if(list==null || list.size()==0) {
 			//当前用户无部门
@@ -215,8 +215,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 		}else if(list.size()==1) {
 			sysMultiOrgCode.add(list.get(0).getOrgCode());
 		}else {
-			info.setOneOrgan(false);
-			for (SysOrgan dpt : list) {
+			info.setOneOrg(false);
+			for (SysOrg dpt : list) {
 				sysMultiOrgCode.add(dpt.getOrgCode());
 			}
 		}
@@ -227,26 +227,26 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
 	// 根据部门Id查询
 	@Override
-	public IPage<SysUser> getUserByOrgId(Page<SysUser> page, String organId,String username) {
-		return userMapper.getUserByOrgId(page, organId,username);
+	public IPage<SysUser> getUserByOrgId(Page<SysUser> page, String orgId,String username) {
+		return userMapper.getUserByOrgId(page, orgId,username);
 	}
 
 	@Override
-	public IPage<SysUser> getUserByOrganIdAndQueryWrapper(Page<SysUser> page, String organId, QueryWrapper<SysUser> queryWrapper) {
+	public IPage<SysUser> getUserByOrgIdAndQueryWrapper(Page<SysUser> page, String orgId, QueryWrapper<SysUser> queryWrapper) {
 		LambdaQueryWrapper<SysUser> lambdaQueryWrapper = queryWrapper.lambda();
 
 		lambdaQueryWrapper.eq(SysUser::getDelFlag, "0");
-        lambdaQueryWrapper.inSql(SysUser::getId, "SELECT user_id FROM sys_user_organ WHERE org_id = '" + organId + "'");
+        lambdaQueryWrapper.inSql(SysUser::getId, "SELECT user_id FROM sys_user_org WHERE org_id = '" + orgId + "'");
 
         return userMapper.selectPage(page, lambdaQueryWrapper);
 	}
 
 	@Override
-	public IPage<SysUserSysOrganModel> queryUserByOrgCode(String orgCode, SysUser userParams, IPage page) {
-		List<SysUserSysOrganModel> list = baseMapper.getUserByOrgCode(page, orgCode, userParams);
+	public IPage<SysUserSysOrgModel> queryUserByOrgCode(String orgCode, SysUser userParams, IPage page) {
+		List<SysUserSysOrgModel> list = baseMapper.getUserByOrgCode(page, orgCode, userParams);
 		Integer total = baseMapper.getUserByOrgCodeTotal(orgCode, userParams);
 
-		IPage<SysUserSysOrganModel> result = new Page<>(page.getCurrent(), page.getSize(), total);
+		IPage<SysUserSysOrgModel> result = new Page<>(page.getCurrent(), page.getSize(), total);
 		result.setRecords(list);
 
 		return result;
@@ -261,8 +261,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
 	@Override
 	@CacheEvict(value= {CacheConstant.SYS_USERS_CACHE}, key="#username")
-	public void updateUserOrgan(String username,String orgCode) {
-		baseMapper.updateUserOrgan(username, orgCode);
+	public void updateUserOrg(String username,String orgCode) {
+		baseMapper.updateUserOrg(username, orgCode);
 	}
 
 
@@ -279,13 +279,13 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
 	@Override
 	@Transactional
-	public void addUserWithOrgan(SysUser user, String selectedParts) {
+	public void addUserWithOrg(SysUser user, String selectedParts) {
 //		this.save(user);  //保存角色的时候已经添加过一次了
 		if(oConvertUtils.isNotEmpty(selectedParts)) {
 			String[] arr = selectedParts.split(",");
 			for (String deaprtId : arr) {
-				SysUserOrgan userDeaprt = new SysUserOrgan(user.getId(), deaprtId);
-				sysUserOrganMapper.insert(userDeaprt);
+				SysUserOrg userDeaprt = new SysUserOrg(user.getId(), deaprtId);
+				sysUserOrgMapper.insert(userDeaprt);
 			}
 		}
 	}
@@ -294,15 +294,15 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 	@Override
 	@Transactional
 	@CacheEvict(value={CacheConstant.SYS_USERS_CACHE}, allEntries=true)
-	public void editUserWithOrgan(SysUser user, String organs) {
+	public void editUserWithOrg(SysUser user, String orgs) {
 		this.updateById(user);  //更新角色的时候已经更新了一次了，可以再跟新一次
 		//先删后加
-		sysUserOrganMapper.delete(new QueryWrapper<SysUserOrgan>().lambda().eq(SysUserOrgan::getUserId, user.getId()));
-		if(oConvertUtils.isNotEmpty(organs)) {
-			String[] arr = organs.split(",");
-			for (String organId : arr) {
-				SysUserOrgan userOrgan = new SysUserOrgan(user.getId(), organId);
-				sysUserOrganMapper.insert(userOrgan);
+		sysUserOrgMapper.delete(new QueryWrapper<SysUserOrg>().lambda().eq(SysUserOrg::getUserId, user.getId()));
+		if(oConvertUtils.isNotEmpty(orgs)) {
+			String[] arr = orgs.split(",");
+			for (String orgId : arr) {
+				SysUserOrg userOrg = new SysUserOrg(user.getId(), orgId);
+				sysUserOrgMapper.insert(userOrg);
 			}
 		}
 	}

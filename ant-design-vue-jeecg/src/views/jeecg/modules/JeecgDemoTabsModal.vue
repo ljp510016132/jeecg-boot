@@ -62,7 +62,7 @@
           <a-tab-pane tab="Tab 1" key="1">
 
             <a-table :columns="columns" :dataSource="data" :pagination="false" size="middle">
-              <template v-for="(col, i) in ['name', 'workId', 'organ']" :slot="col" slot-scope="text, record, index">
+              <template v-for="(col, i) in ['name', 'workId', 'org']" :slot="col" slot-scope="text, record, index">
                 <a-tooltip  title="必填项" :defaultVisible="false" overlayStyle="{ color: 'red' }">
                   <a-input :key="col" v-if="record.editable" style="margin: -5px 0"  :value="text" :placeholder="columns[i].title" @change="e => handlerRowChange(e.target.value, record.key, col)"/>
                 <template v-else>{{ text }}</template>
@@ -132,10 +132,10 @@
           },
           {
             title: '所属部门',
-            dataIndex: 'organ',
-            key: 'organ',
+            dataIndex: 'org',
+            key: 'org',
             width: '40%',
-            scopedSlots: {customRender: 'organ'}
+            scopedSlots: {customRender: 'org'}
           },
           {
             title: '操作',
@@ -149,21 +149,21 @@
             name: '小明',
             workId: '001',
             editable: false,
-            organ: '行政部'
+            org: '行政部'
           },
           {
             key: '2',
             name: '李莉',
             workId: '002',
             editable: false,
-            organ: 'IT部'
+            org: 'IT部'
           },
           {
             key: '3',
             name: '王小帅',
             workId: '003',
             editable: false,
-            organ: '财务部'
+            org: '财务部'
           }
         ],
 
@@ -244,7 +244,7 @@
           key: uuid,
           name: '',
           workId: '',
-          organ: '',
+          org: '',
           editable: true,
           isNew: true
         })

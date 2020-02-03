@@ -69,7 +69,7 @@
             title: '部门',
             width: '20%',
             align: 'center',
-            dataIndex: 'organName'
+            dataIndex: 'orgName'
           },
           {
             title: '姓名',

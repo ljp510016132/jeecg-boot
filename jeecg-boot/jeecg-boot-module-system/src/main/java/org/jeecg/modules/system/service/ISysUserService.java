@@ -12,7 +12,7 @@ import org.jeecg.common.system.vo.SysUserCacheInfo;
 import org.jeecg.modules.system.entity.SysUser;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import org.jeecg.modules.system.model.SysUserSysOrganModel;
+import org.jeecg.modules.system.model.SysUserSysOrgModel;
 
 /**
  * <p>
@@ -93,17 +93,17 @@ public interface ISysUserService extends IService<SysUser> {
 	 * @param
 	 * @return
 	 */
-	public IPage<SysUser> getUserByOrgId(Page<SysUser> page, String organId, String username);
+	public IPage<SysUser> getUserByOrgId(Page<SysUser> page, String orgId, String username);
 
     /**
      * 根据部门 Id 和 QueryWrapper 查询
      *
      * @param page
-     * @param organId
+     * @param orgId
      * @param queryWrapper
      * @return
      */
-    public IPage<SysUser> getUserByOrganIdAndQueryWrapper(Page<SysUser> page, String organId, QueryWrapper<SysUser> queryWrapper);
+    public IPage<SysUser> getUserByOrgIdAndQueryWrapper(Page<SysUser> page, String orgId, QueryWrapper<SysUser> queryWrapper);
 
 	/**
 	 * 根据 orgCode 查询用户，包括子部门下的用户
@@ -113,7 +113,7 @@ public interface ISysUserService extends IService<SysUser> {
 	 * @param page 分页参数
 	 * @return
 	 */
-	IPage<SysUserSysOrganModel> queryUserByOrgCode(String orgCode, SysUser userParams, IPage page);
+	IPage<SysUserSysOrgModel> queryUserByOrgCode(String orgCode, SysUser userParams, IPage page);
 
 	/**
 	 * 根据角色Id查询
@@ -143,7 +143,7 @@ public interface ISysUserService extends IService<SysUser> {
 	 * @param username
 	 * @param orgCode
 	 */
-	void updateUserOrgan(String username,String orgCode);
+	void updateUserOrg(String username,String orgCode);
 	
 	/**
 	 * 根据手机号获取用户名和密码
@@ -162,14 +162,14 @@ public interface ISysUserService extends IService<SysUser> {
 	 * @param user
 	 * @param selectedParts
 	 */
-	void addUserWithOrgan(SysUser user, String selectedParts);
+	void addUserWithOrg(SysUser user, String selectedParts);
 
 	/**
 	 * 编辑用户和用户部门关系
 	 * @param user
-	 * @param organs
+	 * @param orgs
 	 */
-	void editUserWithOrgan(SysUser user, String organs);
+	void editUserWithOrg(SysUser user, String orgs);
 	
 	/**
 	   * 校验用户是否有效

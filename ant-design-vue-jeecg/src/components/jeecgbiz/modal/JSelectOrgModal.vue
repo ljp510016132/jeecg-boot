@@ -35,10 +35,10 @@
 </template>
 
 <script>
-  import { queryOrganTreeList } from '@/api/api'
+  import { queryOrgTreeList } from '@/api/api'
   export default {
-    name: 'JSelectOrganModal',
-    props:['modalWidth','multi','rootOpened','organId'],
+    name: 'JSelectOrgModal',
+    props:['modalWidth','multi','rootOpened','orgId'],
     data(){
       return {
         visible:false,
@@ -53,17 +53,17 @@
       }
     },
     created(){
-      this.loadOrgan();
+      this.loadOrg();
     },
     watch:{
-      organId(){
-        this.initOrganComponent()
+      orgId(){
+        this.initOrgComponent()
       },
       visible: {
         handler() {
-          if (this.organId) {
-            this.checkedKeys = this.organId.split(",");
-            // console.log('this.organId', this.organId)
+          if (this.orgId) {
+            this.checkedKeys = this.orgId.split(",");
+            // console.log('this.orgId', this.orgId)
           } else {
             this.checkedKeys = [];
           }
@@ -76,25 +76,25 @@
         this.checkedRows=[]
         this.checkedKeys=[]
       },
-      loadOrgan(){
-        queryOrganTreeList().then(res=>{
+      loadOrg(){
+        queryOrgTreeList().then(res=>{
           if(res.success){
             let arr = [...res.result]
             this.reWriterWithSlot(arr)
             this.treeData = arr
-            this.initOrganComponent()
+            this.initOrgComponent()
             if(this.rootOpened){
               this.initExpandedKeys(res.result)
             }
           }
         })
       },
-      initOrganComponent(){
+      initOrgComponent(){
         let names = ''
-        if(this.organId){
-          let currOrganId = this.organId
+        if(this.orgId){
+          let currOrgId = this.orgId
           for(let item of this.dataList){
-            if(currOrganId.indexOf(item.key)>=0){
+            if(currOrgId.indexOf(item.key)>=0){
               names+=","+item.title
             }
           }

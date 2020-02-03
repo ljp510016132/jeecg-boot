@@ -15,7 +15,7 @@
               :checkStrictly="true"
               @select="onSelect"
               :dropdownStyle="{maxHeight:'200px',overflow:'auto'}"
-              :treeData="organTree"
+              :treeData="orgTree"
             />
 
           </template>
@@ -27,10 +27,10 @@
       <a-card :bordered="false">
         <a-tabs defaultActiveKey="2" @change="callback">
           <a-tab-pane tab="基本信息" key="1" forceRender>
-            <Organ-Base-Info ref="OrganBaseInfo"></Organ-Base-Info>
+            <Org-Base-Info ref="OrgBaseInfo"></Org-Base-Info>
           </a-tab-pane>
           <a-tab-pane tab="用户信息" key="2">
-            <Organ-User-Info ref="OrganUserInfo"></Organ-User-Info>
+            <Org-User-Info ref="OrgUserInfo"></Org-User-Info>
           </a-tab-pane>
         </a-tabs>
       </a-card>
@@ -38,21 +38,21 @@
   </a-row>
 </template>
 <script>
-  import OrganBaseInfo from './modules/OrganBaseInfo'
-  import OrganUserInfo from './modules/OrganUserInfo'
-  import {queryOrganTreeList, searchByKeywords} from '@/api/api'
+  import OrgBaseInfo from './modules/OrgBaseInfo'
+  import OrgUserInfo from './modules/OrgUserInfo'
+  import {queryOrgTreeList, searchByKeywords} from '@/api/api'
   import {JeecgListMixin} from '@/mixins/JeecgListMixin'
 
   export default {
-    name: 'OrganUserList',
+    name: 'OrgUserList',
     mixins: [JeecgListMixin],
     components: {
-      OrganBaseInfo,
-      OrganUserInfo,
+      OrgBaseInfo,
+      OrgUserInfo,
     },
     data() {
       return {
-        currentOrganId: '',
+        currentOrgId: '',
         iExpandedKeys: [],
         loading: false,
         autoExpandParent: true,
@@ -61,12 +61,12 @@
         disable: true,
         treeData: [],
         visible: false,
-        organTree: [],
+        orgTree: [],
         rightClickSelectedKey: '',
         hiding: true,
         model: {},
         dropTrigger: '',
-        organ: {},
+        org: {},
         disableSubmit: false,
         checkedKeys: [],
         selectedKeys: [],
@@ -97,13 +97,13 @@
       loadTree() {
         var that = this
         that.treeData = []
-        that.organTree = []
-        queryOrganTreeList().then((res) => {
+        that.orgTree = []
+        queryOrgTreeList().then((res) => {
           if (res.success) {
             for (let i = 0; i < res.result.length; i++) {
               let temp = res.result[i]
               that.treeData.push(temp)
-              that.organTree.push(temp)
+              that.orgTree.push(temp)
               that.setThisExpandedKeys(temp)
               // console.log(temp.id)
             }
@@ -137,10 +137,10 @@
         if (value) {
           searchByKeywords({keyWord: value}).then((res) => {
             if (res.success) {
-              that.organTree = []
+              that.orgTree = []
               for (let i = 0; i < res.result.length; i++) {
                 let temp = res.result[i]
-                that.organTree.push(temp)
+                that.orgTree.push(temp)
               }
             } else {
               that.$message.warning(res.message)
@@ -156,16 +156,16 @@
         // console.log('onCheck', checkedKeys, e);
         this.checkedKeys = [];
         // if (e.checked === true) {
-        this.currentOrganId = record.id;
+        this.currentOrgId = record.id;
         this.checkedKeys.push(record.id);
 
-        this.$refs.OrganBaseInfo.open(record);
-        this.$refs.OrganUserInfo.open(record);
+        this.$refs.OrgBaseInfo.open(record);
+        this.$refs.OrgUserInfo.open(record);
         // }
         // else {
         //   this.checkedKeys = [];
-        //   this.$refs.OrganBaseInfo.clearForm();
-        //   this.$refs.OrganUserInfo.clearList();
+        //   this.$refs.OrgBaseInfo.clearForm();
+        //   this.$refs.OrgUserInfo.clearList();
         // }
 
         this.hiding = false;
@@ -177,9 +177,9 @@
         }
         let record = e.node.dataRef;
         this.checkedKeys.push(record.id);
-        this.$refs.OrganBaseInfo.open(record);
-        this.$refs.OrganUserInfo.onClearSelected();
-        this.$refs.OrganUserInfo.open(record);
+        this.$refs.OrgBaseInfo.open(record);
+        this.$refs.OrgUserInfo.onClearSelected();
+        this.$refs.OrgUserInfo.open(record);
       },
     },
     created() {

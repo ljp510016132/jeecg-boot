@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jeecg.modules.system.entity.SysOrgan;
+import org.jeecg.modules.system.entity.SysOrg;
 
 /**
  * <p>
@@ -15,7 +15,7 @@ import org.jeecg.modules.system.entity.SysOrgan;
  * @Since 2019-01-22 
  *
  */
-public class OrganIdModel implements Serializable {
+public class OrgIdModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -28,14 +28,14 @@ public class OrganIdModel implements Serializable {
     // 部门名称
     private String title;
     
-    List<OrganIdModel> children = new ArrayList<>();
+    List<OrgIdModel> children = new ArrayList<>();
     
     /**
-     * 将SysOrganTreeModel的部分数据放在该对象当中
+     * 将SysOrgTreeModel的部分数据放在该对象当中
      * @param treeModel
      * @return
      */
-    public OrganIdModel convert(SysOrganTreeModel treeModel) {
+    public OrgIdModel convert(SysOrgTreeModel treeModel) {
         this.key = treeModel.getId();
         this.value = treeModel.getId();
         this.title = treeModel.getOrgName();
@@ -44,21 +44,21 @@ public class OrganIdModel implements Serializable {
     
     /**
      * 该方法为用户部门的实现类所使用
-     * @param sysOrgan
+     * @param sysOrg
      * @return
      */
-    public OrganIdModel convertByUserOrgan(SysOrgan sysOrgan) {
-        this.key = sysOrgan.getId();
-        this.value = sysOrgan.getId();
-        this.title = sysOrgan.getOrgName();
+    public OrgIdModel convertByUserOrg(SysOrg sysOrg) {
+        this.key = sysOrg.getId();
+        this.value = sysOrg.getId();
+        this.title = sysOrg.getOrgName();
         return this;
     } 
 
-    public List<OrganIdModel> getChildren() {
+    public List<OrgIdModel> getChildren() {
         return children;
     }
 
-    public void setChildren(List<OrganIdModel> children) {
+    public void setChildren(List<OrgIdModel> children) {
         this.children = children;
     }
 

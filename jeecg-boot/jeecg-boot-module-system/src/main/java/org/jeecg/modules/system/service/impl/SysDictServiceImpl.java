@@ -152,8 +152,8 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictMapper, SysDict> impl
     }
 
 	@Override
-	public List<DictModel> queryAllOrganBackDictModel() {
-		return baseMapper.queryAllOrganBackDictModel();
+	public List<DictModel> queryAllOrgBackDictModel() {
+		return baseMapper.queryAllOrgBackDictModel();
 	}
 
 	@Override

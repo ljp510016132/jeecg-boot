@@ -104,8 +104,8 @@
                   placeholder="请选择用户"
                   :returnKeys="['id', item.customReturnField || 'username']"
                 />
-                <j-select-organ
-                  v-else-if="item.type === 'select-organ'"
+                <j-select-org
+                  v-else-if="item.type === 'select-org'"
                   v-model="item.val"
                   :multi="false"
                   placeholder="请选择部门"
@@ -165,12 +165,12 @@
 <script>
   import * as utils from '@/utils/util'
   import JDate from '@/components/jeecg/JDate.vue'
-  import JSelectOrgan from '@/components/jeecgbiz/JSelectOrgan'
+  import JSelectOrg from '@/components/jeecgbiz/JSelectOrg'
   import JSelectMultiUser from '@/components/jeecgbiz/JSelectMultiUser'
 
   export default {
     name: 'JSuperQuery',
-    components: { JDate, JSelectOrgan, JSelectMultiUser },
+    components: { JDate, JSelectOrg, JSelectMultiUser },
     props: {
       /*
        fieldList: [{

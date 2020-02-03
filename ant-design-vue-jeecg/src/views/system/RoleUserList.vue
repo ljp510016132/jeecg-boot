@@ -448,7 +448,7 @@
             ids += this.selectedRowKeys2[a] + ','
           }
           var that = this
-          console.log(this.currentOrganId)
+          console.log(this.currentOrgId)
           this.$confirm({
             title: '确认删除',
             content: '是否删除选中数据?',

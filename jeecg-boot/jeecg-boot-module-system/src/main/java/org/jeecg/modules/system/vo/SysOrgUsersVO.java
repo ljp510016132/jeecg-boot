@@ -6,21 +6,21 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class SysOrganUsersVO implements Serializable{
+public class SysOrgUsersVO implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	/**部门id*/
 	private String orgId;
 	/**对应的用户id集合*/
 	private List<String> userIdList;
-	public SysOrganUsersVO(String orgId, List<String> userIdList) {
+	public SysOrgUsersVO(String orgId, List<String> userIdList) {
 		super();
 		this.orgId = orgId;
 		this.userIdList = userIdList;
 	}
     //update-begin--Author:kangxiaolin  Date:20190908 for：[512][部门管理]点击添加已有用户失败修复--------------------
 
-	public SysOrganUsersVO(){
+	public SysOrgUsersVO(){
 
 	}
     //update-begin--Author:kangxiaolin  Date:20190908 for：[512][部门管理]点击添加已有用户失败修复--------------------
