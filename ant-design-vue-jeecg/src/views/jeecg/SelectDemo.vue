@@ -40,26 +40,26 @@
         <a-row :gutter="24">
           <a-col :span="12">
             <a-form-item label="选择部门 自定义返回值">
-              <j-select-depart v-decorator="['departId']" :trigger-change="true" customReturnField="departName"></j-select-depart>
+              <j-select-organ v-decorator="['organId']" :trigger-change="true" customReturnField="organName"></j-select-organ>
             </a-form-item>
           </a-col>
-          <a-col :span="12">选中的部门ID(v-decorator):{{ getDepartIdValue() }}</a-col>
+          <a-col :span="12">选中的部门ID(v-decorator):{{ getOrganIdValue() }}</a-col>
         </a-row>
 
         <a-row :gutter="24">
           <a-col :span="12">
             <a-form-item label="选择部门">
-              <j-select-depart v-model="departId" :multi="true"></j-select-depart>
+              <j-select-organ v-model="organId" :multi="true"></j-select-organ>
             </a-form-item>
           </a-col>
-          <a-col :span="12">选中的部门ID(v-model):{{ departId }}</a-col>
+          <a-col :span="12">选中的部门ID(v-model):{{ organId }}</a-col>
         </a-row>
 
         <!--  通过部门选择用户控件 -->
         <a-row :gutter="24">
           <a-col :span="12">
             <a-form-item label="选择用户">
-              <j-select-user-by-dep v-model="userIds" :multi="true"></j-select-user-by-dep>
+              <j-select-user-by-org v-model="userIds" :multi="true"></j-select-user-by-org>
             </a-form-item>
           </a-col>
           <a-col :span="12">选中的用户(v-model):{{ userIds }}</a-col>
@@ -271,8 +271,8 @@
 <script>
 
   import JDictSelectTag from '../../components/dict/JDictSelectTag.vue'
-  import JSelectDepart from '@/components/jeecgbiz/JSelectDepart'
-  import JSelectUserByDep from '@/components/jeecgbiz/JSelectUserByDep'
+  import JSelectOrgan from '@/components/jeecgbiz/JSelectOrgan'
+  import JSelectUserByOrg from '@/components/jeecgbiz/JSelectUserByOrg'
   import JSelectMultiUser from '@/components/jeecgbiz/JSelectMultiUser'
   import JSelectRole from '@/components/jeecgbiz/JSelectRole'
   import JCheckbox from '@/components/jeecg/JCheckbox'
@@ -292,8 +292,8 @@
     components: {
       JTreeDict,
       JDictSelectTag,
-      JSelectDepart,
-      JSelectUserByDep,
+      JSelectOrgan,
+      JSelectUserByOrg,
       JSelectMultiUser,
       JSelectRole,
       JCheckbox,
@@ -307,7 +307,7 @@
         selectedDepUsers: '',
         formData: {},
         form: this.$form.createForm(this),
-        departId: '4f1765520d6346f9bd9c79e2479e5b12,57197590443c44f083d42ae24ef26a2c',
+        organId: '4f1765520d6346f9bd9c79e2479e5b12,57197590443c44f083d42ae24ef26a2c',
         userIds: 'admin',
         multiUser: 'admin,jeecg',
         jcheckbox: {
@@ -372,8 +372,8 @@ sayHi('hello, world!')`
     methods: {
       handleChange() {
       },
-      getDepartIdValue() {
-        return this.form.getFieldValue('departId')
+      getOrganIdValue() {
+        return this.form.getFieldValue('organId')
       },
       selectOK: function(data) {
         this.selectList = data
@@ -386,9 +386,9 @@ sayHi('hello, world!')`
       },
       //通过组织机构筛选选择用户
       onSearchDepUser() {
-        this.$refs.JSearchUserByDep.showModal()
+        this.$refs.JSearchUserByOrg.showModal()
         this.selectedDepUsers = ''
-        this.$refs.JSearchUserByDep.title = '根据部门查询用户'
+        this.$refs.JSearchUserByOrg.title = '根据部门查询用户'
       },
       onSearchDepUserCallBack(selectedDepUsers) {
         this.selectedDepUsers = selectedDepUsers

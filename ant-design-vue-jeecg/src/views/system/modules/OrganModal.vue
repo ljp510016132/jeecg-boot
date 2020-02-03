@@ -18,13 +18,13 @@
           label="机构名称"
           :hidden="false"
           hasFeedback >
-          <a-input id="departName" placeholder="请输入机构/部门名称" v-decorator="['departName', validatorRules.departName ]"/>
+          <a-input id="organName" placeholder="请输入机构/部门名称" v-decorator="['organName', validatorRules.organName ]"/>
         </a-form-item>
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :hidden="seen" label="上级部门" hasFeedback>
         <a-tree-select
           style="width:100%"
           :dropdownStyle="{maxHeight:'200px',overflow:'auto'}"
-          :treeData="departTree"
+          :treeData="organTree"
           v-model="model.parentId"
           placeholder="请选择上级部门"
           :disabled="condition">
@@ -74,7 +74,7 @@
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
           label="排序">
-          <a-input-number v-decorator="[ 'departOrder',{'initialValue':0}]" />
+          <a-input-number v-decorator="[ 'organOrder',{'initialValue':0}]" />
         </a-form-item>
         <a-form-item
           :labelCol="labelCol"
@@ -94,14 +94,14 @@
   import pick from 'lodash.pick'
   import ATextarea from 'ant-design-vue/es/input/TextArea'
   export default {
-    name: "SysDepartModal",
+    name: "SysOrganModal",
     components: { ATextarea },
     data () {
       return {
-        departTree:[],
+        organTree:[],
         orgTypeData:[],
         phoneWarning:'',
-        departName:"",
+        organName:"",
         title:"操作",
         seen:false,
         visible: false,
@@ -122,12 +122,12 @@
         confirmLoading: false,
         form: this.$form.createForm(this),
         validatorRules:{
-        departName:{rules: [{ required: true, message: '请输入机构/部门名称!' }]},
+        organName:{rules: [{ required: true, message: '请输入机构/部门名称!' }]},
         orgCode:{rules: [{ required: true, message: '请输入机构编码!' }]},
          mobile:{rules: [{validator:this.validateMobile}]}
         },
         url: {
-          add: "/sys/sysDepart/add",
+          add: "/sys/sysOrgan/add",
         },
         dictDisabled:true,
       }
@@ -139,24 +139,24 @@
         var that = this;
         queryIdTree().then((res)=>{
           if(res.success){
-            that.departTree = [];
+            that.organTree = [];
             for (let i = 0; i < res.result.length; i++) {
               let temp = res.result[i];
-              that.departTree.push(temp);
+              that.organTree.push(temp);
             }
           }
 
         })
       },
-      add (depart) {
-        if(depart){
+      add (organ) {
+        if(organ){
           this.seen = false;
           this.dictDisabled = false;
         }else{
           this.seen = true;
           this.dictDisabled = true;
         }
-        this.edit(depart);
+        this.edit(organ);
       },
       edit (record) {
           this.form.resetFields();
@@ -170,7 +170,7 @@
             this.model.orgCategory = '2';
           }
           this.$nextTick(() => {
-            this.form.setFieldsValue(pick(this.model,'orgCategory','departName','departNameEn','departNameAbbr','departOrder','description','orgType','orgCode','mobile','fax','address','memo','status','delFlag'))
+            this.form.setFieldsValue(pick(this.model,'orgCategory','organName','organNameEn','organNameAbbr','organOrder','description','orgType','orgCode','mobile','fax','address','memo','status','delFlag'))
           });
       },
       close () {

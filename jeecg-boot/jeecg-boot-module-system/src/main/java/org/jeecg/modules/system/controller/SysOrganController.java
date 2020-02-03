@@ -17,11 +17,11 @@ import org.jeecg.common.constant.CacheConstant;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.system.util.JwtUtil;
 import org.jeecg.common.system.vo.LoginUser;
-import org.jeecg.modules.system.entity.SysDepart;
-import org.jeecg.modules.system.model.DepartIdModel;
-import org.jeecg.modules.system.model.SysDepartTreeModel;
-import org.jeecg.modules.system.service.ISysDepartService;
-import org.jeecg.modules.system.util.FindsDepartsChildrenUtil;
+import org.jeecg.modules.system.entity.SysOrgan;
+import org.jeecg.modules.system.model.OrganIdModel;
+import org.jeecg.modules.system.model.SysOrganTreeModel;
+import org.jeecg.modules.system.service.ISysOrganService;
+import org.jeecg.modules.system.util.FindsOrgansChildrenUtil;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
 import org.jeecgframework.poi.excel.def.NormalExcelConstants;
 import org.jeecgframework.poi.excel.entity.ExportParams;
@@ -51,12 +51,12 @@ import lombok.extern.slf4j.Slf4j;
  * @Author: Steve @Since： 2019-01-22
  */
 @RestController
-@RequestMapping("/sys/sysDepart")
+@RequestMapping("/sys/sysOrgan")
 @Slf4j
-public class SysDepartController {
+public class SysOrganController {
 
 	@Autowired
-	private ISysDepartService sysDepartService;
+	private ISysOrganService sysOrganService;
 
 	/**
 	 * 查询数据 查出所有部门,并以树结构数据格式响应给前端
@@ -64,15 +64,15 @@ public class SysDepartController {
 	 * @return
 	 */
 	@RequestMapping(value = "/queryTreeList", method = RequestMethod.GET)
-	public Result<List<SysDepartTreeModel>> queryTreeList() {
-		Result<List<SysDepartTreeModel>> result = new Result<>();
+	public Result<List<SysOrganTreeModel>> queryTreeList() {
+		Result<List<SysOrganTreeModel>> result = new Result<>();
 		try {
 			// 从内存中读取
-//			List<SysDepartTreeModel> list =FindsDepartsChildrenUtil.getSysDepartTreeList();
+//			List<SysOrganTreeModel> list =FindsOrgansChildrenUtil.getSysOrganTreeList();
 //			if (CollectionUtils.isEmpty(list)) {
-//				list = sysDepartService.queryTreeList();
+//				list = sysOrganService.queryTreeList();
 //			}
-			List<SysDepartTreeModel> list = sysDepartService.queryTreeList();
+			List<SysOrganTreeModel> list = sysOrganService.queryTreeList();
 			result.setResult(list);
 			result.setSuccess(true);
 		} catch (Exception e) {
@@ -84,20 +84,20 @@ public class SysDepartController {
 	/**
 	 * 添加新数据 添加用户新建的部门对象数据,并保存到数据库
 	 * 
-	 * @param sysDepart
+	 * @param sysOrgan
 	 * @return
 	 */
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	@CacheEvict(value= {CacheConstant.SYS_DEPARTS_CACHE,CacheConstant.SYS_DEPART_IDS_CACHE}, allEntries=true)
-	public Result<SysDepart> add(@RequestBody SysDepart sysDepart, HttpServletRequest request) {
-		Result<SysDepart> result = new Result<SysDepart>();
+	public Result<SysOrgan> add(@RequestBody SysOrgan sysOrgan, HttpServletRequest request) {
+		Result<SysOrgan> result = new Result<SysOrgan>();
 		String username = JwtUtil.getUserNameByToken(request);
 		try {
-			sysDepart.setCreateBy(username);
-			sysDepartService.saveDepartData(sysDepart, username);
+			sysOrgan.setCreateBy(username);
+			sysOrganService.saveOrganData(sysOrgan, username);
 			//清除部门树内存
-			// FindsDepartsChildrenUtil.clearSysDepartTreeList();
-			// FindsDepartsChildrenUtil.clearDepartIdModel();
+			// FindsOrgansChildrenUtil.clearSysOrganTreeList();
+			// FindsOrgansChildrenUtil.clearOrganIdModel();
 			result.success("添加成功！");
 		} catch (Exception e) {
 			log.error(e.getMessage(),e);
@@ -109,25 +109,25 @@ public class SysDepartController {
 	/**
 	 * 编辑数据 编辑部门的部分数据,并保存到数据库
 	 * 
-	 * @param sysDepart
+	 * @param sysOrgan
 	 * @return
 	 */
 	@RequestMapping(value = "/edit", method = RequestMethod.PUT)
 	@CacheEvict(value= {CacheConstant.SYS_DEPARTS_CACHE,CacheConstant.SYS_DEPART_IDS_CACHE}, allEntries=true)
-	public Result<SysDepart> edit(@RequestBody SysDepart sysDepart, HttpServletRequest request) {
+	public Result<SysOrgan> edit(@RequestBody SysOrgan sysOrgan, HttpServletRequest request) {
 		String username = JwtUtil.getUserNameByToken(request);
-		sysDepart.setUpdateBy(username);
-		Result<SysDepart> result = new Result<SysDepart>();
-		SysDepart sysDepartEntity = sysDepartService.getById(sysDepart.getId());
-		if (sysDepartEntity == null) {
+		sysOrgan.setUpdateBy(username);
+		Result<SysOrgan> result = new Result<SysOrgan>();
+		SysOrgan sysOrganEntity = sysOrganService.getById(sysOrgan.getId());
+		if (sysOrganEntity == null) {
 			result.error500("未找到对应实体");
 		} else {
-			boolean ok = sysDepartService.updateDepartDataById(sysDepart, username);
+			boolean ok = sysOrganService.updateOrganDataById(sysOrgan, username);
 			// TODO 返回false说明什么？
 			if (ok) {
 				//清除部门树内存
-				//FindsDepartsChildrenUtil.clearSysDepartTreeList();
-				//FindsDepartsChildrenUtil.clearDepartIdModel();
+				//FindsOrgansChildrenUtil.clearSysOrganTreeList();
+				//FindsOrgansChildrenUtil.clearOrganIdModel();
 				result.success("修改成功!");
 			}
 		}
@@ -141,18 +141,18 @@ public class SysDepartController {
     */
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
 	@CacheEvict(value= {CacheConstant.SYS_DEPARTS_CACHE,CacheConstant.SYS_DEPART_IDS_CACHE}, allEntries=true)
-   public Result<SysDepart> delete(@RequestParam(name="id",required=true) String id) {
+   public Result<SysOrgan> delete(@RequestParam(name="id",required=true) String id) {
 
-       Result<SysDepart> result = new Result<SysDepart>();
-       SysDepart sysDepart = sysDepartService.getById(id);
-       if(sysDepart==null) {
+       Result<SysOrgan> result = new Result<SysOrgan>();
+       SysOrgan sysOrgan = sysOrganService.getById(id);
+       if(sysOrgan==null) {
            result.error500("未找到对应实体");
        }else {
-           boolean ok = sysDepartService.delete(id);
+           boolean ok = sysOrganService.delete(id);
            if(ok) {
 	            //清除部门树内存
-	   		   //FindsDepartsChildrenUtil.clearSysDepartTreeList();
-	   		   // FindsDepartsChildrenUtil.clearDepartIdModel();
+	   		   //FindsOrgansChildrenUtil.clearSysOrganTreeList();
+	   		   // FindsOrgansChildrenUtil.clearOrganIdModel();
                result.success("删除成功!");
            }
        }
@@ -168,13 +168,13 @@ public class SysDepartController {
 	 */
 	@RequestMapping(value = "/deleteBatch", method = RequestMethod.DELETE)
 	@CacheEvict(value= {CacheConstant.SYS_DEPARTS_CACHE,CacheConstant.SYS_DEPART_IDS_CACHE}, allEntries=true)
-	public Result<SysDepart> deleteBatch(@RequestParam(name = "ids", required = true) String ids) {
+	public Result<SysOrgan> deleteBatch(@RequestParam(name = "ids", required = true) String ids) {
 
-		Result<SysDepart> result = new Result<SysDepart>();
+		Result<SysOrgan> result = new Result<SysOrgan>();
 		if (ids == null || "".equals(ids.trim())) {
 			result.error500("参数不识别！");
 		} else {
-			this.sysDepartService.deleteBatchWithChildren(Arrays.asList(ids.split(",")));
+			this.sysOrganService.deleteBatchWithChildren(Arrays.asList(ids.split(",")));
 			result.success("删除成功!");
 		}
 		return result;
@@ -186,17 +186,17 @@ public class SysDepartController {
 	 * @return
 	 */
 	@RequestMapping(value = "/queryIdTree", method = RequestMethod.GET)
-	public Result<List<DepartIdModel>> queryIdTree() {
-//		Result<List<DepartIdModel>> result = new Result<List<DepartIdModel>>();
-//		List<DepartIdModel> idList;
+	public Result<List<OrganIdModel>> queryIdTree() {
+//		Result<List<OrganIdModel>> result = new Result<List<OrganIdModel>>();
+//		List<OrganIdModel> idList;
 //		try {
-//			idList = FindsDepartsChildrenUtil.wrapDepartIdModel();
+//			idList = FindsOrgansChildrenUtil.wrapOrganIdModel();
 //			if (idList != null && idList.size() > 0) {
 //				result.setResult(idList);
 //				result.setSuccess(true);
 //			} else {
-//				sysDepartService.queryTreeList();
-//				idList = FindsDepartsChildrenUtil.wrapDepartIdModel();
+//				sysOrganService.queryTreeList();
+//				idList = FindsOrgansChildrenUtil.wrapOrganIdModel();
 //				result.setResult(idList);
 //				result.setSuccess(true);
 //			}
@@ -206,9 +206,9 @@ public class SysDepartController {
 //			result.setSuccess(false);
 //			return result;
 //		}
-		Result<List<DepartIdModel>> result = new Result<>();
+		Result<List<OrganIdModel>> result = new Result<>();
 		try {
-			List<DepartIdModel> list = sysDepartService.queryDepartIdTreeList();
+			List<OrganIdModel> list = sysOrganService.queryOrganIdTreeList();
 			result.setResult(list);
 			result.setSuccess(true);
 		} catch (Exception e) {
@@ -226,10 +226,10 @@ public class SysDepartController {
 	 * @return
 	 */
 	@RequestMapping(value = "/searchBy", method = RequestMethod.GET)
-	public Result<List<SysDepartTreeModel>> searchBy(@RequestParam(name = "keyWord", required = true) String keyWord) {
-		Result<List<SysDepartTreeModel>> result = new Result<List<SysDepartTreeModel>>();
+	public Result<List<SysOrganTreeModel>> searchBy(@RequestParam(name = "keyWord", required = true) String keyWord) {
+		Result<List<SysOrganTreeModel>> result = new Result<List<SysOrganTreeModel>>();
 		try {
-			List<SysDepartTreeModel> treeList = this.sysDepartService.searhBy(keyWord);
+			List<SysOrganTreeModel> treeList = this.sysOrganService.searhBy(keyWord);
 			if (treeList.size() == 0 || treeList == null) {
 				throw new Exception();
 			}
@@ -251,22 +251,22 @@ public class SysDepartController {
      * @param request
      */
     @RequestMapping(value = "/exportXls")
-    public ModelAndView exportXls(SysDepart sysDepart,HttpServletRequest request) {
+    public ModelAndView exportXls(SysOrgan sysOrgan,HttpServletRequest request) {
         // Step.1 组装查询条件
-        QueryWrapper<SysDepart> queryWrapper = QueryGenerator.initQueryWrapper(sysDepart, request.getParameterMap());
+        QueryWrapper<SysOrgan> queryWrapper = QueryGenerator.initQueryWrapper(sysOrgan, request.getParameterMap());
         //Step.2 AutoPoi 导出Excel
         ModelAndView mv = new ModelAndView(new JeecgEntityExcelView());
-        List<SysDepart> pageList = sysDepartService.list(queryWrapper);
+        List<SysOrgan> pageList = sysOrganService.list(queryWrapper);
         //按字典排序
-        Collections.sort(pageList, new Comparator<SysDepart>() {
+        Collections.sort(pageList, new Comparator<SysOrgan>() {
             @Override
-			public int compare(SysDepart arg0, SysDepart arg1) {
+			public int compare(SysOrgan arg0, SysOrgan arg1) {
             	return arg0.getOrgCode().compareTo(arg1.getOrgCode());
             }
         });
         //导出文件名称
         mv.addObject(NormalExcelConstants.FILE_NAME, "部门列表");
-        mv.addObject(NormalExcelConstants.CLASS, SysDepart.class);
+        mv.addObject(NormalExcelConstants.CLASS, SysOrgan.class);
         LoginUser user = (LoginUser) SecurityUtils.getSubject().getPrincipal();
         mv.addObject(NormalExcelConstants.PARAMS, new ExportParams("部门列表数据", "导出人:"+user.getRealname(), "导出信息"));
         mv.addObject(NormalExcelConstants.DATA_LIST, pageList);
@@ -294,36 +294,36 @@ public class SysDepartController {
             try {
             	// orgCode编码长度
             	int codeLength = 3;
-                List<SysDepart> listSysDeparts = ExcelImportUtil.importExcel(file.getInputStream(), SysDepart.class, params);
+                List<SysOrgan> listSysOrgans = ExcelImportUtil.importExcel(file.getInputStream(), SysOrgan.class, params);
                 //按长度排序
-                Collections.sort(listSysDeparts, new Comparator<SysDepart>() {
+                Collections.sort(listSysOrgans, new Comparator<SysOrgan>() {
                     @Override
-					public int compare(SysDepart arg0, SysDepart arg1) {
+					public int compare(SysOrgan arg0, SysOrgan arg1) {
                     	return arg0.getOrgCode().length() - arg1.getOrgCode().length();
                     }
                 });
-                for (SysDepart sysDepart : listSysDeparts) {
-                	String orgCode = sysDepart.getOrgCode();
+                for (SysOrgan sysOrgan : listSysOrgans) {
+                	String orgCode = sysOrgan.getOrgCode();
                 	if(orgCode.length() > codeLength) {
                 		String parentCode = orgCode.substring(0, orgCode.length()-codeLength);
-                		QueryWrapper<SysDepart> queryWrapper = new QueryWrapper<SysDepart>();
+                		QueryWrapper<SysOrgan> queryWrapper = new QueryWrapper<SysOrgan>();
                 		queryWrapper.eq("org_code", parentCode);
                 		try {
-                		SysDepart parentDept = sysDepartService.getOne(queryWrapper);
+                		SysOrgan parentDept = sysOrganService.getOne(queryWrapper);
                 		if(!parentDept.equals(null)) {
-							sysDepart.setParentId(parentDept.getId());
+							sysOrgan.setParentId(parentDept.getId());
 						} else {
-							sysDepart.setParentId("");
+							sysOrgan.setParentId("");
 						}
                 		}catch (Exception e) {
                 			//没有查找到parentDept
                 		}
                 	}else{
-                		sysDepart.setParentId("");
+                		sysOrgan.setParentId("");
 					}
-                    sysDepartService.save(sysDepart);
+                    sysOrganService.save(sysOrgan);
                 }
-                return Result.ok("文件导入成功！数据行数：" + listSysDeparts.size());
+                return Result.ok("文件导入成功！数据行数：" + listSysOrgans.size());
             } catch (Exception e) {
                 log.error(e.getMessage(),e);
                 return Result.error("文件导入失败:"+e.getMessage());

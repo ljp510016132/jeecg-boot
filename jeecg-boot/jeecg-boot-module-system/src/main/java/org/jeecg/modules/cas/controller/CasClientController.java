@@ -12,9 +12,9 @@ import org.jeecg.common.system.util.JwtUtil;
 import org.jeecg.common.util.RedisUtil;
 import org.jeecg.modules.cas.util.CASServiceUtil;
 import org.jeecg.modules.cas.util.XmlUtils;
-import org.jeecg.modules.system.entity.SysDepart;
+import org.jeecg.modules.system.entity.SysOrgan;
 import org.jeecg.modules.system.entity.SysUser;
-import org.jeecg.modules.system.service.ISysDepartService;
+import org.jeecg.modules.system.service.ISysOrganService;
 import org.jeecg.modules.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,7 +44,7 @@ public class CasClientController {
 	@Autowired
 	private ISysUserService sysUserService;
 	@Autowired
-    private ISysDepartService sysDepartService;
+    private ISysOrganService sysOrganService;
 	@Autowired
     private RedisUtil redisUtil;
 	
@@ -84,15 +84,15 @@ public class CasClientController {
 	 		redisUtil.expire(CommonConstant.PREFIX_USER_TOKEN + token, JwtUtil.EXPIRE_TIME*2 / 1000);
 	  		//获取用户部门信息
 			JSONObject obj = new JSONObject();
-			List<SysDepart> departs = sysDepartService.queryUserDeparts(sysUser.getId());
-			obj.put("departs", departs);
-			if (departs == null || departs.size() == 0) {
-				obj.put("multi_depart", 0);
-			} else if (departs.size() == 1) {
-				sysUserService.updateUserDepart(principal, departs.get(0).getOrgCode());
-				obj.put("multi_depart", 1);
+			List<SysOrgan> organs = sysOrganService.queryUserOrgans(sysUser.getId());
+			obj.put("organs", organs);
+			if (organs == null || organs.size() == 0) {
+				obj.put("multi_organ", 0);
+			} else if (organs.size() == 1) {
+				sysUserService.updateUserOrgan(principal, organs.get(0).getOrgCode());
+				obj.put("multi_organ", 1);
 			} else {
-				obj.put("multi_depart", 2);
+				obj.put("multi_organ", 2);
 			}
 			obj.put("token", token);
 			obj.put("userInfo", sysUser);

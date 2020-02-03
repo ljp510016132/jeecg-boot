@@ -22,7 +22,7 @@ import org.jeecg.common.system.api.ISysBaseAPI;
 import org.jeecg.common.system.vo.ComboModel;
 import org.jeecg.common.system.vo.DictModel;
 import org.jeecg.common.system.vo.LoginUser;
-import org.jeecg.common.system.vo.SysDepartModel;
+import org.jeecg.common.system.vo.SysOrganModel;
 import org.jeecg.common.util.IPUtils;
 import org.jeecg.common.util.SpringContextUtils;
 import org.jeecg.common.util.oConvertUtils;
@@ -31,7 +31,7 @@ import org.jeecg.modules.message.service.ISysMessageTemplateService;
 import org.jeecg.modules.message.websocket.WebSocket;
 import org.jeecg.modules.system.entity.*;
 import org.jeecg.modules.system.mapper.*;
-import org.jeecg.modules.system.service.ISysDepartService;
+import org.jeecg.modules.system.service.ISysOrganService;
 import org.jeecg.modules.system.service.ISysDictService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +63,7 @@ public class SysBaseApiImpl implements ISysBaseAPI {
 	@Autowired
 	private SysUserRoleMapper sysUserRoleMapper;
 	@Autowired
-	private ISysDepartService sysDepartService;
+	private ISysOrganService sysOrganService;
 	@Autowired
 	private ISysDictService sysDictService;
 	@Resource
@@ -75,7 +75,7 @@ public class SysBaseApiImpl implements ISysBaseAPI {
 	@Resource
 	private SysRoleMapper roleMapper;
 	@Resource
-	private SysDepartMapper departMapper;
+	private SysOrganMapper organMapper;
 	
 	@Override
 	public void addLog(String LogContent, Integer logType, Integer operatetype) {
@@ -144,21 +144,21 @@ public class SysBaseApiImpl implements ISysBaseAPI {
 	}
 
 	@Override
-	public List<String> getDepartIdsByUsername(String username) {
-		List<SysDepart> list = sysDepartService.queryDepartsByUsername(username);
+	public List<String> getOrganIdsByUsername(String username) {
+		List<SysOrgan> list = sysOrganService.queryOrgansByUsername(username);
 		List<String> result = new ArrayList<>(list.size());
-		for (SysDepart depart : list) {
-			result.add(depart.getId());
+		for (SysOrgan organ : list) {
+			result.add(organ.getId());
 		}
 		return result;
 	}
 
 	@Override
-	public List<String> getDepartNamesByUsername(String username) {
-		List<SysDepart> list = sysDepartService.queryDepartsByUsername(username);
+	public List<String> getOrgNamesByUsername(String username) {
+		List<SysOrgan> list = sysOrganService.queryOrgansByUsername(username);
 		List<String> result = new ArrayList<>(list.size());
-		for (SysDepart depart : list) {
-			result.add(depart.getDepartName());
+		for (SysOrgan organ : list) {
+			result.add(organ.getOrgName());
 		}
 		return result;
 	}
@@ -180,8 +180,8 @@ public class SysBaseApiImpl implements ISysBaseAPI {
 	}
 
 	@Override
-	public List<DictModel> queryAllDepartBackDictModel() {
-		return sysDictService.queryAllDepartBackDictModel();
+	public List<DictModel> queryAllOrganBackDictModel() {
+		return sysDictService.queryAllOrganBackDictModel();
 	}
 
 	@Override
@@ -427,26 +427,26 @@ public class SysBaseApiImpl implements ISysBaseAPI {
 	}
 
 	@Override
-	public String getDepartIdsByOrgCode(String orgCode) {
-		return departMapper.queryDepartIdByOrgCode(orgCode);
+	public String getOrganIdsByOrgCode(String orgCode) {
+		return organMapper.queryOrganIdByOrgCode(orgCode);
 	}
 
 	@Override
-	public DictModel getParentDepartId(String departId) {
-		SysDepart depart = departMapper.getParentDepartId(departId);
-		DictModel model = new DictModel(depart.getId(),depart.getParentId());
+	public DictModel getParentOrganId(String organId) {
+		SysOrgan organ = organMapper.getParentOrganId(organId);
+		DictModel model = new DictModel(organ.getId(),organ.getParentId());
 		return model;
 	}
 
 	@Override
-	public List<SysDepartModel> getAllSysDepart() {
-		List<SysDepartModel> departModelList = new ArrayList<SysDepartModel>();
-		List<SysDepart> departList = departMapper.selectList(new QueryWrapper<SysDepart>().eq("del_flag","0"));
-		for(SysDepart depart : departList){
-			SysDepartModel model = new SysDepartModel();
-			BeanUtils.copyProperties(depart,model);
-			departModelList.add(model);
+	public List<SysOrganModel> getAllSysOrgan() {
+		List<SysOrganModel> organModelList = new ArrayList<SysOrganModel>();
+		List<SysOrgan> organList = organMapper.selectList(new QueryWrapper<SysOrgan>().eq("del_flag","0"));
+		for(SysOrgan organ : organList){
+			SysOrganModel model = new SysOrganModel();
+			BeanUtils.copyProperties(organ,model);
+			organModelList.add(model);
 		}
-		return departModelList;
+		return organModelList;
 	}
 }

@@ -63,22 +63,22 @@
     <!-- table区域-end -->
 
     <!-- 表单区域 -->
-    <sysDepart-modal ref="sysDepartModal" @ok="modalFormOk"></sysDepart-modal>
+    <sysOrgan-modal ref="sysOrganModal" @ok="modalFormOk"></sysOrgan-modal>
   </a-card>
 </template>
 
 <script>
-  import SysDepartModal from './modules/DepartModal'
+  import SysOrganModal from './modules/OrganModal'
   /*  import { filterObj } from '@/utils/util'
     , queryByFactories*/
-  import {queryDepartTreeList} from '@/api/api'
+  import {queryOrganTreeList} from '@/api/api'
   import {deleteAction} from '@/api/manage'
 
   // 表头
   const columns = [
     {
       title: '机构名称',
-      dataIndex: 'departName',
+      dataIndex: 'organName',
     },
     {
       title: '机构类型',
@@ -104,7 +104,7 @@
     {
       title: '排序',
       align: 'center',
-      dataIndex: 'departOrder'
+      dataIndex: 'organOrder'
     },
     {
       title: '操作',
@@ -115,13 +115,13 @@
   ];
 
   export default {
-    name: "DepartList2",
+    name: "OrganList2",
     components: {
-      SysDepartModal
+      SysOrganModal
     },
     data() {
       return {
-        description: 'jeecg 生成SysDepart代码管理页面',
+        description: 'jeecg 生成SysOrgan代码管理页面',
         // 查询条件
         queryParam: {},
         //数据集
@@ -148,9 +148,9 @@
         selectedRowKeys: [],
         selectedRows: [],
         url: {
-          list: "/sys/sysDepart/list",
-          delete: "/sys/sysDepart/delete",
-          deleteBatch: "/sys/sysDepart/deleteBatch",
+          list: "/sys/sysOrgan/list",
+          delete: "/sys/sysOrgan/delete",
+          deleteBatch: "/sys/sysOrgan/deleteBatch",
         },
 
       }
@@ -161,7 +161,7 @@
     methods: {
       loadData() {
         this.dataSource = [];
-        queryDepartTreeList().then((res) => {
+        queryOrganTreeList().then((res) => {
           if (res.success) {
             this.dataSource = res.result;
           }
@@ -198,9 +198,9 @@
         });
       },
       handleDetail(record) {
-        this.$refs.sysDepartModal.edit(record);
-        this.$refs.sysDepartModal.title = "详情";
-        this.$refs.sysDepartModal.disableSubmit = true;
+        this.$refs.sysOrganModal.edit(record);
+        this.$refs.sysOrganModal.title = "详情";
+        this.$refs.sysOrganModal.disableSubmit = true;
       },
       batchDel: function () {
         if (this.selectedRowKeys.length <= 0) {
@@ -230,12 +230,12 @@
         }
       },
       handleEdit: function (record) {
-        this.$refs.sysDepartModal.edit(record);
-        this.$refs.sysDepartModal.title = "编辑";
+        this.$refs.sysOrganModal.edit(record);
+        this.$refs.sysOrganModal.title = "编辑";
       },
       handleAdd() {
-        this.$refs.sysDepartModal.add();
-        this.$refs.sysDepartModal.title = "新增";
+        this.$refs.sysOrganModal.add();
+        this.$refs.sysOrganModal.title = "新增";
       },
       handleTableChange(pagination, filters, sorter) {
         //分页、排序、筛选变化时触发

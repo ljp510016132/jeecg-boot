@@ -5,9 +5,9 @@
 
         <!-- 按钮操作区域 -->
         <a-row style="margin-left: 14px">
-          <a-button @click="handleAdd(2)" type="primary">添加子部门</a-button>
-          <a-button @click="handleAdd(1)" type="primary">添加一级部门</a-button>
-          <a-button type="primary" icon="download" @click="handleExportXls('部门信息')">导出</a-button>
+          <a-button @click="handleAdd(2)" type="primary">添加子组织</a-button>
+          <a-button @click="handleAdd(1)" type="primary">添加一级组织</a-button>
+          <a-button type="primary" icon="download" @click="handleExportXls('组织信息')">导出</a-button>
           <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
             <a-button type="primary" icon="import">导入</a-button>
           </a-upload>
@@ -22,7 +22,7 @@
               <a v-if="this.currSelected.title" style="margin-left: 10px" @click="onClearSelected">取消选择</a>
             </div>
           </a-alert>
-          <a-input-search @search="onSearch" style="width:100%;margin-top: 10px" placeholder="请输入部门名称"/>
+          <a-input-search @search="onSearch" style="width:100%;margin-top: 10px" placeholder="请输入组织名称"/>
           <!-- 树-->
           <a-col :md="10" :sm="24">
             <template>
@@ -36,7 +36,7 @@
               @rightClick="rightHandle"
               :selectedKeys="selectedKeys"
               :checkedKeys="checkedKeys"
-              :treeData="departTree"
+              :treeData="organTree"
               :checkStrictly="checkStrictly"
               :expandedKeys="iExpandedKeys"
               :autoExpandParent="autoExpandParent"
@@ -78,9 +78,9 @@
             :labelCol="labelCol"
             :wrapperCol="wrapperCol"
             label="机构名称">
-            <a-input placeholder="请输入机构/部门名称" v-decorator="['departName', validatorRules.departName ]"/>
+            <a-input placeholder="请输入机构/组织名称" v-decorator="['organName', validatorRules.organName ]"/>
           </a-form-item>
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="上级部门">
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="上级组织">
             <a-tree-select
               style="width:100%"
               :dropdownStyle="{maxHeight:'200px',overflow:'auto'}"
@@ -110,7 +110,7 @@
             <template v-else>
               <a-radio-group v-decorator="['orgCategory',validatorRules.orgCategory]" placeholder="请选择机构类型">
                 <a-radio value="2">
-                  部门
+                  组织
                 </a-radio>
                 <a-radio value="3">
                   岗位
@@ -122,7 +122,7 @@
             :labelCol="labelCol"
             :wrapperCol="wrapperCol"
             label="排序">
-            <a-input-number v-decorator="[ 'departOrder',{'initialValue':0}]"/>
+            <a-input-number v-decorator="[ 'organOrder',{'initialValue':0}]"/>
           </a-form-item>
           <a-form-item
             :labelCol="labelCol"
@@ -149,20 +149,20 @@
         </div>
       </a-card>
     </a-col>
-    <depart-modal ref="departModal" @ok="loadTree"></depart-modal>
+    <organ-modal ref="organModal" @ok="loadTree"></organ-modal>
   </a-row>
 </template>
 <script>
-  import DepartModal from './modules/DepartModal'
+  import OrganModal from './modules/OrganModal'
   import pick from 'lodash.pick'
-  import {queryDepartTreeList, searchByKeywords, deleteByDepartId} from '@/api/api'
+  import {queryOrganTreeList, searchByKeywords, deleteByOrganId} from '@/api/api'
   import {httpAction, deleteAction} from '@/api/manage'
   import {JeecgListMixin} from '@/mixins/JeecgListMixin'
   // 表头
   const columns = [
     {
       title: '机构名称',
-      dataIndex: 'departName'
+      dataIndex: 'organName'
     },
     {
       title: '机构类型',
@@ -188,7 +188,7 @@
     {
       title: '排序',
       align: 'center',
-      dataIndex: 'departOrder'
+      dataIndex: 'organOrder'
     },
     {
       title: '操作',
@@ -198,10 +198,10 @@
     }
   ]
   export default {
-    name: 'DepartList',
+    name: 'OrganList',
     mixins: [JeecgListMixin],
     components: {
-      DepartModal
+      OrganModal
     },
     data() {
       return {
@@ -213,12 +213,12 @@
         disable: true,
         treeData: [],
         visible: false,
-        departTree: [],
+        organTree: [],
         rightClickSelectedKey: '',
         hiding: true,
         model: {},
         dropTrigger: '',
-        depart: {},
+        organ: {},
         columns: columns,
         disableSubmit: false,
         checkedKeys: [],
@@ -243,17 +243,17 @@
           edges: []
         },
         validatorRules: {
-          departName: {rules: [{required: true, message: '请输入机构/部门名称!'}]},
+          organName: {rules: [{required: true, message: '请输入机构/组织名称!'}]},
           orgCode: {rules: [{required: true, message: '请输入机构编码!'}]},
           orgCategory: {rules: [{required: true, message: '请输入机构类型!'}]},
           mobile: {rules: [{validator: this.validateMobile}]}
         },
         url: {
-          delete: '/sys/sysDepart/delete',
-          edit: '/sys/sysDepart/edit',
-          deleteBatch: '/sys/sysDepart/deleteBatch',
-          exportXlsUrl: "sys/sysDepart/exportXls",
-          importExcelUrl: "sys/sysDepart/importExcel",
+          delete: '/sys/sysOrgan/delete',
+          edit: '/sys/sysOrgan/edit',
+          deleteBatch: '/sys/sysOrgan/deleteBatch',
+          exportXlsUrl: "sys/sysOrgan/exportXls",
+          importExcelUrl: "sys/sysOrgan/importExcel",
         },
         orgCategoryDisabled:false,
       }
@@ -270,13 +270,13 @@
       loadTree() {
         var that = this
         that.treeData = []
-        that.departTree = []
-        queryDepartTreeList().then((res) => {
+        that.organTree = []
+        queryOrganTreeList().then((res) => {
           if (res.success) {
             for (let i = 0; i < res.result.length; i++) {
               let temp = res.result[i]
               that.treeData.push(temp)
-              that.departTree.push(temp)
+              that.organTree.push(temp)
               that.setThisExpandedKeys(temp)
               that.getAllKeys(temp);
               // console.log(temp.id)
@@ -358,10 +358,10 @@
         if (value) {
           searchByKeywords({keyWord: value}).then((res) => {
             if (res.success) {
-              that.departTree = []
+              that.organTree = []
               for (let i = 0; i < res.result.length; i++) {
                 let temp = res.result[i]
-                that.departTree.push(temp)
+                that.organTree.push(temp)
               }
             } else {
               that.$message.warning(res.message)
@@ -406,7 +406,7 @@
 
 
       },
-      // 触发onSelect事件时,为部门树右侧的form表单赋值
+      // 触发onSelect事件时,为组织树右侧的form表单赋值
       setValuesToForm(record) {
         if(record.orgCategory == '1'){
           this.orgCategoryDisabled = true;
@@ -414,7 +414,7 @@
           this.orgCategoryDisabled = false;
         }
         this.form.getFieldDecorator('fax', {initialValue: ''})
-        this.form.setFieldsValue(pick(record, 'departName','orgCategory', 'orgCode', 'departOrder', 'mobile', 'fax', 'address', 'memo'))
+        this.form.setFieldsValue(pick(record, 'organName','orgCategory', 'orgCode', 'organOrder', 'mobile', 'fax', 'address', 'memo'))
       },
       getCurrSelectedTitle() {
         return !this.currSelected.title ? '' : this.currSelected.title
@@ -439,7 +439,7 @@
         this.form.validateFields((err, values) => {
           if (!err) {
             if (!this.currSelected.id) {
-              this.$message.warning('请点击选择要修改部门!')
+              this.$message.warning('请点击选择要修改组织!')
               return
             }
 
@@ -471,23 +471,23 @@
       },
       handleAdd(num) {
         if (num == 1) {
-          this.$refs.departModal.add()
-          this.$refs.departModal.title = '新增'
+          this.$refs.organModal.add()
+          this.$refs.organModal.title = '新增'
         } else if (num == 2) {
           let key = this.currSelected.key
           if (!key) {
             this.$message.warning('请先选中一条记录!')
             return false
           }
-          this.$refs.departModal.add(this.selectedKeys)
-          this.$refs.departModal.title = '新增'
+          this.$refs.organModal.add(this.selectedKeys)
+          this.$refs.organModal.title = '新增'
         } else {
-          this.$refs.departModal.add(this.rightClickSelectedKey)
-          this.$refs.departModal.title = '新增'
+          this.$refs.organModal.add(this.rightClickSelectedKey)
+          this.$refs.organModal.title = '新增'
         }
       },
       handleDelete() {
-        deleteByDepartId({id: this.rightClickSelectedKey}).then((resp) => {
+        deleteByOrganId({id: this.rightClickSelectedKey}).then((resp) => {
           if (resp.success) {
             this.$message.success('删除成功!')
             this.loadTree()

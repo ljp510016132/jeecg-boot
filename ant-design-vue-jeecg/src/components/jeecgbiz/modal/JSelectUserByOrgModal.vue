@@ -15,11 +15,11 @@
           <!--组织机构-->
           <a-directory-tree
             selectable
-            :selectedKeys="selectedDepIds"
+            :selectedKeys="selectedOrgIds"
             :checkStrictly="true"
             @select="onDepSelect"
             :dropdownStyle="{maxHeight:'200px',overflow:'auto'}"
-            :treeData="departTree"
+            :treeData="organTree"
           />
         </a-card>
       </a-col>
@@ -53,10 +53,10 @@
 
 <script>
   import {filterObj} from '@/utils/util'
-  import {queryDepartTreeList, getUserList, queryUserByDepId} from '@/api/api'
+  import {queryOrganTreeList, getUserList, queryUserByOrgId} from '@/api/api'
 
   export default {
-    name: 'JSelectUserByDepModal',
+    name: 'JSelectUserByOrgModal',
     components: {},
     props: ['modalWidth', 'multi', 'userIds'],
     data() {
@@ -121,8 +121,8 @@
           column: 'createTime',
           order: 'desc'
         },
-        selectedDepIds: [],
-        departTree: [],
+        selectedOrgIds: [],
+        organTree: [],
         visible: false,
         form: this.$form.createForm(this)
       }
@@ -163,7 +163,7 @@
           }
           this.$emit("initComp", names)
         }else{
-          // JSelectUserByDep组件bug issues/I16634
+          // JSelectUserByOrg组件bug issues/I16634
           this.$emit("initComp", "")
         }
       },
@@ -190,7 +190,7 @@
       },
       showModal() {
         this.visible = true;
-        this.queryDepartTree();
+        this.queryOrganTree();
         this.loadData();
         this.form.resetFields();
       },
@@ -216,7 +216,7 @@
         }
         that.selectedRowKeys = [];
         that.selectUserIds = [];
-        that.selectedDepIds = [];
+        that.selectedOrgIds = [];
       },
       close() {
         this.searchReset(0);
@@ -253,11 +253,11 @@
         this.selectUserIds = userIds.substring(1);
       },
       // 点击树节点,筛选出对应的用户
-      onDepSelect(selectedDepIds) {
-        if (selectedDepIds[0] != null) {
-          this.initQueryUserByDepId(selectedDepIds); // 调用方法根据选选择的id查询用户信息
-          if (this.selectedDepIds[0] !== selectedDepIds[0]) {
-            this.selectedDepIds = [selectedDepIds[0]];
+      onDepSelect(selectedOrgIds) {
+        if (selectedOrgIds[0] != null) {
+          this.initQueryUserByOrgId(selectedOrgIds); // 调用方法根据选选择的id查询用户信息
+          if (this.selectedOrgIds[0] !== selectedOrgIds[0]) {
+            this.selectedOrgIds = [selectedOrgIds[0]];
           }
         }
       },
@@ -269,18 +269,18 @@
         this.loadData(1);
       },
       // 根据选择的id来查询用户信息
-      initQueryUserByDepId(selectedDepIds) {
-        queryUserByDepId({id: selectedDepIds.toString()}).then((res) => {
+      initQueryUserByOrgId(selectedOrgIds) {
+        queryUserByOrgId({id: selectedOrgIds.toString()}).then((res) => {
           if (res.success) {
             this.dataSource = res.result;
             this.ipagination.total = res.result.length;
           }
         })
       },
-      queryDepartTree() {
-        queryDepartTreeList().then((res) => {
+      queryOrganTree() {
+        queryOrganTreeList().then((res) => {
           if (res.success) {
-            this.departTree = res.result;
+            this.organTree = res.result;
           }
         })
       },

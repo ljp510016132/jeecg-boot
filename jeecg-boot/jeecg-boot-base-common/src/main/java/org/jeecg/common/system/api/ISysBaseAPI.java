@@ -7,7 +7,7 @@ import java.util.Map;
 import org.jeecg.common.system.vo.ComboModel;
 import org.jeecg.common.system.vo.DictModel;
 import org.jeecg.common.system.vo.LoginUser;
-import org.jeecg.common.system.vo.SysDepartModel;
+import org.jeecg.common.system.vo.SysOrganModel;
 
 /**
  * @Description: 底层共通业务API，提供其他独立模块调用
@@ -51,14 +51,14 @@ public interface ISysBaseAPI {
 	 * @param username
 	 * @return 部门 id
 	 */
-	List<String> getDepartIdsByUsername(String username);
+	List<String> getOrganIdsByUsername(String username);
 
 	/**
 	 * 通过用户账号查询部门 name
 	 * @param username
 	 * @return 部门 name
 	 */
-	List<String> getDepartNamesByUsername(String username);
+	List<String> getOrgNamesByUsername(String username);
 
 	/**
 	 * 获取当前数据库类型
@@ -87,10 +87,10 @@ public interface ISysBaseAPI {
     List<DictModel> queryTableDictItemsByCode(String table, String text, String code);
     
     /**
-   	 * 查询所有部门 作为字典信息 id -->value,departName -->text
+   	 * 查询所有部门 作为字典信息 id -->value,organName -->text
    	 * @return
    	 */
-   	public List<DictModel> queryAllDepartBackDictModel();
+   	public List<DictModel> queryAllOrganBackDictModel();
    	
 	/**
 	 * 发送系统消息
@@ -179,19 +179,19 @@ public interface ISysBaseAPI {
 	 * @param orgCode
 	 * @return
 	 */
-	public String getDepartIdsByOrgCode(String orgCode);
+	public String getOrganIdsByOrgCode(String orgCode);
 
 	/**
 	 * 查询上一级部门
 	 * @param departId
 	 * @return
 	 */
-	public DictModel getParentDepartId(String departId);
+	public DictModel getParentOrganId(String departId);
 
 	/**
 	 * 查询所有部门
 	 * @return
 	 */
-	public List<SysDepartModel> getAllSysDepart();
+	public List<SysOrganModel> getAllSysOrgan();
 	
 }

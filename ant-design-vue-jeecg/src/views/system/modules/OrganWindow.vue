@@ -22,7 +22,7 @@
         :checkStrictly="true"
         @check="onCheck"
         :dropdownStyle="{maxHeight:'200px',overflow:'auto'}"
-        :treeData="departTree"
+        :treeData="organTree"
         placeholder="请选择上级部门"
         >
       </a-tree>
@@ -38,7 +38,7 @@
   import { queryIdTree } from '@/api/api'
   import userModal from './UserModal'
   export default {
-    name: "DepartWindow",
+    name: "OrganWindow",
     components: {
       userModal,
     },
@@ -46,11 +46,11 @@
       return {
         checkedKeys:[], // 存储选中的部门id
         userId:"", // 存储用户id
-        model:{}, // 存储SysUserDepartsVO表
-        userDepartModel:{userId:'',departIdList:[]}, // 存储用户id一对多部门信息的对象
-        departList:[], // 存储部门信息
+        model:{}, // 存储SysUserOrgansVO表
+        userOrganModel:{userId:'',organIdList:[]}, // 存储用户id一对多部门信息的对象
+        organList:[], // 存储部门信息
         modalWidth:400,
-        departTree:[],
+        organTree:[],
         title:"操作",
         visible: false,
         labelCol: {
@@ -70,18 +70,18 @@
       }
     },
     methods: {
-      add (checkedDepartKeys,userId) {
-        this.checkedKeys = checkedDepartKeys;
+      add (checkedOrganKeys,userId) {
+        this.checkedKeys = checkedOrganKeys;
         this.userId = userId;
         this.edit({});
       },
       edit (record) {
-        this.departList = [];
-        this.queryDepartTree();
+        this.organList = [];
+        this.queryOrganTree();
         this.form.resetFields();
         this.visible = true;
         this.model = Object.assign({}, record);
-        let filedsVal = pick(this.model,'id','userId','departIdList');
+        let filedsVal = pick(this.model,'id','userId','organIdList');
         this.$nextTick(() => {
           this.form.setFieldsValue(filedsVal);
         });
@@ -89,7 +89,7 @@
       close () {
         this.$emit('close');
         this.visible = false;
-        this.departList = [];
+        this.organList = [];
         this.checkedKeys = [];
       },
       handleSubmit () {
@@ -102,20 +102,20 @@
               getAction(this.url.userId).then((res)=>{
                 if(res.success){
                   let formData = {userId:res.result,
-                  departIdList:this.departList}
+                  organIdList:this.organList}
                   console.log(formData)
                   that.$emit('ok', formData);
                 }
               }).finally(() => {
-                that.departList = [];
+                that.organList = [];
                 that.confirmLoading = false;
                 that.close();
               })
             }else {
               let formData = {userId:this.userId,
-                departIdList:this.departList}
+                organIdList:this.organList}
               console.log(formData)
-              that.departList = [];
+              that.organList = [];
               that.$emit('ok', formData);
               that.confirmLoading = false;
               that.close();
@@ -129,23 +129,23 @@
 
       // 选择部门时作用的API
       onCheck(checkedKeys, info){
-        this.departList = [];
+        this.organList = [];
         this.checkedKeys = checkedKeys.checked;
         let checkedNodes = info.checkedNodes;
         for (let i = 0; i < checkedNodes.length; i++) {
           let de = checkedNodes[i].data.props;
-          let depart = {key:"",value:"",title:""};
-          depart.key = de.value;
-          depart.value = de.value;
-          depart.title = de.title;
-          this.departList.push(depart);
+          let organ = {key:"",value:"",title:""};
+          organ.key = de.value;
+          organ.value = de.value;
+          organ.title = de.title;
+          this.organList.push(organ);
         }
         console.log('onCheck', checkedKeys, info);
       },
-      queryDepartTree(){
+      queryOrganTree(){
         queryIdTree().then((res)=>{
           if(res.success){
-            this.departTree = res.result;
+            this.organTree = res.result;
           }
         })
       },

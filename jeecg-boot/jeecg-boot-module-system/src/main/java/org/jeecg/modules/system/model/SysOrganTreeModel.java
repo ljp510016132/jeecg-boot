@@ -1,6 +1,6 @@
 package org.jeecg.modules.system.model;
 
-import org.jeecg.modules.system.entity.SysDepart;
+import org.jeecg.modules.system.entity.SysOrgan;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,34 +16,34 @@ import java.util.Objects;
  * @Author Steve
  * @Since 2019-01-22 
  */
-public class SysDepartTreeModel implements Serializable{
+public class SysOrganTreeModel implements Serializable{
 	
     private static final long serialVersionUID = 1L;
     
-    /** 对应SysDepart中的id字段,前端数据树中的key*/
+    /** 对应SysOrgan中的id字段,前端数据树中的key*/
     private String key;
 
-    /** 对应SysDepart中的id字段,前端数据树中的value*/
+    /** 对应SysOrgan中的id字段,前端数据树中的value*/
     private String value;
 
-    /** 对应depart_name字段,前端数据树中的title*/
+    /** 对应org_name字段,前端数据树中的title*/
     private String title;
 
 
     private boolean isLeaf;
-    // 以下所有字段均与SysDepart相同
+    // 以下所有字段均与SysOrgan相同
     
     private String id;
 
     private String parentId;
 
-    private String departName;
+    private String orgName;
 
-    private String departNameEn;
+    private String orgNameEn;
 
-    private String departNameAbbr;
+    private String orgNameAbbr;
 
-    private Integer departOrder;
+    private Integer orgOrder;
 
     private Object description;
     
@@ -73,37 +73,37 @@ public class SysDepartTreeModel implements Serializable{
 
     private Date updateTime;
 
-    private List<SysDepartTreeModel> children = new ArrayList<>();
+    private List<SysOrganTreeModel> children = new ArrayList<>();
 
 
     /**
-     * 将SysDepart对象转换成SysDepartTreeModel对象
-     * @param sysDepart
+     * 将SysOrgan对象转换成SysOrganTreeModel对象
+     * @param sysOrgan
      */
-	public SysDepartTreeModel(SysDepart sysDepart) {
-		this.key = sysDepart.getId();
-        this.value = sysDepart.getId();
-        this.title = sysDepart.getDepartName();
-        this.id = sysDepart.getId();
-        this.parentId = sysDepart.getParentId();
-        this.departName = sysDepart.getDepartName();
-        this.departNameEn = sysDepart.getDepartNameEn();
-        this.departNameAbbr = sysDepart.getDepartNameAbbr();
-        this.departOrder = sysDepart.getDepartOrder();
-        this.description = sysDepart.getDescription();
-        this.orgCategory = sysDepart.getOrgCategory();
-        this.orgType = sysDepart.getOrgType();
-        this.orgCode = sysDepart.getOrgCode();
-        this.mobile = sysDepart.getMobile();
-        this.fax = sysDepart.getFax();
-        this.address = sysDepart.getAddress();
-        this.memo = sysDepart.getMemo();
-        this.status = sysDepart.getStatus();
-        this.delFlag = sysDepart.getDelFlag();
-        this.createBy = sysDepart.getCreateBy();
-        this.createTime = sysDepart.getCreateTime();
-        this.updateBy = sysDepart.getUpdateBy();
-        this.updateTime = sysDepart.getUpdateTime();
+	public SysOrganTreeModel(SysOrgan sysOrgan) {
+		this.key = sysOrgan.getId();
+        this.value = sysOrgan.getId();
+        this.title = sysOrgan.getOrgName();
+        this.id = sysOrgan.getId();
+        this.parentId = sysOrgan.getParentId();
+        this.orgName = sysOrgan.getOrgName();
+        this.orgNameEn = sysOrgan.getOrgNameEn();
+        this.orgNameAbbr = sysOrgan.getOrgNameAbbr();
+        this.orgOrder = sysOrgan.getOrgOrder();
+        this.description = sysOrgan.getDescription();
+        this.orgCategory = sysOrgan.getOrgCategory();
+        this.orgType = sysOrgan.getOrgType();
+        this.orgCode = sysOrgan.getOrgCode();
+        this.mobile = sysOrgan.getMobile();
+        this.fax = sysOrgan.getFax();
+        this.address = sysOrgan.getAddress();
+        this.memo = sysOrgan.getMemo();
+        this.status = sysOrgan.getStatus();
+        this.delFlag = sysOrgan.getDelFlag();
+        this.createBy = sysOrgan.getCreateBy();
+        this.createTime = sysOrgan.getCreateTime();
+        this.updateBy = sysOrgan.getUpdateBy();
+        this.updateTime = sysOrgan.getUpdateTime();
     }
 
     public boolean getIsLeaf() {
@@ -152,11 +152,11 @@ public class SysDepartTreeModel implements Serializable{
         this.id = id;
     }
 
-    public List<SysDepartTreeModel> getChildren() {
+    public List<SysOrganTreeModel> getChildren() {
         return children;
     }
 
-    public void setChildren(List<SysDepartTreeModel> children) {
+    public void setChildren(List<SysOrganTreeModel> children) {
         if (children==null){
             this.isLeaf=true;
         }
@@ -175,12 +175,12 @@ public class SysDepartTreeModel implements Serializable{
         return serialVersionUID;
     }
 
-    public String getDepartName() {
-        return departName;
+    public String getOrgName() {
+        return orgName;
     }
 
-    public void setDepartName(String departName) {
-        this.departName = departName;
+    public void setOrgName(String orgName) {
+        this.orgName = orgName;
     }
     
     public String getOrgCategory() {
@@ -239,28 +239,28 @@ public class SysDepartTreeModel implements Serializable{
         this.memo = memo;
     }
 
-    public String getDepartNameEn() {
-        return departNameEn;
+    public String getOrgNameEn() {
+        return orgNameEn;
     }
 
-    public void setDepartNameEn(String departNameEn) {
-        this.departNameEn = departNameEn;
+    public void setOrgNameEn(String orgNameEn) {
+        this.orgNameEn = orgNameEn;
     }
 
-    public String getDepartNameAbbr() {
-        return departNameAbbr;
+    public String getOrgNameAbbr() {
+        return orgNameAbbr;
     }
 
-    public void setDepartNameAbbr(String departNameAbbr) {
-        this.departNameAbbr = departNameAbbr;
+    public void setOrgNameAbbr(String orgNameAbbr) {
+        this.orgNameAbbr = orgNameAbbr;
     }
 
-    public Integer getDepartOrder() {
-        return departOrder;
+    public Integer getOrgOrder() {
+        return orgOrder;
     }
 
-    public void setDepartOrder(Integer departOrder) {
-        this.departOrder = departOrder;
+    public void setOrgOrder(Integer orgOrder) {
+        this.orgOrder = orgOrder;
     }
 
     public Object getDescription() {
@@ -319,7 +319,7 @@ public class SysDepartTreeModel implements Serializable{
         this.updateTime = updateTime;
     }
 
-    public SysDepartTreeModel() { }
+    public SysOrganTreeModel() { }
 
     /**
      * 重写equals方法
@@ -332,13 +332,13 @@ public class SysDepartTreeModel implements Serializable{
         if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-        SysDepartTreeModel model = (SysDepartTreeModel) o;
+        SysOrganTreeModel model = (SysOrganTreeModel) o;
         return Objects.equals(id, model.id) &&
                 Objects.equals(parentId, model.parentId) &&
-                Objects.equals(departName, model.departName) &&
-                Objects.equals(departNameEn, model.departNameEn) &&
-                Objects.equals(departNameAbbr, model.departNameAbbr) &&
-                Objects.equals(departOrder, model.departOrder) &&
+                Objects.equals(orgName, model.orgName) &&
+                Objects.equals(orgNameEn, model.orgNameEn) &&
+                Objects.equals(orgNameAbbr, model.orgNameAbbr) &&
+                Objects.equals(orgOrder, model.orgOrder) &&
                 Objects.equals(description, model.description) &&
                 Objects.equals(orgCategory, model.orgCategory) &&
                 Objects.equals(orgType, model.orgType) &&
@@ -362,8 +362,8 @@ public class SysDepartTreeModel implements Serializable{
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, parentId, departName, departNameEn, departNameAbbr,
-        		departOrder, description, orgCategory, orgType, orgCode, mobile, fax, address, 
+        return Objects.hash(id, parentId, orgName, orgNameEn, orgNameAbbr,
+        		orgOrder, description, orgCategory, orgType, orgCode, mobile, fax, address,
         		memo, status, delFlag, createBy, createTime, updateBy, updateTime, 
         		children);
     }

@@ -14,14 +14,14 @@ public class SysUserCacheInfo {
 	
 	private List<String> sysMultiOrgCode;
 	
-	private boolean oneDepart;
+	private boolean oneOrgan;
 	
-	public boolean isOneDepart() {
-		return oneDepart;
+	public boolean isOneOrgan() {
+		return oneOrgan;
 	}
 
-	public void setOneDepart(boolean oneDepart) {
-		this.oneDepart = oneDepart;
+	public void setOneOrgan(boolean oneOrgan) {
+		this.oneOrgan = oneOrgan;
 	}
 
 	public String getSysDate() {

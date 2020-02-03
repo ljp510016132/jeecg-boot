@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Param;
 import org.jeecg.modules.system.entity.SysUser;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.jeecg.modules.system.model.SysUserSysDepartModel;
+import org.jeecg.modules.system.model.SysUserSysOrganModel;
 
 import java.util.List;
 
@@ -28,10 +28,10 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
 	/**
 	 *  根据部门Id查询用户信息
 	 * @param page
-	 * @param departId
+	 * @param organId
 	 * @return
 	 */
-	IPage<SysUser> getUserByDepId(Page page, @Param("departId") String departId, @Param("username") String username);
+	IPage<SysUser> getUserByOrgId(Page page, @Param("organId") String organId, @Param("username") String username);
 
 	/**
 	 * 根据角色Id查询用户信息
@@ -44,9 +44,9 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
 	/**
 	 * 根据用户名设置部门ID
 	 * @param username
-	 * @param departId
+	 * @param organId
 	 */
-	void updateUserDepart(@Param("username") String username,@Param("orgCode") String orgCode);
+	void updateUserOrgan(@Param("username") String username,@Param("orgCode") String orgCode);
 	
 	/**
 	 * 根据手机号查询用户信息
@@ -71,7 +71,7 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
 	 * @param userParams 用户查询条件，可为空
 	 * @return
 	 */
-	List<SysUserSysDepartModel> getUserByOrgCode(IPage page, @Param("orgCode") String orgCode, @Param("userParams") SysUser userParams);
+	List<SysUserSysOrganModel> getUserByOrgCode(IPage page, @Param("orgCode") String orgCode, @Param("userParams") SysUser userParams);
 
 
     /**

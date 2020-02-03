@@ -147,7 +147,7 @@ v-decorator用法：
       <j-search-select-tag
         placeholder="请做出你的选择"
         v-model="asyncSelectValue"
-        dict="sys_depart,depart_name,id"
+        dict="sys_organ,organ_name,id"
         :async="true">
       </j-search-select-tag>
       {{ asyncSelectValue }}

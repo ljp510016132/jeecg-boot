@@ -139,7 +139,7 @@
             <#elseif po.classType=='image'>
             dataIndex: '${po.fieldName}',
             scopedSlots: {customRender: 'imgSlot'}
-            <#elseif po.classType =='list' || po.classType =='radio' || po.classType =='list_multi' || po.classType =='checkbox' || po.classType =='sel_search' || po.classType =='cat_tree' || po.classType =='sel_depart'>
+            <#elseif po.classType =='list' || po.classType =='radio' || po.classType =='list_multi' || po.classType =='checkbox' || po.classType =='sel_search' || po.classType =='cat_tree' || po.classType =='sel_organ'>
             dataIndex: '${po.fieldName}_dictText',
 			<#else>
             dataIndex: '${po.fieldName}'
@@ -162,7 +162,7 @@
         dictOptions:{
          <#list columns as po>
          <#if (po.isQuery=='Y' || po.isShowList=='Y')>
-         <#if  po.classType='sel_depart' || po.classType=='list_multi' || po.classType=='list' || po.classType=='radio' || po.classType=='checkbox'>
+         <#if  po.classType='sel_organ' || po.classType=='list_multi' || po.classType=='list' || po.classType=='radio' || po.classType=='checkbox'>
          ${po.fieldName}:[],
          </#if>
          </#if>

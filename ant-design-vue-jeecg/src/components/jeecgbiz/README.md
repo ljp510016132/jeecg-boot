@@ -1,4 +1,4 @@
-# JSelectDepart 部门选择组件
+# JSelectOrgan 部门选择组件
 选择部门组件,存储部门ID,显示部门名称
 
 ## 参数配置
@@ -15,17 +15,17 @@
 <template>
   <a-form :form="form">
     <a-form-item label="部门选择v-decorator" style="width: 300px">
-      <j-select-depart v-decorator="['bumen']"/>
+      <j-select-organ v-decorator="['bumen']"/>
       {{ getFormFieldValue('bumen') }}
     </a-form-item>
 
     <a-form-item label="部门选择v-model" style="width: 300px">
-      <j-select-depart v-model="bumen"/>
+      <j-select-organ v-model="bumen"/>
       {{ bumen }}
     </a-form-item>
 
     <a-form-item label="部门多选v-model" style="width: 300px">
-      <j-select-depart v-model="bumens" :multi="true"/>
+      <j-select-organ v-model="bumens" :multi="true"/>
       {{ bumens }}
     </a-form-item>
 
@@ -33,9 +33,9 @@
 </template>
 
 <script>
-  import JSelectDepart from '@/components/jeecgbiz/JSelectDepart'
+  import JSelectOrgan from '@/components/jeecgbiz/JSelectOrgan'
   export default {
-    components: {JSelectDepart},
+    components: {JSelectOrgan},
     data() {
       return {
         form: this.$form.createForm(this),
@@ -90,7 +90,7 @@
 </script>
 ```
 
-# JSelectUserByDep 根据部门选择用户
+# JSelectUserByOrg 根据部门选择用户
 
 ## 参数配置
 | 参数           | 类型   | 必填 |说明|
@@ -104,12 +104,12 @@
 <template>
   <a-form :form="form">
     <a-form-item label="用户选择v-decorator" style="width: 500px">
-      <j-select-user-by-dep v-decorator="['users']"/>
+      <j-select-user-by-org v-decorator="['users']"/>
       {{ getFormFieldValue('users') }}
     </a-form-item>
 
     <a-form-item label="用户选择v-model" style="width: 500px">
-      <j-select-user-by-dep v-model="users" ></j-select-user-by-dep>
+      <j-select-user-by-org v-model="users" ></j-select-user-by-org>
       {{ users }}
     </a-form-item>
 
@@ -117,9 +117,9 @@
 </template>
 
 <script>
-  import JSelectUserByDep from '@/components/jeecgbiz/JSelectUserByDep'
+  import JSelectUserByOrg from '@/components/jeecgbiz/JSelectUserByOrg'
   export default {
-    components: {JSelectUserByDep},
+    components: {JSelectUserByOrg},
     data() {
       return {
         form: this.$form.createForm(this),

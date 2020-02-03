@@ -1,9 +1,9 @@
 package org.jeecg.modules.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import org.jeecg.modules.system.entity.SysDepart;
-import org.jeecg.modules.system.model.DepartIdModel;
-import org.jeecg.modules.system.model.SysDepartTreeModel;
+import org.jeecg.modules.system.entity.SysOrgan;
+import org.jeecg.modules.system.model.OrganIdModel;
+import org.jeecg.modules.system.model.SysOrganTreeModel;
 import java.util.List;
 
 /**
@@ -14,47 +14,47 @@ import java.util.List;
  * @Author:Steve
  * @Since：   2019-01-22
  */
-public interface ISysDepartService extends IService<SysDepart>{
+public interface ISysOrganService extends IService<SysOrgan>{
 
 
     /**
      * 查询所有部门信息,并分节点进行显示
      * @return
      */
-    List<SysDepartTreeModel> queryTreeList();
+    List<SysOrganTreeModel> queryTreeList();
 
     /**
-     * 查询所有部门DepartId信息,并分节点进行显示
+     * 查询所有部门OrganId信息,并分节点进行显示
      * @return
      */
-    public List<DepartIdModel> queryDepartIdTreeList();
+    public List<OrganIdModel> queryOrganIdTreeList();
 
     /**
      * 保存部门数据
-     * @param sysDepart
+     * @param sysOrgan
      */
-    void saveDepartData(SysDepart sysDepart,String username);
+    void saveOrganData(SysOrgan sysOrgan,String username);
 
     /**
-     * 更新depart数据
-     * @param sysDepart
+     * 更新organ数据
+     * @param sysOrgan
      * @return
      */
-    Boolean updateDepartDataById(SysDepart sysDepart,String username);
+    Boolean updateOrganDataById(SysOrgan sysOrgan,String username);
     
     /**
-     * 删除depart数据
+     * 删除organ数据
      * @param id
      * @return
      */
-	/* boolean removeDepartDataById(String id); */
+	/* boolean removeOrganDataById(String id); */
     
     /**
      * 根据关键字搜索相关的部门数据
      * @param keyWord
      * @return
      */
-    List<SysDepartTreeModel> searhBy(String keyWord);
+    List<SysOrganTreeModel> searhBy(String keyWord);
     
     /**
      * 根据部门id删除并删除其可能存在的子级部门
@@ -64,11 +64,11 @@ public interface ISysDepartService extends IService<SysDepart>{
     boolean delete(String id);
     
     /**
-     * 查询SysDepart集合
+     * 查询SysOrgan集合
      * @param userId
      * @return
      */
-	public List<SysDepart> queryUserDeparts(String userId);
+	public List<SysOrgan> queryUserOrgans(String userId);
 
     /**
      * 根据用户名查询部门
@@ -76,7 +76,7 @@ public interface ISysDepartService extends IService<SysDepart>{
      * @param username
      * @return
      */
-    List<SysDepart> queryDepartsByUsername(String username);
+    List<SysOrgan> queryOrgansByUsername(String username);
 
 	 /**
      * 根据部门id批量删除并删除其可能存在的子级部门

@@ -7,7 +7,7 @@
     :maskClosable="closable">
     <template slot="footer">
       <a-button v-if="closable" @click="close">关闭</a-button>
-      <a-button type="primary" @click="departOk">确认</a-button>
+      <a-button type="primary" @click="organOk">确认</a-button>
     </template>
 
     <a-form>
@@ -22,13 +22,13 @@
           </template>
           <a-avatar style="backgroundColor:#87d068" icon="gold" />
         </a-tooltip>
-        <a-select v-model="departSelected" :class="{'valid-error':validate_status=='error'}" placeholder="请选择登录部门" style="margin-left:10px;width: 80%">
+        <a-select v-model="organSelected" :class="{'valid-error':validate_status=='error'}" placeholder="请选择登录部门" style="margin-left:10px;width: 80%">
           <a-icon slot="suffixIcon" type="gold" />
           <a-select-option
-            v-for="d in departList"
+            v-for="d in organList"
             :key="d.id"
             :value="d.orgCode">
-            {{ d.departName }}
+            {{ d.organName }}
           </a-select-option>
         </a-select>
       </a-form-item>
@@ -46,7 +46,7 @@
   import { USER_INFO } from "@/store/mutation-types"
 
   export default {
-    name: 'DepartSelect',
+    name: 'OrganSelect',
     props:{
       title:{
         type:String,
@@ -67,7 +67,7 @@
     watch:{
       username(val){
         if(val){
-          this.loadDepartList()
+          this.loadOrganList()
         }
       }
     },
@@ -75,36 +75,36 @@
       return {
         currTitle:this.title,
         visible:false,
-        departList:[],
-        departSelected:"",
+        organList:[],
+        organSelected:"",
         validate_status:"",
-        currDepartName:"",
+        currOrganName:"",
       }
     },
     created(){
-      //this.loadDepartList()
+      //this.loadOrganList()
     },
     methods:{
-      loadDepartList(){
+      loadOrganList(){
         return new Promise(resolve => {
-          let url = "/sys/user/getCurrentUserDeparts"
-          this.currDepartName=''
+          let url = "/sys/user/getCurrentUserOrgans"
+          this.currOrganName=''
           getAction(url).then(res=>{
             if(res.success){
-              let departs = res.result.list
+              let organs = res.result.list
               let orgCode = res.result.orgCode
-              if(departs && departs.length>0){
-                for(let i of departs){
+              if(organs && organs.length>0){
+                for(let i of organs){
                   if(i.orgCode == orgCode){
-                    this.currDepartName = i.departName
+                    this.currOrganName = i.organName
                     break
                   }
                 }
               }
-              this.departSelected = orgCode
-              this.departList  = departs
-              if(this.currDepartName){
-                this.currTitle ="部门切换（当前部门 : "+this.currDepartName+"）"
+              this.organSelected = orgCode
+              this.organList  = organs
+              if(this.currOrganName){
+                this.currTitle ="部门切换（当前部门 : "+this.currOrganName+"）"
               }
 
             }
@@ -113,43 +113,43 @@
         })
       },
       close(){
-        this.departClear()
+        this.organClear()
       },
-      departOk(){
-        if(!this.departSelected){
+      organOk(){
+        if(!this.organSelected){
           this.validate_status='error'
           return false
         }
         let obj = {
-          orgCode:this.departSelected,
+          orgCode:this.organSelected,
           username:this.username
         }
-        putAction("/sys/selectDepart",obj).then(res=>{
+        putAction("/sys/selectOrgan",obj).then(res=>{
           if(res.success){
             const userInfo = res.result.userInfo;
             Vue.ls.set(USER_INFO, userInfo, 7 * 24 * 60 * 60 * 1000);
             store.commit('SET_INFO', userInfo);
             //console.log("---切换组织机构---userInfo-------",store.getters.userInfo.orgCode);
-            this.departClear()
+            this.organClear()
           }
         })
       },
       show(){
-        //如果组件传值username此处就不用loadDepartList了
-        this.loadDepartList().then(()=>{
+        //如果组件传值username此处就不用loadOrganList了
+        this.loadOrganList().then(()=>{
           this.visible=true
-          if(!this.departList || this.departList.length<=0){
+          if(!this.organList || this.organList.length<=0){
             this.$message.warning("您尚未设置部门信息!")
-            this.departClear()
+            this.organClear()
           }
         })
       },
-      departClear(){
-        this.departList=[]
-        this.departSelected=""
+      organClear(){
+        this.organList=[]
+        this.organSelected=""
         this.visible=false
         this.validate_status=''
-        this.currDepartName=""
+        this.currOrganName=""
       },
     }
 

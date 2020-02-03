@@ -1,28 +1,28 @@
 <template>
   <div class="components-input-demo-presuffix">
     <!---->
-    <a-input @click="openModal" placeholder="请点击选择部门" v-model="departNames" readOnly :disabled="disabled">
+    <a-input @click="openModal" placeholder="请点击选择部门" v-model="organNames" readOnly :disabled="disabled">
       <a-icon slot="prefix" type="cluster" title="部门选择控件"/>
-      <a-icon v-if="departIds" slot="suffix" type="close-circle" @click="handleEmpty" title="清空"/>
+      <a-icon v-if="organIds" slot="suffix" type="close-circle" @click="handleEmpty" title="清空"/>
     </a-input>
 
-    <j-select-depart-modal
-      ref="innerDepartSelectModal"
+    <j-select-organ-modal
+      ref="innerOrganSelectModal"
       :modal-width="modalWidth"
       :multi="multi"
       :rootOpened="rootOpened"
-      :depart-id="departIds"
+      :organ-id="organIds"
       @ok="handleOK"
       @initComp="initComp"/>
   </div>
 </template>
 
 <script>
-  import JSelectDepartModal from './modal/JSelectDepartModal'
+  import JSelectOrganModal from './modal/JSelectOragnModal'
   export default {
-    name: 'JSelectDepart',
+    name: 'JSelectOrgan',
     components:{
-      JSelectDepartModal
+      JSelectOrganModal
     },
     props:{
       modalWidth:{
@@ -59,41 +59,41 @@
       return {
         visible:false,
         confirmLoading:false,
-        departNames:"",
-        departIds:''
+        organNames:"",
+        organIds:''
       }
     },
     mounted(){
-      this.departIds = this.value
+      this.organIds = this.value
     },
     watch:{
       value(val){
         if (this.customReturnField === 'id') {
-          this.departIds = val
+          this.organIds = val
         }
       }
     },
     methods:{
-      initComp(departNames){
-        this.departNames = departNames
+      initComp(organNames){
+        this.organNames = organNames
       },
       openModal(){
-        this.$refs.innerDepartSelectModal.show()
+        this.$refs.innerOrganSelectModal.show()
       },
       handleOK(rows, idstr) {
         let value = ''
         if (!rows && rows.length <= 0) {
-          this.departNames = ''
-          this.departIds = ''
+          this.organNames = ''
+          this.organIds = ''
         } else {
           value = rows.map(row => row[this.customReturnField]).join(',')
-          this.departNames = rows.map(row => row['departName']).join(',')
-          this.departIds = idstr
+          this.organNames = rows.map(row => row['organName']).join(',')
+          this.organIds = idstr
         }
         this.$emit("change", value)
       },
-      getDepartNames(){
-        return this.departNames
+      getOrganNames(){
+        return this.organNames
       },
       handleEmpty(){
         this.handleOK('')

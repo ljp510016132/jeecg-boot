@@ -30,13 +30,13 @@ import org.jeecg.common.util.PasswordUtil;
 import org.jeecg.common.util.RedisUtil;
 import org.jeecg.common.util.oConvertUtils;
 import org.jeecg.modules.system.entity.*;
-import org.jeecg.modules.system.model.DepartIdModel;
-import org.jeecg.modules.system.model.SysUserSysDepartModel;
-import org.jeecg.modules.system.service.ISysDepartService;
-import org.jeecg.modules.system.service.ISysUserDepartService;
+import org.jeecg.modules.system.model.OrganIdModel;
+import org.jeecg.modules.system.model.SysUserSysOrganModel;
+import org.jeecg.modules.system.service.ISysOrganService;
+import org.jeecg.modules.system.service.ISysUserOrganService;
 import org.jeecg.modules.system.service.ISysUserRoleService;
 import org.jeecg.modules.system.service.ISysUserService;
-import org.jeecg.modules.system.vo.SysDepartUsersVO;
+import org.jeecg.modules.system.vo.SysOrganUsersVO;
 import org.jeecg.modules.system.vo.SysUserRoleVO;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
 import org.jeecgframework.poi.excel.def.NormalExcelConstants;
@@ -85,13 +85,13 @@ public class SysUserController {
 	private ISysUserService sysUserService;
 
     @Autowired
-    private ISysDepartService sysDepartService;
+    private ISysOrganService sysOrganService;
 
 	@Autowired
 	private ISysUserRoleService sysUserRoleService;
 
 	@Autowired
-	private ISysUserDepartService sysUserDepartService;
+	private ISysUserOrganService sysUserOrganService;
 
 	@Autowired
 	private ISysUserRoleService userRoleService;
@@ -115,7 +115,7 @@ public class SysUserController {
 	public Result<SysUser> add(@RequestBody JSONObject jsonObject) {
 		Result<SysUser> result = new Result<SysUser>();
 		String selectedRoles = jsonObject.getString("selectedroles");
-		String selectedDeparts = jsonObject.getString("selecteddeparts");
+		String selectedOrgans = jsonObject.getString("selectedorgans");
 		try {
 			SysUser user = JSON.parseObject(jsonObject.toJSONString(), SysUser.class);
 			user.setCreateTime(new Date());//设置创建时间
@@ -126,7 +126,7 @@ public class SysUserController {
 			user.setStatus(1);
 			user.setDelFlag("0");
 			sysUserService.addUserWithRole(user, selectedRoles);
-            sysUserService.addUserWithDepart(user, selectedDeparts);
+            sysUserService.addUserWithOrgan(user, selectedOrgans);
 			result.success("添加成功！");
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -149,9 +149,9 @@ public class SysUserController {
 				//String passwordEncode = PasswordUtil.encrypt(user.getUsername(), user.getPassword(), sysUser.getSalt());
 				user.setPassword(sysUser.getPassword());
 				String roles = jsonObject.getString("selectedroles");
-                String departs = jsonObject.getString("selecteddeparts");
+                String organs = jsonObject.getString("selectedorgans");
 				sysUserService.editUserWithRole(user, roles);
-                sysUserService.editUserWithDepart(user, departs);
+                sysUserService.editUserWithOrgan(user, organs);
 				result.success("修改成功!");
 			}
 		} catch (Exception e) {
@@ -288,15 +288,15 @@ public class SysUserController {
      * @param userId
      * @return
      */
-    @RequestMapping(value = "/userDepartList", method = RequestMethod.GET)
-    public Result<List<DepartIdModel>> getUserDepartsList(@RequestParam(name = "userId", required = true) String userId) {
-        Result<List<DepartIdModel>> result = new Result<>();
+    @RequestMapping(value = "/userOrganList", method = RequestMethod.GET)
+    public Result<List<OrganIdModel>> getUserOrgansList(@RequestParam(name = "userId", required = true) String userId) {
+        Result<List<OrganIdModel>> result = new Result<>();
         try {
-            List<DepartIdModel> depIdModelList = this.sysUserDepartService.queryDepartIdsOfUser(userId);
-            if (depIdModelList != null && depIdModelList.size() > 0) {
+            List<OrganIdModel> orgIdModelList = this.sysUserOrganService.queryOrganIdsOfUser(userId);
+            if (orgIdModelList != null && orgIdModelList.size() > 0) {
                 result.setSuccess(true);
                 result.setMessage("查找成功");
-                result.setResult(depIdModelList);
+                result.setResult(orgIdModelList);
             } else {
                 result.setSuccess(false);
                 result.setMessage("查找失败");
@@ -332,10 +332,10 @@ public class SysUserController {
      * @param id
      * @return
      */
-    @RequestMapping(value = "/queryUserByDepId", method = RequestMethod.GET)
-    public Result<List<SysUser>> queryUserByDepId(@RequestParam(name = "id", required = true) String id) {
+    @RequestMapping(value = "/queryUserByOrgId", method = RequestMethod.GET)
+    public Result<List<SysUser>> queryUserByOrgId(@RequestParam(name = "id", required = true) String id) {
         Result<List<SysUser>> result = new Result<>();
-        List<SysUser> userList = sysUserDepartService.queryUserByDepId(id);
+        List<SysUser> userList = sysUserOrganService.queryUserByOrgId(id);
         try {
             result.setSuccess(true);
             result.setResult(userList);
@@ -555,14 +555,14 @@ public class SysUserController {
     /**
      * 部门用户列表
      */
-    @RequestMapping(value = "/departUserList", method = RequestMethod.GET)
-    public Result<IPage<SysUser>> departUserList(@RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
+    @RequestMapping(value = "/organUserList", method = RequestMethod.GET)
+    public Result<IPage<SysUser>> organUserList(@RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
                                                  @RequestParam(name="pageSize", defaultValue="10") Integer pageSize, HttpServletRequest req) {
         Result<IPage<SysUser>> result = new Result<IPage<SysUser>>();
         Page<SysUser> page = new Page<SysUser>(pageNo, pageSize);
-        String depId = req.getParameter("depId");
+        String orgId = req.getParameter("orgId");
         String username = req.getParameter("username");
-        IPage<SysUser> pageList = sysUserService.getUserByDepId(page,depId,username);
+        IPage<SysUser> pageList = sysUserService.getUserByOrgId(page,orgId,username);
         result.setSuccess(true);
         result.setResult(pageList);
         return result;
@@ -574,13 +574,13 @@ public class SysUserController {
      * 若某个用户包含多个部门，则会显示多条记录，可自行处理成单条记录
      */
     @GetMapping("/queryByOrgCode")
-    public Result<?> queryByDepartId(
+    public Result<?> queryByOrganId(
             @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
             @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
             @RequestParam(name = "orgCode") String orgCode,
             SysUser userParams
     ) {
-        IPage<SysUserSysDepartModel> pageList = sysUserService.queryUserByOrgCode(orgCode, userParams, new Page(pageNo, pageSize));
+        IPage<SysUserSysOrganModel> pageList = sysUserService.queryUserByOrgCode(orgCode, userParams, new Page(pageNo, pageSize));
         return Result.ok(pageList);
     }
 
@@ -596,29 +596,29 @@ public class SysUserController {
             SysUser userParams
     ) {
         IPage page = new Page(pageNo, pageSize);
-        IPage<SysUserSysDepartModel> pageList = sysUserService.queryUserByOrgCode(orgCode, userParams, page);
-        List<SysUserSysDepartModel> list = pageList.getRecords();
+        IPage<SysUserSysOrganModel> pageList = sysUserService.queryUserByOrgCode(orgCode, userParams, page);
+        List<SysUserSysOrganModel> list = pageList.getRecords();
 
         // 记录所有出现过的 user, key = userId
         Map<String, JSONObject> hasUser = new HashMap<>(list.size());
 
         JSONArray resultJson = new JSONArray(list.size());
 
-        for (SysUserSysDepartModel item : list) {
+        for (SysUserSysOrganModel item : list) {
             String userId = item.getSysUser().getId();
             // userId
             JSONObject getModel = hasUser.get(userId);
             // 之前已存在过该用户，直接合并数据
             if (getModel != null) {
-                String departName = getModel.get("departName").toString();
-                getModel.put("departName", (departName + " | " + item.getSysDepart().getDepartName()));
+                String orgName = getModel.get("orgName").toString();
+                getModel.put("orgName", (orgName + " | " + item.getSysOrgan().getOrgName()));
             } else {
                 // 将用户对象转换为json格式，并将部门信息合并到 json 中
                 JSONObject json = JSON.parseObject(JSON.toJSONString(item.getSysUser()));
                 json.remove("id");
                 json.put("userId", userId);
-                json.put("departId", item.getSysDepart().getId());
-                json.put("departName", item.getSysDepart().getDepartName());
+                json.put("organId", item.getSysOrgan().getId());
+                json.put("orgName", item.getSysOrgan().getOrgName());
 
                 resultJson.add(json);
                 hasUser.put(userId, json);
@@ -633,18 +633,18 @@ public class SysUserController {
     /**
      * 给指定部门添加对应的用户
      */
-    @RequestMapping(value = "/editSysDepartWithUser", method = RequestMethod.POST)
-    public Result<String> editSysDepartWithUser(@RequestBody SysDepartUsersVO sysDepartUsersVO) {
+    @RequestMapping(value = "/editSysOrganWithUser", method = RequestMethod.POST)
+    public Result<String> editSysOrganWithUser(@RequestBody SysOrganUsersVO sysOrganUsersVO) {
         Result<String> result = new Result<String>();
         try {
-            String sysDepId = sysDepartUsersVO.getDepId();
-            for(String sysUserId:sysDepartUsersVO.getUserIdList()) {
-                SysUserDepart sysUserDepart = new SysUserDepart(null,sysUserId,sysDepId);
-                QueryWrapper<SysUserDepart> queryWrapper = new QueryWrapper<SysUserDepart>();
-                queryWrapper.eq("dep_id", sysDepId).eq("user_id",sysUserId);
-                SysUserDepart one = sysUserDepartService.getOne(queryWrapper);
+            String sysOrgId = sysOrganUsersVO.getOrgId();
+            for(String sysUserId:sysOrganUsersVO.getUserIdList()) {
+                SysUserOrgan sysUserOrgan = new SysUserOrgan(null,sysUserId,sysOrgId);
+                QueryWrapper<SysUserOrgan> queryWrapper = new QueryWrapper<SysUserOrgan>();
+                queryWrapper.eq("org_id", sysOrgId).eq("user_id",sysUserId);
+                SysUserOrgan one = sysUserOrganService.getOne(queryWrapper);
                 if(one==null){
-                    sysUserDepartService.save(sysUserDepart);
+                    sysUserOrganService.save(sysUserOrgan);
                 }
             }
             result.setMessage("添加成功!");
@@ -661,15 +661,15 @@ public class SysUserController {
     /**
      *   删除指定机构的用户关系
      */
-    @RequestMapping(value = "/deleteUserInDepart", method = RequestMethod.DELETE)
-    public Result<SysUserDepart> deleteUserInDepart(@RequestParam(name="depId") String depId,
+    @RequestMapping(value = "/deleteUserInOrgan", method = RequestMethod.DELETE)
+    public Result<SysUserOrgan> deleteUserInOrgan(@RequestParam(name="orgId") String orgId,
                                                     @RequestParam(name="userId",required=true) String userId
     ) {
-        Result<SysUserDepart> result = new Result<SysUserDepart>();
+        Result<SysUserOrgan> result = new Result<SysUserOrgan>();
         try {
-            QueryWrapper<SysUserDepart> queryWrapper = new QueryWrapper<SysUserDepart>();
-            queryWrapper.eq("dep_id", depId).eq("user_id",userId);
-            sysUserDepartService.remove(queryWrapper);
+            QueryWrapper<SysUserOrgan> queryWrapper = new QueryWrapper<SysUserOrgan>();
+            queryWrapper.eq("org_id", orgId).eq("user_id",userId);
+            sysUserOrganService.remove(queryWrapper);
             result.success("删除成功!");
         }catch(Exception e) {
             log.error(e.getMessage(), e);
@@ -681,15 +681,15 @@ public class SysUserController {
     /**
      * 批量删除指定机构的用户关系
      */
-    @RequestMapping(value = "/deleteUserInDepartBatch", method = RequestMethod.DELETE)
-    public Result<SysUserDepart> deleteUserInDepartBatch(
-            @RequestParam(name="depId") String depId,
+    @RequestMapping(value = "/deleteUserInOrganBatch", method = RequestMethod.DELETE)
+    public Result<SysUserOrgan> deleteUserInOrganBatch(
+            @RequestParam(name="orgId") String orgId,
             @RequestParam(name="userIds",required=true) String userIds) {
-        Result<SysUserDepart> result = new Result<SysUserDepart>();
+        Result<SysUserOrgan> result = new Result<SysUserOrgan>();
         try {
-            QueryWrapper<SysUserDepart> queryWrapper = new QueryWrapper<SysUserDepart>();
-            queryWrapper.eq("dep_id", depId).in("user_id",Arrays.asList(userIds.split(",")));
-            sysUserDepartService.remove(queryWrapper);
+            QueryWrapper<SysUserOrgan> queryWrapper = new QueryWrapper<SysUserOrgan>();
+            queryWrapper.eq("org_id", orgId).in("user_id",Arrays.asList(userIds.split(",")));
+            sysUserOrganService.remove(queryWrapper);
             result.success("删除成功!");
         }catch(Exception e) {
             log.error(e.getMessage(), e);
@@ -702,12 +702,12 @@ public class SysUserController {
          *  查询当前用户的所有部门/当前部门编码
      * @return
      */
-    @RequestMapping(value = "/getCurrentUserDeparts", method = RequestMethod.GET)
-    public Result<Map<String,Object>> getCurrentUserDeparts() {
+    @RequestMapping(value = "/getCurrentUserOrgans", method = RequestMethod.GET)
+    public Result<Map<String,Object>> getCurrentUserOrgans() {
         Result<Map<String,Object>> result = new Result<Map<String,Object>>();
         try {
         	LoginUser sysUser = (LoginUser)SecurityUtils.getSubject().getPrincipal();
-            List<SysDepart> list = this.sysDepartService.queryUserDeparts(sysUser.getId());
+            List<SysOrgan> list = this.sysOrganService.queryUserOrgans(sysUser.getId());
             Map<String,Object> map = new HashMap<String,Object>();
             map.put("list", list);
             map.put("orgCode", sysUser.getOrgCode());

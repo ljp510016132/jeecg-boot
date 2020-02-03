@@ -53,8 +53,8 @@ public class ${subTab.entityName} implements Serializable {
 <#if po.classType =='cat_tree'>
     @Dict(dicCode = "id",dicText = "name",dictTable = "sys_category")
 </#if>
-<#if po.classType =='sel_depart'>
-    @Dict(dicCode = "id",dicText = "depart_name",dictTable = "sys_depart")
+<#if po.classType =='sel_organ'>
+    @Dict(dicCode = "id",dicText = "org_name",dictTable = "sys_organ")
 </#if>
 	private <#if po.fieldType=='java.sql.Blob'>byte[]<#else>${po.fieldType}</#if> ${po.fieldName};
 </#list>

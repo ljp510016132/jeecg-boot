@@ -17,10 +17,10 @@ import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.common.util.*;
 import org.jeecg.common.util.encryption.EncryptedString;
 import org.jeecg.modules.shiro.vo.DefContants;
-import org.jeecg.modules.system.entity.SysDepart;
+import org.jeecg.modules.system.entity.SysOrgan;
 import org.jeecg.modules.system.entity.SysUser;
 import org.jeecg.modules.system.model.SysLoginModel;
-import org.jeecg.modules.system.service.ISysDepartService;
+import org.jeecg.modules.system.service.ISysOrganService;
 import org.jeecg.modules.system.service.ISysLogService;
 import org.jeecg.modules.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +48,7 @@ public class LoginController {
 	@Autowired
     private RedisUtil redisUtil;
 	@Autowired
-    private ISysDepartService sysDepartService;
+    private ISysOrganService sysOrganService;
 	
 	private static final String BASE_CHECK_CODES = "qwertyuiplkjhgfdsazxcvbnmQWERTYUPLKJHGFDSAZXCVBNM1234567890";
 
@@ -187,8 +187,8 @@ public class LoginController {
 	 * @param user
 	 * @return
 	 */
-	@RequestMapping(value = "/selectDepart", method = RequestMethod.PUT)
-	public Result<JSONObject> selectDepart(@RequestBody SysUser user) {
+	@RequestMapping(value = "/selectOrgan", method = RequestMethod.PUT)
+	public Result<JSONObject> selectOrgan(@RequestBody SysUser user) {
 		Result<JSONObject> result = new Result<JSONObject>();
 		String username = user.getUsername();
 		if(oConvertUtils.isEmpty(username)) {
@@ -196,7 +196,7 @@ public class LoginController {
 			username = sysUser.getUsername();
 		}
 		String orgCode= user.getOrgCode();
-		this.sysUserService.updateUserDepart(username, orgCode);
+		this.sysUserService.updateUserOrgan(username, orgCode);
 		SysUser sysUser = sysUserService.getUserByName(username);
 		JSONObject obj = new JSONObject();
 		obj.put("userInfo", sysUser);
@@ -331,15 +331,15 @@ public class LoginController {
 
 		// 获取用户部门信息
 		JSONObject obj = new JSONObject();
-		List<SysDepart> departs = sysDepartService.queryUserDeparts(sysUser.getId());
-		obj.put("departs", departs);
-		if (departs == null || departs.size() == 0) {
-			obj.put("multi_depart", 0);
-		} else if (departs.size() == 1) {
-			sysUserService.updateUserDepart(username, departs.get(0).getOrgCode());
-			obj.put("multi_depart", 1);
+		List<SysOrgan> organs = sysOrganService.queryUserOrgans(sysUser.getId());
+		obj.put("organs", organs);
+		if (organs == null || organs.size() == 0) {
+			obj.put("multi_organ", 0);
+		} else if (organs.size() == 1) {
+			sysUserService.updateUserOrgan(username, organs.get(0).getOrgCode());
+			obj.put("multi_organ", 1);
 		} else {
-			obj.put("multi_depart", 2);
+			obj.put("multi_organ", 2);
 		}
 		obj.put("token", token);
 		obj.put("userInfo", sysUser);
@@ -415,14 +415,14 @@ public class LoginController {
 		String orgCode = sysUser.getOrgCode();
 		if(oConvertUtils.isEmpty(orgCode)) {
 			//如果当前用户无选择部门 查看部门关联信息
-			List<SysDepart> departs = sysDepartService.queryUserDeparts(sysUser.getId());
-			if (departs == null || departs.size() == 0) {
+			List<SysOrgan> organs = sysOrganService.queryUserOrgans(sysUser.getId());
+			if (organs == null || organs.size() == 0) {
 				result.error500("用户暂未归属部门,不可登录!");
 				return result;
 			}
-			orgCode = departs.get(0).getOrgCode();
+			orgCode = organs.get(0).getOrgCode();
 			sysUser.setOrgCode(orgCode);
-			this.sysUserService.updateUserDepart(username, orgCode);
+			this.sysUserService.updateUserOrgan(username, orgCode);
 		}
 		JSONObject obj = new JSONObject();
 		//用户登录信息

@@ -356,6 +356,11 @@ export const constantRouterMap = [
         path: 'home',
         name: 'TestHome',
         component: () => import('@/views/Home')
+      },
+      {
+        path: 'web1',
+        name: 'Web1',
+        component: () => import('@/views/system/LogList')
       }
     ]
   },

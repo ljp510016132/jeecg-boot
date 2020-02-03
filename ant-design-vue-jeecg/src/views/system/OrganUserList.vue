@@ -15,7 +15,7 @@
               :checkStrictly="true"
               @select="onSelect"
               :dropdownStyle="{maxHeight:'200px',overflow:'auto'}"
-              :treeData="departTree"
+              :treeData="organTree"
             />
 
           </template>
@@ -27,10 +27,10 @@
       <a-card :bordered="false">
         <a-tabs defaultActiveKey="2" @change="callback">
           <a-tab-pane tab="基本信息" key="1" forceRender>
-            <Dept-Base-Info ref="DeptBaseInfo"></Dept-Base-Info>
+            <Organ-Base-Info ref="OrganBaseInfo"></Organ-Base-Info>
           </a-tab-pane>
           <a-tab-pane tab="用户信息" key="2">
-            <Dept-User-Info ref="DeptUserInfo"></Dept-User-Info>
+            <Organ-User-Info ref="OrganUserInfo"></Organ-User-Info>
           </a-tab-pane>
         </a-tabs>
       </a-card>
@@ -38,21 +38,21 @@
   </a-row>
 </template>
 <script>
-  import DeptBaseInfo from './modules/DeptBaseInfo'
-  import DeptUserInfo from './modules/DeptUserInfo'
-  import {queryDepartTreeList, searchByKeywords} from '@/api/api'
+  import OrganBaseInfo from './modules/OrganBaseInfo'
+  import OrganUserInfo from './modules/OrganUserInfo'
+  import {queryOrganTreeList, searchByKeywords} from '@/api/api'
   import {JeecgListMixin} from '@/mixins/JeecgListMixin'
 
   export default {
-    name: 'DepartUserList',
+    name: 'OrganUserList',
     mixins: [JeecgListMixin],
     components: {
-      DeptBaseInfo,
-      DeptUserInfo,
+      OrganBaseInfo,
+      OrganUserInfo,
     },
     data() {
       return {
-        currentDeptId: '',
+        currentOrganId: '',
         iExpandedKeys: [],
         loading: false,
         autoExpandParent: true,
@@ -61,12 +61,12 @@
         disable: true,
         treeData: [],
         visible: false,
-        departTree: [],
+        organTree: [],
         rightClickSelectedKey: '',
         hiding: true,
         model: {},
         dropTrigger: '',
-        depart: {},
+        organ: {},
         disableSubmit: false,
         checkedKeys: [],
         selectedKeys: [],
@@ -97,13 +97,13 @@
       loadTree() {
         var that = this
         that.treeData = []
-        that.departTree = []
-        queryDepartTreeList().then((res) => {
+        that.organTree = []
+        queryOrganTreeList().then((res) => {
           if (res.success) {
             for (let i = 0; i < res.result.length; i++) {
               let temp = res.result[i]
               that.treeData.push(temp)
-              that.departTree.push(temp)
+              that.organTree.push(temp)
               that.setThisExpandedKeys(temp)
               // console.log(temp.id)
             }
@@ -137,10 +137,10 @@
         if (value) {
           searchByKeywords({keyWord: value}).then((res) => {
             if (res.success) {
-              that.departTree = []
+              that.organTree = []
               for (let i = 0; i < res.result.length; i++) {
                 let temp = res.result[i]
-                that.departTree.push(temp)
+                that.organTree.push(temp)
               }
             } else {
               that.$message.warning(res.message)
@@ -156,16 +156,16 @@
         // console.log('onCheck', checkedKeys, e);
         this.checkedKeys = [];
         // if (e.checked === true) {
-        this.currentDeptId = record.id;
+        this.currentOrganId = record.id;
         this.checkedKeys.push(record.id);
 
-        this.$refs.DeptBaseInfo.open(record);
-        this.$refs.DeptUserInfo.open(record);
+        this.$refs.OrganBaseInfo.open(record);
+        this.$refs.OrganUserInfo.open(record);
         // }
         // else {
         //   this.checkedKeys = [];
-        //   this.$refs.DeptBaseInfo.clearForm();
-        //   this.$refs.DeptUserInfo.clearList();
+        //   this.$refs.OrganBaseInfo.clearForm();
+        //   this.$refs.OrganUserInfo.clearList();
         // }
 
         this.hiding = false;
@@ -177,9 +177,9 @@
         }
         let record = e.node.dataRef;
         this.checkedKeys.push(record.id);
-        this.$refs.DeptBaseInfo.open(record);
-        this.$refs.DeptUserInfo.onClearSelected();
-        this.$refs.DeptUserInfo.open(record);
+        this.$refs.OrganBaseInfo.open(record);
+        this.$refs.OrganUserInfo.onClearSelected();
+        this.$refs.OrganUserInfo.open(record);
       },
     },
     created() {

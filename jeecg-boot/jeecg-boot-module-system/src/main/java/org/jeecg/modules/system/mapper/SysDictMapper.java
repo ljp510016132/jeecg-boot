@@ -43,10 +43,10 @@ public interface SysDictMapper extends BaseMapper<SysDict> {
 	public List<DictModel> queryTableDictByKeys(@Param("table") String table, @Param("text") String text, @Param("code") String code, @Param("keyArray") String[] keyArray);
 
 	/**
-	 * 查询所有部门 作为字典信息 id -->value,departName -->text
+	 * 查询所有部门 作为字典信息 id -->value,orgName -->text
 	 * @return
 	 */
-	public List<DictModel> queryAllDepartBackDictModel();
+	public List<DictModel> queryAllOrganBackDictModel();
 	
 	/**
 	 * 查询所有用户  作为字典信息 username -->value,realname -->text

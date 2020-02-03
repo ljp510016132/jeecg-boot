@@ -62,10 +62,10 @@
         </a-form-item>
 
         <!--部门分配-->
-        <a-form-item label="部门分配" :labelCol="labelCol" :wrapperCol="wrapperCol" v-show="!departDisabled">
+        <a-form-item label="部门分配" :labelCol="labelCol" :wrapperCol="wrapperCol" v-show="!organDisabled">
           <a-input-search
             placeholder="点击右侧按钮选择部门"
-            v-model="checkedDepartNameString"
+            v-model="checkedOrganNameString"
             disabled
             @search="onSearch">
             <a-button slot="enterButton" icon="search">选择</a-button>
@@ -122,7 +122,7 @@
 
       </a-form>
     </a-spin>
-    <depart-window ref="departWindow" @ok="modalFormOk"></depart-window>
+    <organ-window ref="organWindow" @ok="modalFormOk"></organ-window>
 
     <div class="drawer-bootom-button" v-show="!disableSubmit">
       <a-popconfirm title="确定放弃编辑？" @confirm="handleCancel" okText="确定" cancelText="取消">
@@ -138,7 +138,7 @@
   import moment from 'moment'
   import Vue from 'vue'
   // 引入搜索部门弹出框的组件
-  import departWindow from './DepartWindow'
+  import organWindow from './OrganWindow'
   import JSelectPosition from '@/components/jeecgbiz/JSelectPosition'
   import { ACCESS_TOKEN } from "@/store/mutation-types"
   import { getAction } from '@/api/manage'
@@ -149,24 +149,24 @@
   export default {
     name: "UserModal",
     components: {
-      departWindow,
+      organWindow,
       JSelectPosition
     },
     data () {
       return {
-        departDisabled: false, //是否是我的部门调用该页面
+        organDisabled: false, //是否是我的部门调用该页面
         roleDisabled: false, //是否是角色维护调用该页面
         modalWidth:800,
         drawerWidth:700,
         modaltoggleFlag:true,
         confirmDirty: false,
-        selectedDepartKeys:[], //保存用户选择部门id
-        checkedDepartKeys:[],
-        checkedDepartNames:[], // 保存部门的名称 =>title
-        checkedDepartNameString:"", // 保存部门的名称 =>title
+        selectedOrganKeys:[], //保存用户选择部门id
+        checkedOrganKeys:[],
+        checkedOrganNames:[], // 保存部门的名称 =>title
+        checkedOrganNameString:"", // 保存部门的名称 =>title
         userId:"", //保存用户id
         disableSubmit:false,
-        userDepartModel:{userId:'',departIdList:[]}, // 保存SysUserDepart的用户部门中间表数据需要的对象
+        userOrganModel:{userId:'',organIdList:[]}, // 保存SysUserOrgan的用户部门中间表数据需要的对象
         dateFormat:"YYYY-MM-DD",
         validatorRules:{
           username:{
@@ -234,7 +234,7 @@
         url: {
           fileUpload: window._CONFIG['domianURL']+"/sys/common/upload",
           imgerver: window._CONFIG['domianURL']+"/sys/common/view",
-          userWithDepart: "/sys/user/userDepartList", // 引入为指定用户查看部门信息需要的url
+          userWithOrgan: "/sys/user/userOrganList", // 引入为指定用户查看部门信息需要的url
           userId:"/sys/user/generateUserId", // 引入生成添加用户情况下的url
           syncUserByUserName:"/process/extActProcess/doSyncUserByUserName",//同步用户到工作流
         },
@@ -282,10 +282,10 @@
         });
       },
       refresh () {
-          this.selectedDepartKeys=[];
-          this.checkedDepartKeys=[];
-          this.checkedDepartNames=[];
-          this.checkedDepartNameString = "";
+          this.selectedOrganKeys=[];
+          this.checkedOrganKeys=[];
+          this.checkedOrganNames=[];
+          this.checkedOrganNameString = "";
           this.userId=""
       },
       add () {
@@ -297,7 +297,7 @@
         this.resetScreenSize(); // 调用此方法,根据屏幕宽度自适应调整抽屉的宽度
         let that = this;
         that.initialRoleList();
-        that.checkedDepartNameString = "";
+        that.checkedOrganNameString = "";
         that.form.resetFields();
         if(record.hasOwnProperty("id")){
           that.loadUserRoles(record.id);
@@ -310,22 +310,22 @@
           that.form.setFieldsValue(pick(this.model,'username','sex','realname','email','phone','activitiSync','workNo','telephone','post'))
         });
         // 调用查询用户对应的部门信息的方法
-        that.checkedDepartKeys = [];
-        that.loadCheckedDeparts();
+        that.checkedOrganKeys = [];
+        that.loadCheckedOrgans();
       },
       //
-      loadCheckedDeparts(){
+      loadCheckedOrgans(){
         let that = this;
         if(!that.userId){return}
-        getAction(that.url.userWithDepart,{userId:that.userId}).then((res)=>{
-          that.checkedDepartNames = [];
+        getAction(that.url.userWithOrgan,{userId:that.userId}).then((res)=>{
+          that.checkedOrganNames = [];
           if(res.success){
             for (let i = 0; i < res.result.length; i++) {
-              that.checkedDepartNames.push(res.result[i].title);
-              this.checkedDepartNameString = this.checkedDepartNames.join(",");
-              that.checkedDepartKeys.push(res.result[i].key);
+              that.checkedOrganNames.push(res.result[i].title);
+              this.checkedOrganNameString = this.checkedOrganNames.join(",");
+              that.checkedOrganKeys.push(res.result[i].key);
             }
-            that.userDepartModel.departIdList = that.checkedDepartKeys
+            that.userOrganModel.organIdList = that.checkedOrganKeys
           }else{
             console.log(res.message);
           }
@@ -336,11 +336,11 @@
         this.visible = false;
         this.disableSubmit = false;
         this.selectedRole = [];
-        this.userDepartModel = {userId:'',departIdList:[]};
-        this.checkedDepartNames = [];
-        this.checkedDepartNameString='';
-        this.checkedDepartKeys = [];
-        this.selectedDepartKeys = [];
+        this.userOrganModel = {userId:'',organIdList:[]};
+        this.checkedOrganNames = [];
+        this.checkedOrganNameString='';
+        this.checkedOrganKeys = [];
+        this.selectedOrganKeys = [];
       },
       moment,
       handleSubmit () {
@@ -359,9 +359,9 @@
             let formData = Object.assign(this.model, values);
             formData.avatar = avatar;
             formData.selectedroles = this.selectedRole.length>0?this.selectedRole.join(","):'';
-            formData.selecteddeparts = this.userDepartModel.departIdList.length>0?this.userDepartModel.departIdList.join(","):'';
+            formData.selectedorgans = this.userOrganModel.organIdList.length>0?this.userOrganModel.organIdList.join(","):'';
 
-            // that.addDepartsToUser(that,formData); // 调用根据当前用户添加部门信息的方法
+            // that.addOrgansToUser(that,formData); // 调用根据当前用户添加部门信息的方法
             let obj;
             if(!this.model.id){
               formData.id = this.userId;
@@ -378,8 +378,8 @@
               }
             }).finally(() => {
               that.confirmLoading = false;
-              that.checkedDepartNames = [];
-              that.userDepartModel.departIdList = {userId:'',departIdList:[]};
+              that.checkedOrganNames = [];
+              that.userOrganModel.organIdList = {userId:'',organIdList:[]};
 
               that.close();
             })
@@ -533,23 +533,23 @@
       },
       // 搜索用户对应的部门API
       onSearch(){
-        this.$refs.departWindow.add(this.checkedDepartKeys,this.userId);
+        this.$refs.organWindow.add(this.checkedOrganKeys,this.userId);
       },
 
       // 获取用户对应部门弹出框提交给返回的数据
       modalFormOk (formData) {
-        this.checkedDepartNames = [];
-        this.selectedDepartKeys = [];
-        this.checkedDepartNameString = '';
+        this.checkedOrganNames = [];
+        this.selectedOrganKeys = [];
+        this.checkedOrganNameString = '';
         this.userId = formData.userId;
-        this.userDepartModel.userId = formData.userId;
-        for (let i = 0; i < formData.departIdList.length; i++) {
-          this.selectedDepartKeys.push(formData.departIdList[i].key);
-          this.checkedDepartNames.push(formData.departIdList[i].title);
-          this.checkedDepartNameString = this.checkedDepartNames.join(",");
+        this.userOrganModel.userId = formData.userId;
+        for (let i = 0; i < formData.organIdList.length; i++) {
+          this.selectedOrganKeys.push(formData.organIdList[i].key);
+          this.checkedOrganNames.push(formData.organIdList[i].title);
+          this.checkedOrganNameString = this.checkedOrganNames.join(",");
         }
-        this.userDepartModel.departIdList = this.selectedDepartKeys;
-        this.checkedDepartKeys = this.selectedDepartKeys  //更新当前的选择keys
+        this.userOrganModel.organIdList = this.selectedOrganKeys;
+        this.checkedOrganKeys = this.selectedOrganKeys  //更新当前的选择keys
        },
       // 根据屏幕变化,设置抽屉尺寸
       resetScreenSize(){

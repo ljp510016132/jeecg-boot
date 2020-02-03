@@ -125,12 +125,12 @@
     <a-modal
       title="登录部门选择"
       :width="450"
-      :visible="departVisible"
+      :visible="organVisible"
       :closable="false"
       :maskClosable="false">
 
       <template slot="footer">
-        <a-button type="primary" @click="departOk">确认</a-button>
+        <a-button type="primary" @click="organOk">确认</a-button>
       </template>
 
       <a-form>
@@ -145,13 +145,13 @@
             </template>
             <a-avatar style="backgroundColor:#87d068" icon="gold" />
           </a-tooltip>
-          <a-select @change="departChange" :class="{'valid-error':validate_status=='error'}" placeholder="请选择登录部门" style="margin-left:10px;width: 80%">
+          <a-select @change="organChange" :class="{'valid-error':validate_status=='error'}" placeholder="请选择登录部门" style="margin-left:10px;width: 80%">
             <a-icon slot="suffixIcon" type="gold" />
             <a-select-option
-              v-for="d in departList"
+              v-for="d in organList"
               :key="d.id"
               :value="d.orgCode">
-              {{ d.departName }}
+              {{ d.organName }}
             </a-select-option>
           </a-select>
         </a-form-item>
@@ -212,9 +212,9 @@
         inputCodeContent:"",
         inputCodeNull:true,
 
-        departList:[],
-        departVisible:false,
-        departSelected:"",
+        organList:[],
+        organVisible:false,
+        organSelected:"",
         currentUsername:"",
         validate_status:""
       }
@@ -262,7 +262,7 @@
               loginParams.checkKey = checkParams.checkKey
 
               that.Login(loginParams).then((res) => {
-                this.departConfirm(res)
+                this.organConfirm(res)
               }).catch((err) => {
                 that.requestFailed(err);
               });
@@ -281,7 +281,7 @@
               loginParams.remember_me = values.rememberMe
               that.PhoneLogin(loginParams).then((res) => {
                 console.log(res.result);
-                this.departConfirm(res)
+                this.organConfirm(res)
               }).catch((err) => {
                 that.requestFailed(err);
               })
@@ -391,64 +391,64 @@
           this.inputCodeNull=false
         }
       },
-      departConfirm(res){
+      organConfirm(res){
         if(res.success){
-          let multi_depart = res.result.multi_depart
+          let multi_organ = res.result.multi_organ
           //0:无部门 1:一个部门 2:多个部门
-          if(multi_depart==0){
+          // if(multi_organ==0){
+          //   this.loginSuccess()
+          //   this.$notification.warn({
+          //     message: '提示',
+          //     description: `您尚未归属部门,请确认账号信息`,
+          //     duration:3
+          //   });
+          // }else if(multi_organ==2){
+          //   this.organVisible=true
+          //   this.currentUsername=this.form.getFieldValue("username")
+          //   this.organList = res.result.organs
+          // }else {
             this.loginSuccess()
-            this.$notification.warn({
-              message: '提示',
-              description: `您尚未归属部门,请确认账号信息`,
-              duration:3
-            });
-          }else if(multi_depart==2){
-            this.departVisible=true
-            this.currentUsername=this.form.getFieldValue("username")
-            this.departList = res.result.departs
-          }else {
-            this.loginSuccess()
-          }
+          // }
         }else{
           this.requestFailed(res)
           this.Logout();
         }
       },
-      departOk(){
-        if(!this.departSelected){
+      organOk(){
+        if(!this.organSelected){
           this.validate_status='error'
           return false
         }
        let obj = {
-          orgCode:this.departSelected,
+          orgCode:this.organSelected,
           username:this.form.getFieldValue("username")
         }
-        putAction("/sys/selectDepart",obj).then(res=>{
+        putAction("/sys/selectOrgan",obj).then(res=>{
           if(res.success){
             const userInfo = res.result.userInfo;
             Vue.ls.set(USER_INFO, userInfo, 7 * 24 * 60 * 60 * 1000);
             store.commit('SET_INFO', userInfo);
             //console.log("---切换组织机构---userInfo-------",store.getters.userInfo.orgCode);
-            this.departClear()
+            this.organClear()
             this.loginSuccess()
           }else{
             this.requestFailed(res)
             this.Logout().then(()=>{
-              this.departClear()
+              this.organClear()
             });
           }
         })
       },
-      departClear(){
-        this.departList=[]
-        this.departSelected=""
+      organClear(){
+        this.organList=[]
+        this.organSelected=""
         this.currentUsername=""
-        this.departVisible=false
+        this.organVisible=false
         this.validate_status=''
       },
-      departChange(value){
+      organChange(value){
         this.validate_status='success'
-        this.departSelected = value
+        this.organSelected = value
       },
     getRouterData(){
       this.$nextTick(() => {

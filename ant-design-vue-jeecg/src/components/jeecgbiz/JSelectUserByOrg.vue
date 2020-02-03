@@ -4,19 +4,19 @@
       v-model="userNames"
       placeholder="请先选择用户"
       disabled
-      @search="onSearchDepUser">
+      @search="onSearchOrgUser">
       <a-button slot="enterButton" :disabled="disabled">选择用户</a-button>
     </a-input-search>
-    <j-select-user-by-dep-modal ref="selectModal" :modal-width="modalWidth" :multi="multi" @ok="selectOK" :user-ids="value" @initComp="initComp"/>
+    <j-select-user-by-org-modal ref="selectModal" :modal-width="modalWidth" :multi="multi" @ok="selectOK" :user-ids="value" @initComp="initComp"/>
   </div>
 </template>
 
 <script>
-  import JSelectUserByDepModal from './modal/JSelectUserByDepModal'
+  import JSelectUserByOrgModal from './modal/JSelectUserByOrgModal'
 
   export default {
-    name: 'JSelectUserByDep',
-    components: {JSelectUserByDepModal},
+    name: 'JSelectUserByOrg',
+    components: {JSelectUserByOrgModal},
     props: {
       modalWidth: {
         type: Number,
@@ -60,7 +60,7 @@
       initComp(userNames) {
         this.userNames = userNames
       },
-      onSearchDepUser() {
+      onSearchOrgUser() {
         this.$refs.selectModal.showModal()
       },
       selectOK(rows, idstr) {

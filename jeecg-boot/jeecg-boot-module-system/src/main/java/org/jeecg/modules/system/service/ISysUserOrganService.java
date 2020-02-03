@@ -4,8 +4,8 @@ package org.jeecg.modules.system.service;
 import java.util.List;
 
 import org.jeecg.modules.system.entity.SysUser;
-import org.jeecg.modules.system.entity.SysUserDepart;
-import org.jeecg.modules.system.model.DepartIdModel;
+import org.jeecg.modules.system.entity.SysUserOrgan;
+import org.jeecg.modules.system.model.OrganIdModel;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -17,7 +17,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @Author ZhiLin
  *
  */
-public interface ISysUserDepartService extends IService<SysUserDepart> {
+public interface ISysUserOrganService extends IService<SysUserOrgan> {
 	
 
 	/**
@@ -25,13 +25,13 @@ public interface ISysUserDepartService extends IService<SysUserDepart> {
 	 * @param userId
 	 * @return
 	 */
-	List<DepartIdModel> queryDepartIdsOfUser(String userId);
+	List<OrganIdModel> queryOrganIdsOfUser(String userId);
 	
 
 	/**
 	 * 根据部门id查询用户信息
-	 * @param depId
+	 * @param orgId
 	 * @return
 	 */
-	List<SysUser> queryUserByDepId(String depId);
+	List<SysUser> queryUserByOrgId(String orgId);
 }

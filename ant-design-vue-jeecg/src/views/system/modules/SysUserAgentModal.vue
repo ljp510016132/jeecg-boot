@@ -21,7 +21,7 @@
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
           label="代理人用户名">
-          <j-select-user-by-dep placeholder="请输入代理人用户名" v-decorator="['agentUserName', validatorRules.agentUserName]" :trigger-change="true"></j-select-user-by-dep>
+          <j-select-user-by-org placeholder="请输入代理人用户名" v-decorator="['agentUserName', validatorRules.agentUserName]" :trigger-change="true"></j-select-user-by-org>
         </a-form-item>
         <a-form-item
           :labelCol="labelCol"
@@ -69,13 +69,13 @@
   import pick from 'lodash.pick'
   import { httpAction, getAction } from '@/api/manage'
   import JDate from '@/components/jeecg/JDate.vue';
-  import JSelectUserByDep from '@/components/jeecgbiz/JSelectUserByDep'
+  import JSelectUserByOrg from '@/components/jeecgbiz/JSelectUserByOrg'
 
   export default {
     name: "SysUserAgentModal",
     components: {
       JDate,
-      JSelectUserByDep
+      JSelectUserByOrg
     },
     data () {
       return {

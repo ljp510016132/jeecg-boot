@@ -8,8 +8,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 
 import lombok.Data;
 @Data
-@TableName("sys_user_depart")
-public class SysUserDepart implements Serializable {
+@TableName("sys_user_organ")
+public class SysUserOrgan implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	/**主键id*/
@@ -18,16 +18,16 @@ public class SysUserDepart implements Serializable {
 	/**用户id*/
 	private String userId;
 	/**部门id*/
-	private String depId;
-	public SysUserDepart(String id, String userId, String depId) {
+	private String orgId;
+	public SysUserOrgan(String id, String userId, String orgId) {
 		super();
 		this.id = id;
 		this.userId = userId;
-		this.depId = depId;
+		this.orgId = orgId;
 	}
 
-	public SysUserDepart(String id, String departId) {
+	public SysUserOrgan(String id, String organId) {
 		this.userId = id;
-		this.depId = departId;
+		this.orgId = organId;
 	}
 }

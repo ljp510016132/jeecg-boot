@@ -3,19 +3,19 @@ package org.jeecg.common.system.vo;
 /**
  * lvdandan 部门机构model
  */
-public class SysDepartModel {
+public class SysOrganModel {
     /**ID*/
     private String id;
     /**父机构ID*/
     private String parentId;
     /**机构/部门名称*/
-    private String departName;
+    private String organName;
     /**英文名*/
-    private String departNameEn;
+    private String organNameEn;
     /**缩写*/
-    private String departNameAbbr;
+    private String organNameAbbr;
     /**排序*/
-    private Integer departOrder;
+    private Integer organOrder;
     /**描述*/
     private Object description;
     /**机构类别 1组织机构，2岗位*/
@@ -49,36 +49,36 @@ public class SysDepartModel {
         this.parentId = parentId;
     }
 
-    public String getDepartName() {
-        return departName;
+    public String getOrgName() {
+        return organName;
     }
 
-    public void setDepartName(String departName) {
-        this.departName = departName;
+    public void setOrgName(String organName) {
+        this.organName = organName;
     }
 
-    public String getDepartNameEn() {
-        return departNameEn;
+    public String getOrgNameEn() {
+        return organNameEn;
     }
 
-    public void setDepartNameEn(String departNameEn) {
-        this.departNameEn = departNameEn;
+    public void setOrgNameEn(String organNameEn) {
+        this.organNameEn = organNameEn;
     }
 
-    public String getDepartNameAbbr() {
-        return departNameAbbr;
+    public String getOrgNameAbbr() {
+        return organNameAbbr;
     }
 
-    public void setDepartNameAbbr(String departNameAbbr) {
-        this.departNameAbbr = departNameAbbr;
+    public void setOrgNameAbbr(String organNameAbbr) {
+        this.organNameAbbr = organNameAbbr;
     }
 
-    public Integer getDepartOrder() {
-        return departOrder;
+    public Integer getOrgOrder() {
+        return organOrder;
     }
 
-    public void setDepartOrder(Integer departOrder) {
-        this.departOrder = departOrder;
+    public void setOrgOrder(Integer organOrder) {
+        this.organOrder = organOrder;
     }
 
     public Object getDescription() {

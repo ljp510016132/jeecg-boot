@@ -241,7 +241,7 @@
             <#elseif po.classType=='image'>
             dataIndex: '${po.fieldName}',
             scopedSlots: {customRender: 'imgSlot'}
-			<#elseif po.classType=='sel_search' || po.classType=='list_multi' || po.classType=='list' || po.classType=='radio' || po.classType=='checkbox' ||  po.classType=='sel_depart'>
+			<#elseif po.classType=='sel_search' || po.classType=='list_multi' || po.classType=='list' || po.classType=='radio' || po.classType=='checkbox' ||  po.classType=='sel_organ'>
             dataIndex: '${po.fieldName}',
             customRender:(text)=>{
               if(!text){
@@ -293,7 +293,7 @@
         dictOptions:{
          <#list columns as po>
          <#if (po.isQuery=='Y' || po.isShowList=='Y')>
-         <#if  po.classType='sel_depart' || po.classType=='list_multi' || po.classType=='list' || po.classType=='radio' || po.classType=='checkbox'>
+         <#if  po.classType='sel_organ' || po.classType=='list_multi' || po.classType=='list' || po.classType=='radio' || po.classType=='checkbox'>
          ${po.fieldName}:[],
          </#if>
          </#if>
@@ -324,8 +324,8 @@
       initDictConfig(){
       <#list columns as po>
       <#if (po.isQuery=='Y' || po.isShowList=='Y') && po.classType!='popup'>
-        <#if po.classType='sel_depart'>
-        initDictOptions('sys_depart,depart_name,id').then((res) => {
+        <#if po.classType='sel_organ'>
+        initDictOptions('sys_organ,org_name,id').then((res) => {
           if (res.success) {
             this.$set(this.dictOptions, '${po.fieldName}', res.result)
           }

@@ -28,7 +28,7 @@
     <div class="table-operator" :md="24" :sm="24" style="margin: -46px 0px 10px 2px">
       <a-button @click="handleAdd" type="primary" icon="plus" style="margin-top: 16px">用户录入</a-button>
       <!--<a-button @click="handleEdit" type="primary" icon="edit" style="margin-top: 16px">用户编辑</a-button>-->
-      <a-button @click="handleAddUserDepart" type="primary" icon="plus">添加已有用户</a-button>
+      <a-button @click="handleAddUserOrgan" type="primary" icon="plus">添加已有用户</a-button>
 
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
@@ -106,7 +106,7 @@
   import UserModal from './UserModal'
 
   export default {
-    name: "DeptUserInfo",
+    name: "OrganUserInfo",
     mixins: [JeecgListMixin],
     components: {
       SelectUserModal,
@@ -115,7 +115,7 @@
     data() {
       return {
         description: '用户信息',
-        currentDeptId: '',
+        currentOrganId: '',
         // 表头
         columns: [{
           title: '用户账号',
@@ -135,10 +135,10 @@
             width: 170
           }],
         url: {
-          list: "/sys/user/departUserList",
-          edit: "/sys/user/editSysDepartWithUser",
-          delete: "/sys/user/deleteUserInDepart",
-          deleteBatch: "/sys/user/deleteUserInDepartBatch",
+          list: "/sys/user/organUserList",
+          edit: "/sys/user/editSysOrganWithUser",
+          delete: "/sys/user/deleteUserInOrgan",
+          deleteBatch: "/sys/user/deleteUserInOrganBatch",
         }
       }
     },
@@ -156,9 +156,9 @@
         if (arg === 1) {
           this.ipagination.current = 1;
         }
-        if (this.currentDeptId === '') return;
+        if (this.currentOrganId === '') return;
         var params = this.getQueryParams();//查询条件
-        params.depId = this.currentDeptId;
+        params.orgId = this.currentOrganId;
         getAction(this.url.list, params).then((res) => {
           if (res.success) {
             this.dataSource = res.result.records;
@@ -181,12 +181,12 @@
             ids += this.selectedRowKeys[a] + ",";
           }
           var that = this;
-          console.log(this.currentDeptId);
+          console.log(this.currentOrganId);
           this.$confirm({
             title: "确认删除",
             content: "是否删除选中数据?",
             onOk: function () {
-              deleteAction(that.url.deleteBatch, {depId: that.currentDeptId, userIds: ids}).then((res) => {
+              deleteAction(that.url.deleteBatch, {orgId: that.currentOrganId, userIds: ids}).then((res) => {
                 if (res.success) {
                   that.$message.success(res.message);
                   that.loadData();
@@ -205,7 +205,7 @@
           return
         }
         var that = this;
-        deleteAction(that.url.delete, {depId: this.currentDeptId, userId: id}).then((res) => {
+        deleteAction(that.url.delete, {orgId: this.currentOrganId, userId: id}).then((res) => {
           if (res.success) {
             that.$message.success(res.message);
             if (this.selectedRowKeys.length>0){
@@ -224,22 +224,22 @@
       },
       open(record) {
         //console.log(record);
-        this.currentDeptId = record.id;
+        this.currentOrganId = record.id;
         this.loadData(1);
       },
       clearList() {
-        this.currentDeptId = '';
+        this.currentOrganId = '';
         this.dataSource = [];
       },
-      hasSelectDept() {
-        if (this.currentDeptId == null) {
+      hasSelectOrgan() {
+        if (this.currentOrganId == null) {
           this.$message.error("请选择一个部门!")
           return false;
         }
         return true;
       },
-      handleAddUserDepart() {
-        if (this.currentDeptId == '') {
+      handleAddUserOrgan() {
+        if (this.currentOrganId == '') {
           this.$message.error("请选择一个部门!")
         } else {
           this.$refs.selectUserModal.visible = true;
@@ -247,23 +247,23 @@
       },
       handleEdit: function (record) {
         this.$refs.modalForm.title = "编辑";
-        this.$refs.modalForm.departDisabled = true;
+        this.$refs.modalForm.organDisabled = true;
         this.$refs.modalForm.disableSubmit = false;
         this.$refs.modalForm.edit(record);
       },
       handleAdd: function () {
-        if (this.currentDeptId == '') {
+        if (this.currentOrganId == '') {
           this.$message.error("请选择一个部门!")
         } else {
-          this.$refs.modalForm.departDisabled = true;
-          this.$refs.modalForm.userDepartModel.departIdList = [this.currentDeptId];  //传入一个部门id
+          this.$refs.modalForm.organDisabled = true;
+          this.$refs.modalForm.userOrganModel.organIdList = [this.currentOrganId];  //传入一个部门id
           this.$refs.modalForm.add();
           this.$refs.modalForm.title = "新增";
         }
       },
       selectOK(data) {
         let params = {};
-        params.depId = this.currentDeptId;
+        params.orgId = this.currentOrganId;
         params.userIdList = [];
         for (var a = 0; a < data.length; a++) {
           params.userIdList.push(data[a]);

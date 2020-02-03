@@ -15,7 +15,7 @@
           :dataSource="data"
           :pagination="false"
         >
-          <template v-for="(col, i) in ['name', 'workId', 'department']" :slot="col" slot-scope="text, record, index">
+          <template v-for="(col, i) in ['name', 'workId', 'organ']" :slot="col" slot-scope="text, record, index">
             <a-input
               :key="col"
               v-if="record.editable"
@@ -96,10 +96,10 @@
           },
           {
             title: '所属部门',
-            dataIndex: 'department',
-            key: 'department',
+            dataIndex: 'organ',
+            key: 'organ',
             width: '40%',
-            scopedSlots: { customRender: 'department' }
+            scopedSlots: { customRender: 'organ' }
           },
           {
             title: '操作',
@@ -113,21 +113,21 @@
             name: '小明',
             workId: '001',
             editable: false,
-            department: '行政部'
+            organ: '行政部'
           },
           {
             key: '2',
             name: '李莉',
             workId: '002',
             editable: false,
-            department: 'IT部'
+            organ: 'IT部'
           },
           {
             key: '3',
             name: '王小帅',
             workId: '003',
             editable: false,
-            department: '财务部'
+            organ: '财务部'
           }
         ]
       }
@@ -141,7 +141,7 @@
           key: '-1',
           name: '',
           workId: '',
-          department: '',
+          organ: '',
           editable: true,
           isNew: true
         })

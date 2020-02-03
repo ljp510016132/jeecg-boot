@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.jeecg.common.aspect.annotation.Dict;
-import org.jeecg.modules.system.model.SysDepartTreeModel;
+import org.jeecg.modules.system.model.SysOrganTreeModel;
 import org.jeecgframework.poi.excel.annotation.Excel;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -24,8 +24,8 @@ import java.util.Objects;
  * @Since  2019-01-22
  */
 @Data
-@TableName("sys_depart")
-public class SysDepart implements Serializable {
+@TableName("sys_organ")
+public class SysOrgan implements Serializable {
     private static final long serialVersionUID = 1L;
     
 	/**ID*/
@@ -35,15 +35,15 @@ public class SysDepart implements Serializable {
 	private String parentId;
 	/**机构/部门名称*/
 	@Excel(name="机构/部门名称",width=15)
-	private String departName;
+	private String orgName;
 	/**英文名*/
 	@Excel(name="英文名",width=15)
-	private String departNameEn;
+	private String orgNameEn;
 	/**缩写*/
-	private String departNameAbbr;
+	private String orgNameAbbr;
 	/**排序*/
 	@Excel(name="排序",width=15)
-	private Integer departOrder;
+	private Integer orgOrder;
 	/**描述*/
 	@Excel(name="描述",width=15)
 	private Object description;
@@ -70,7 +70,7 @@ public class SysDepart implements Serializable {
 	private String memo;
 	/**状态（1启用，0不启用）*/
 	@Excel(name="状态",width=15)
-	@Dict(dicCode = "depart_status")
+	@Dict(dicCode = "organ_status")
 	private String status;
 	/**删除状态（0，正常，1已删除）*/
 	@Excel(name="删除状态",width=15)
@@ -103,27 +103,27 @@ public class SysDepart implements Serializable {
         if (!super.equals(o)) {
 			return false;
 		}
-        SysDepart depart = (SysDepart) o;
-        return Objects.equals(id, depart.id) &&
-                Objects.equals(parentId, depart.parentId) &&
-                Objects.equals(departName, depart.departName) &&
-                Objects.equals(departNameEn, depart.departNameEn) &&
-                Objects.equals(departNameAbbr, depart.departNameAbbr) &&
-                Objects.equals(departOrder, depart.departOrder) &&
-                Objects.equals(description, depart.description) &&
-                Objects.equals(orgCategory, depart.orgCategory) &&
-                Objects.equals(orgType, depart.orgType) &&
-                Objects.equals(orgCode, depart.orgCode) &&
-                Objects.equals(mobile, depart.mobile) &&
-                Objects.equals(fax, depart.fax) &&
-                Objects.equals(address, depart.address) &&
-                Objects.equals(memo, depart.memo) &&
-                Objects.equals(status, depart.status) &&
-                Objects.equals(delFlag, depart.delFlag) &&
-                Objects.equals(createBy, depart.createBy) &&
-                Objects.equals(createTime, depart.createTime) &&
-                Objects.equals(updateBy, depart.updateBy) &&
-                Objects.equals(updateTime, depart.updateTime);
+        SysOrgan organ = (SysOrgan) o;
+        return Objects.equals(id, organ.id) &&
+                Objects.equals(parentId, organ.parentId) &&
+                Objects.equals(orgName, organ.orgName) &&
+                Objects.equals(orgNameEn, organ.orgNameEn) &&
+                Objects.equals(orgNameAbbr, organ.orgNameAbbr) &&
+                Objects.equals(orgOrder, organ.orgOrder) &&
+                Objects.equals(description, organ.description) &&
+                Objects.equals(orgCategory, organ.orgCategory) &&
+                Objects.equals(orgType, organ.orgType) &&
+                Objects.equals(orgCode, organ.orgCode) &&
+                Objects.equals(mobile, organ.mobile) &&
+                Objects.equals(fax, organ.fax) &&
+                Objects.equals(address, organ.address) &&
+                Objects.equals(memo, organ.memo) &&
+                Objects.equals(status, organ.status) &&
+                Objects.equals(delFlag, organ.delFlag) &&
+                Objects.equals(createBy, organ.createBy) &&
+                Objects.equals(createTime, organ.createTime) &&
+                Objects.equals(updateBy, organ.updateBy) &&
+                Objects.equals(updateTime, organ.updateTime);
     }
 
     /**
@@ -132,8 +132,8 @@ public class SysDepart implements Serializable {
     @Override
     public int hashCode() {
 
-        return Objects.hash(super.hashCode(), id, parentId, departName, 
-        		departNameEn, departNameAbbr, departOrder, description,orgCategory, 
+        return Objects.hash(super.hashCode(), id, parentId, orgName,
+        		orgNameEn, orgNameAbbr, orgOrder, description,orgCategory,
         		orgType, orgCode, mobile, fax, address, memo, status, 
         		delFlag, createBy, createTime, updateBy, updateTime);
     }

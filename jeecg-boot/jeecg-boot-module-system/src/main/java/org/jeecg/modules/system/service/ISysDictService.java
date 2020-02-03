@@ -45,10 +45,10 @@ public interface ISysDictService extends IService<SysDict> {
     public void saveMain(SysDict sysDict, List<SysDictItem> sysDictItemList);
     
     /**
-	 * 查询所有部门 作为字典信息 id -->value,departName -->text
+	 * 查询所有部门 作为字典信息 id -->value,orgName -->text
 	 * @return
 	 */
-	public List<DictModel> queryAllDepartBackDictModel();
+	public List<DictModel> queryAllOrganBackDictModel();
 	
 	/**
 	 * 查询所有用户  作为字典信息 username -->value,realname -->text

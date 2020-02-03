@@ -50,11 +50,11 @@ const getPermissionRuleList = (params)=>getAction("/sys/permission/getPermRuleLi
 const queryPermissionRule = (params)=>getAction("/sys/permission/queryPermissionRule",params);
 
 // 部门管理
-const queryDepartTreeList = (params)=>getAction("/sys/sysDepart/queryTreeList",params);
-const queryIdTree = (params)=>getAction("/sys/sysDepart/queryIdTree",params);
-const queryParentName   = (params)=>getAction("/sys/sysDepart/queryParentName",params);
-const searchByKeywords   = (params)=>getAction("/sys/sysDepart/searchBy",params);
-const deleteByDepartId   = (params)=>deleteAction("/sys/sysDepart/delete",params);
+const queryOrganTreeList = (params)=>getAction("/sys/sysOrgan/queryTreeList",params);
+const queryIdTree = (params)=>getAction("/sys/sysOrgan/queryIdTree",params);
+const queryParentName   = (params)=>getAction("/sys/sysOrgan/queryParentName",params);
+const searchByKeywords   = (params)=>getAction("/sys/sysOrgan/searchBy",params);
+const deleteByOrganId   = (params)=>deleteAction("/sys/sysOrgan/delete",params);
 
 //日志管理
 //const getLogList = (params)=>getAction("/sys/log/list",params);
@@ -86,7 +86,7 @@ const getVisitInfo = (params)=>getAction("/sys/visitInfo",params);
 // const getDataLogList = (params)=>getAction("/sys/dataLog/list",params);
 
 // 根据部门主键查询用户信息
-const queryUserByDepId = (params)=>getAction("/sys/user/queryUserByDepId",params);
+const queryUserByOrgId = (params)=>getAction("/sys/user/queryUserByOrgId",params);
 
 // 查询用户角色表里的所有信息
 const queryUserRoleMap = (params)=>getAction("/sys/user/queryUserRoleMap",params);
@@ -120,11 +120,11 @@ export {
   loadAllRoleIds,
   getPermissionRuleList,
   queryPermissionRule,
-  queryDepartTreeList,
+  queryOrganTreeList,
   queryIdTree,
   queryParentName,
   searchByKeywords,
-  deleteByDepartId,
+  deleteByOrganId,
   deleteLog,
   deleteLogList,
   addDict,
@@ -136,7 +136,7 @@ export {
   doReovkeData,
   getLoginfo,
   getVisitInfo,
-  queryUserByDepId,
+  queryUserByOrgId,
   queryUserRoleMap,
   duplicateCheck,
   queryTreeListForRole,

@@ -35,10 +35,10 @@
 </template>
 
 <script>
-  import { queryDepartTreeList } from '@/api/api'
+  import { queryOrganTreeList } from '@/api/api'
   export default {
-    name: 'JSelectDepartModal',
-    props:['modalWidth','multi','rootOpened','departId'],
+    name: 'JSelectOrganModal',
+    props:['modalWidth','multi','rootOpened','organId'],
     data(){
       return {
         visible:false,
@@ -53,17 +53,17 @@
       }
     },
     created(){
-      this.loadDepart();
+      this.loadOrgan();
     },
     watch:{
-      departId(){
-        this.initDepartComponent()
+      organId(){
+        this.initOrganComponent()
       },
       visible: {
         handler() {
-          if (this.departId) {
-            this.checkedKeys = this.departId.split(",");
-            // console.log('this.departId', this.departId)
+          if (this.organId) {
+            this.checkedKeys = this.organId.split(",");
+            // console.log('this.organId', this.organId)
           } else {
             this.checkedKeys = [];
           }
@@ -76,25 +76,25 @@
         this.checkedRows=[]
         this.checkedKeys=[]
       },
-      loadDepart(){
-        queryDepartTreeList().then(res=>{
+      loadOrgan(){
+        queryOrganTreeList().then(res=>{
           if(res.success){
             let arr = [...res.result]
             this.reWriterWithSlot(arr)
             this.treeData = arr
-            this.initDepartComponent()
+            this.initOrganComponent()
             if(this.rootOpened){
               this.initExpandedKeys(res.result)
             }
           }
         })
       },
-      initDepartComponent(){
+      initOrganComponent(){
         let names = ''
-        if(this.departId){
-          let currDepartId = this.departId
+        if(this.organId){
+          let currOrganId = this.organId
           for(let item of this.dataList){
-            if(currDepartId.indexOf(item.key)>=0){
+            if(currOrganId.indexOf(item.key)>=0){
               names+=","+item.title
             }
           }
