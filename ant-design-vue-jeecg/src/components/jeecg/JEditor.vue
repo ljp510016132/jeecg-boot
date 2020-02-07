@@ -23,6 +23,9 @@
   import 'tinymce/plugins/colorpicker'
   import 'tinymce/plugins/textcolor'
   import 'tinymce/plugins/fullscreen'
+  import 'tinymce/plugins/paste'
+  import 'tinymce/plugins/preview'
+
   export default {
     components: {
       Editor
@@ -43,11 +46,11 @@
       },
       plugins: {
         type: [String, Array],
-        default: 'lists image link media table textcolor wordcount contextmenu fullscreen'
+        default: 'lists image link media table textcolor wordcount contextmenu fullscreen paste preview'
       },
       toolbar: {
         type: [String, Array],
-        default: 'undo redo |  formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | lists link unlink image media table | removeformat | fullscreen',
+        default: 'undo redo |  formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | lists link unlink image media table | removeformat | fullscreen | preview',
         branding:false
       }
     },
@@ -64,6 +67,11 @@
           branding: false,
           menubar: false,
           toolbar_drawer: false,
+          paste_data_images: true, // 设置为“true”将允许粘贴图像，而将其设置为“false”将不允许粘贴图像
+          plugin_preview_width: 575, // 预览宽度 
+          plugin_preview_height: 668,
+          content_style: ' * { padding:0; margin:0; }   img {max-width:100% !important }',
+          powerpaste_word_import: 'merge', // 是否保留word粘贴样式  clean | merge  
           images_upload_handler: (blobInfo, success) => {
             const img = 'data:image/jpeg;base64,' + blobInfo.base64()
             success(img)
