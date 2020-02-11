@@ -27,16 +27,24 @@ public interface CacheConstant {
 	public static final String SYS_USERS_CACHE = "sys:cache:user";
 
 	/**
-	 * 全部部门信息缓存
+	 * 全部组织机构信息缓存
+	 */
+	public static final String SYS_ORGS_CACHE = "sys:cache:org:alldata";
+
+	/**
+	 * 全部行政机构信息缓存
 	 */
 	public static final String SYS_DEPARTS_CACHE = "sys:cache:depart:alldata";
 
+	/**
+	 * 全部组织机构ids缓存
+	 */
+	public static final String SYS_ORG_IDS_CACHE = "sys:cache:org:allids";
 
 	/**
-	 * 全部部门ids缓存
+	 * 全部行政机构ids缓存
 	 */
 	public static final String SYS_DEPART_IDS_CACHE = "sys:cache:depart:allids";
-
 
 	/**
 	 * 测试缓存key

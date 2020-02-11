@@ -39,7 +39,7 @@ public class SysOrgServiceImpl extends ServiceImpl<SysOrgMapper, SysOrg> impleme
 	/**
 	 * queryTreeList 对应 queryTreeList 查询所有的部门数据,以树结构形式响应给前端
 	 */
-	@Cacheable(value = CacheConstant.SYS_DEPARTS_CACHE)
+	@Cacheable(value = CacheConstant.SYS_ORGS_CACHE)
 	@Override
 	public List<SysOrgTreeModel> queryTreeList() {
 		LambdaQueryWrapper<SysOrg> query = new LambdaQueryWrapper<SysOrg>();
@@ -51,7 +51,7 @@ public class SysOrgServiceImpl extends ServiceImpl<SysOrgMapper, SysOrg> impleme
 		return listResult;
 	}
 
-	@Cacheable(value = CacheConstant.SYS_DEPART_IDS_CACHE)
+	@Cacheable(value = CacheConstant.SYS_ORG_IDS_CACHE)
 	@Override
 	public List<OrgIdModel> queryOrgIdTreeList() {
 		LambdaQueryWrapper<SysOrg> query = new LambdaQueryWrapper<SysOrg>();

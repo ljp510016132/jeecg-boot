@@ -49,12 +49,19 @@ const loadAllRoleIds = (params)=>getAction("/sys/permission/loadAllRoleIds",para
 const getPermissionRuleList = (params)=>getAction("/sys/permission/getPermRuleListByPermId",params);
 const queryPermissionRule = (params)=>getAction("/sys/permission/queryPermissionRule",params);
 
-// 部门管理
+// 组织机构管理
 const queryOrgTreeList = (params)=>getAction("/sys/sysOrg/queryTreeList",params);
 const queryIdTree = (params)=>getAction("/sys/sysOrg/queryIdTree",params);
 const queryParentName   = (params)=>getAction("/sys/sysOrg/queryParentName",params);
 const searchByKeywords   = (params)=>getAction("/sys/sysOrg/searchBy",params);
 const deleteByOrgId   = (params)=>deleteAction("/sys/sysOrg/delete",params);
+
+// 行政机构管理
+const queryDepartTreeList = (params)=>getAction("/sys/sysDepart/queryTreeList",params);
+const queryDepartIdTree = (params)=>getAction("/sys/sysDepart/queryIdTree",params);
+const queryDepartParentName   = (params)=>getAction("/sys/sysDepart/queryParentName",params);
+const searchByDepartKeywords   = (params)=>getAction("/sys/sysDepart/searchBy",params);
+const deleteByDepartId   = (params)=>deleteAction("/sys/sysDepart/delete",params);
 
 //日志管理
 //const getLogList = (params)=>getAction("/sys/log/list",params);
@@ -125,6 +132,11 @@ export {
   queryParentName,
   searchByKeywords,
   deleteByOrgId,
+  queryDepartTreeList,
+  queryDepartIdTree,
+  queryDepartParentName,
+  searchByDepartKeywords,
+  deleteByDepartId,
   deleteLog,
   deleteLogList,
   addDict,

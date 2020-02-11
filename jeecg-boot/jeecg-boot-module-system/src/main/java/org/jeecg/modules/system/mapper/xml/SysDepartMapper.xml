@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.jeecg.modules.system.mapper.SysOrgMapper">
+<mapper namespace="org.jeecg.modules.system.mapper.SysDepartMapper">
 
-	<select id="queryUserOrgs" parameterType="String" resultType="org.jeecg.modules.system.entity.SysOrg">
-	   select * from sys_org where id IN ( select org_id from sys_user_org where user_id = #{userId} )
+	<select id="queryUserDeparts" parameterType="String" resultType="org.jeecg.modules.system.entity.SysDepart">
+	   select * from sys_depart where id IN ( select depart_id from sys_user_depart where user_id = #{userId} )
 	</select>
 
     <!-- 根据username查询所拥有的部门 -->
-    <select id="queryOrgsByUsername" parameterType="String" resultType="org.jeecg.modules.system.entity.SysOrg">
+    <select id="queryDepartsByUsername" parameterType="String" resultType="org.jeecg.modules.system.entity.SysDepart">
         SELECT *
-        FROM sys_org
+        FROM sys_depart
         WHERE id IN (
-            SELECT org_id
-            FROM sys_user_org
+            SELECT depart_id
+            FROM sys_user_depart
             WHERE user_id = (
                 SELECT id
                 FROM sys_user

@@ -24,6 +24,11 @@ import lombok.experimental.Accessors;
 public class LoginUser {
 
 	/**
+	 * 平台code
+	 */
+	private String platformCode;
+
+	/**
 	 * 登录人id
 	 */
 	private String id;
