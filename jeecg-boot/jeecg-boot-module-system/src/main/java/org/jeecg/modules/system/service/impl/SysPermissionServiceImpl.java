@@ -180,8 +180,8 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
 	}
 
 	@Override
-	public List<SysPermission> queryByUser(String username) {
-		return this.sysPermissionMapper.queryByUser(username);
+	public List<SysPermission> queryByUser(String username,String platformCode) {
+		return this.sysPermissionMapper.queryByUser(username,platformCode);
 	}
 
 	/**

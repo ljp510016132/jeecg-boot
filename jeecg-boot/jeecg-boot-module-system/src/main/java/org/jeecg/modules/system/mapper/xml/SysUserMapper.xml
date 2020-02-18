@@ -28,6 +28,11 @@
 		UPDATE sys_user SET org_code = #{orgCode} where username = #{username}
 	</update>
 
+	<!--  修改用户平台code -->
+	<update id="updateUserPlatform">
+		UPDATE sys_user SET platform_code = #{platformCode} where username = #{username}
+	</update>
+
 	<!-- 根据手机号查询 -->
 	<select id="getUserByPhone"  resultType="org.jeecg.modules.system.entity.SysUser">
 		select * from  sys_user  where phone = #{phone} and del_flag = '0'

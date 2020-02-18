@@ -173,4 +173,4 @@ logging:
     org.jeecg.modules.system.mapper : debug
 #cas单点登录
 cas:
-  prefixUrl: http://cas.example.org:8443/cas
+  prefixUrl: http://localhost:8888/cas

@@ -8,7 +8,7 @@
 
           <a-col :md="6" :sm="8">
             <a-form-item label="平台名称">
-              <a-input placeholder="请输入平台名称" v-model="queryParam.platformName"></a-input>
+              <j-input placeholder="请输入平台名称" v-model="queryParam.platformName"></j-input>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="8">
@@ -100,12 +100,14 @@
 <script>
   import SysPlatformModal from './modules/SysPlatformModal'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
+  import JInput from '@/components/jeecg/JInput'
 
   export default {
     name: "SysPlatformList",
     mixins:[JeecgListMixin],
     components: {
-      SysPlatformModal
+      SysPlatformModal,
+      JInput
     },
     data () {
       return {
@@ -145,11 +147,11 @@
           }
         ],
 		url: {
-          list: "/system/sysPlatform/list",
-          delete: "/system/sysPlatform/delete",
-          deleteBatch: "/system/sysPlatform/deleteBatch",
-          exportXlsUrl: "system/sysPlatform/exportXls",
-          importExcelUrl: "system/sysPlatform/importExcel",
+          list: "/sys/platform/list",
+          delete: "/sys/platform/delete",
+          deleteBatch: "/sys/platform/deleteBatch",
+          exportXlsUrl: "sys/platform/exportXls",
+          importExcelUrl: "sys/platform/importExcel",
        },
     }
   },

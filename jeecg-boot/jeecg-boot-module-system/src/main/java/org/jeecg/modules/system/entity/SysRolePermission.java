@@ -45,6 +45,11 @@ public class SysRolePermission implements Serializable {
      */
     private String dataRuleIds;
 
+    /**
+     * 所属组织机构
+     */
+    private String sysOrgCode;
+
     public SysRolePermission() {
    	}
        

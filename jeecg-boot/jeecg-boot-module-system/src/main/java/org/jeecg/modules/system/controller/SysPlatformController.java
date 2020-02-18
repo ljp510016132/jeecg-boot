@@ -44,11 +44,11 @@ import io.swagger.annotations.ApiOperation;
 @Slf4j
 @Api(tags="平台表")
 @RestController
-@RequestMapping("/system/sysPlatform")
+@RequestMapping("/sys/platform")
 public class SysPlatformController extends JeecgController<SysPlatform, ISysPlatformService> {
 	@Autowired
 	private ISysPlatformService sysPlatformService;
-	
+
 	/**
 	 * 分页列表查询
 	 *

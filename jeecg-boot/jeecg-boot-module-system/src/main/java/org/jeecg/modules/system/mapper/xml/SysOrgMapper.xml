@@ -2,8 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.jeecg.modules.system.mapper.SysOrgMapper">
 
-	<select id="queryUserOrgs" parameterType="String" resultType="org.jeecg.modules.system.entity.SysOrg">
-	   select * from sys_org where id IN ( select org_id from sys_user_org where user_id = #{userId} )
+	<select id="queryUserOrgs" parameterType="Object" resultType="org.jeecg.modules.system.entity.SysOrg">
+	   select * from sys_org
+        <if test="_parameter != null">
+	   where id IN ( select org_id from sys_user_org where user_id = #{userId} )
+       </if>
 	</select>
 
     <!-- 根据username查询所拥有的部门 -->

@@ -15,9 +15,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.jeecg.common.api.vo.Result;
+import org.jeecg.common.aspect.annotation.PermissionData;
 import org.jeecg.common.constant.CacheConstant;
 import org.jeecg.common.constant.CommonConstant;
 import org.jeecg.common.system.query.QueryGenerator;
+import org.jeecg.common.system.util.JwtUtil;
+import org.jeecg.common.system.vo.SysUserCacheInfo;
 import org.jeecg.common.util.PmsUtil;
 import org.jeecg.common.util.oConvertUtils;
 import org.jeecg.modules.system.entity.SysPermission;
@@ -25,10 +28,7 @@ import org.jeecg.modules.system.entity.SysPermissionDataRule;
 import org.jeecg.modules.system.entity.SysRole;
 import org.jeecg.modules.system.entity.SysRolePermission;
 import org.jeecg.modules.system.model.TreeModel;
-import org.jeecg.modules.system.service.ISysPermissionDataRuleService;
-import org.jeecg.modules.system.service.ISysPermissionService;
-import org.jeecg.modules.system.service.ISysRolePermissionService;
-import org.jeecg.modules.system.service.ISysRoleService;
+import org.jeecg.modules.system.service.*;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
 import org.jeecgframework.poi.excel.def.NormalExcelConstants;
 import org.jeecgframework.poi.excel.entity.ExportParams;
@@ -81,6 +81,9 @@ public class SysRoleController {
 	@Autowired
 	private ISysPermissionService sysPermissionService;
 
+	@Autowired
+	private ISysUserService sysUserService;
+
 	/**
 	  * 分页列表查询
 	 * @param role
@@ -90,12 +93,18 @@ public class SysRoleController {
 	 * @return
 	 */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
+	@PermissionData(pageComponent = "system/RoleUserList")
 	public Result<IPage<SysRole>> queryPageList(SysRole role,
 									  @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
 									  @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
 									  HttpServletRequest req) {
 		Result<IPage<SysRole>> result = new Result<IPage<SysRole>>();
 		QueryWrapper<SysRole> queryWrapper = QueryGenerator.initQueryWrapper(role, req.getParameterMap());
+		//增加组织过滤
+		String username = JwtUtil.getUserNameByToken(req);
+		SysUserCacheInfo userinfo = sysUserService.getCacheUser(username);
+		String orgsStr=JwtUtil.getUserSystemData("sysMultiOrgCode",userinfo);
+		queryWrapper.in("sys_org_code",(Object[])orgsStr.toString().split(","));
 		Page<SysRole> page = new Page<SysRole>(pageNo, pageSize);
 		IPage<SysRole> pageList = sysRoleService.page(page, queryWrapper);
 		result.setSuccess(true);
@@ -192,9 +201,15 @@ public class SysRoleController {
 	}
 	
 	@RequestMapping(value = "/queryall", method = RequestMethod.GET)
-	public Result<List<SysRole>> queryall() {
+	public Result<List<SysRole>> queryall(HttpServletRequest req) {
 		Result<List<SysRole>> result = new Result<>();
-		List<SysRole> list = sysRoleService.list();
+		//增加组织过滤
+		QueryWrapper<SysRole> queryWrapper=new QueryWrapper();
+		String username = JwtUtil.getUserNameByToken(req);
+		SysUserCacheInfo userinfo = sysUserService.getCacheUser(username);
+		String orgsStr=JwtUtil.getUserSystemData("sysMultiOrgCode",userinfo);
+		queryWrapper.in("sys_org_code",(Object[])orgsStr.toString().split(","));
+		List<SysRole> list = sysRoleService.list(queryWrapper);
 		if(list==null||list.size()<=0) {
 			result.error500("未找到角色信息");
 		}else {
@@ -357,15 +372,25 @@ public class SysRoleController {
 	 * @return
 	 */
 	@RequestMapping(value = "/queryTreeList", method = RequestMethod.GET)
-	public Result<Map<String,Object>> queryTreeList(HttpServletRequest request) {
+	public Result<Map<String,Object>> queryTreeList(@RequestParam("platformCode") String platformCode, HttpServletRequest request) {
 		Result<Map<String,Object>> result = new Result<>();
 		//全部权限ids
 		List<String> ids = new ArrayList<>();
 		try {
-			LambdaQueryWrapper<SysPermission> query = new LambdaQueryWrapper<SysPermission>();
-			query.eq(SysPermission::getDelFlag, CommonConstant.DEL_FLAG_0);
-			query.orderByAsc(SysPermission::getSortNo);
-			List<SysPermission> list = sysPermissionService.list(query);
+//			LambdaQueryWrapper<SysPermission> query = new LambdaQueryWrapper<SysPermission>();
+//			query.eq(SysPermission::getDelFlag, CommonConstant.DEL_FLAG_0);
+//			query.orderByAsc(SysPermission::getSortNo);
+//			List<SysPermission> list = sysPermissionService.list(query);
+
+			//根据用户查询可以所具有的权限，只有自己拥有的权限才能向下传递
+			LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+			List<SysPermission> list;
+			if(sysUser.getUsername().equals(CommonConstant.SUPER_ADMIN_NAME)){
+				list = sysPermissionService.queryByUser(null,platformCode);
+			}else{
+				list = sysPermissionService.queryByUser(sysUser.getUsername(),platformCode);
+			}
+
 			for(SysPermission sysPer : list) {
 				ids.add(sysPer.getId());
 			}

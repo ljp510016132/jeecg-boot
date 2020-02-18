@@ -9,6 +9,7 @@ import org.jeecg.modules.system.model.SysOrgTreeModel;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -42,6 +43,24 @@ public class FindsOrgsChildrenUtil {
             records.add(new SysOrgTreeModel(org));
         }
         List<SysOrgTreeModel> tree = findChildren(records, idList);
+        setEmptyChildrenAsNull(tree);
+        return tree;
+    }
+
+    /**
+     * queryTreeList的子方法 ====1=====
+     * 该方法是s将SysOrg类型的list集合转换成SysOrgTreeModel类型的集合
+     */
+    public static List<SysOrgTreeModel> wrapTreeDataToTreeList2(List<SysOrg> recordList) {
+        // 在该方法每请求一次,都要对全局list集合进行一次清理
+        //idList.clear();
+        List<OrgIdModel> idList = new ArrayList<OrgIdModel>();
+        List<SysOrgTreeModel> records = new ArrayList<>();
+        for (int i = 0; i < recordList.size(); i++) {
+            SysOrg org = recordList.get(i);
+            records.add(new SysOrgTreeModel(org));
+        }
+        List<SysOrgTreeModel> tree = findChildren2(records, idList);
         setEmptyChildrenAsNull(tree);
         return tree;
     }
@@ -82,6 +101,35 @@ public class FindsOrgsChildrenUtil {
         }
         getGrandChildren(treeList,recordList,orgIdList);
         
+        //idList = orgIdList;
+        return treeList;
+    }
+
+
+    /**
+     * queryTreeList的子方法 ====2=====
+     * 该方法是找到并封装顶级父类的节点到TreeList集合
+     * 顶级节点不一定是根节点情况
+     */
+    private static List<SysOrgTreeModel> findChildren2(List<SysOrgTreeModel> recordList,
+                                                      List<OrgIdModel> orgIdList) {
+        List<SysOrgTreeModel> treeList = new ArrayList<>();
+
+        HashMap<String,SysOrgTreeModel> cacheOrgMap=new HashMap<>(recordList.size());
+        for (SysOrgTreeModel org:recordList) {
+            cacheOrgMap.put(org.getId(),org);
+        }
+        for (SysOrgTreeModel org:recordList) {
+            if(cacheOrgMap.get(org.getParentId())==null){
+                SysOrgTreeModel branch = org;
+                treeList.add(branch);
+                OrgIdModel orgIdModel = new OrgIdModel().convert(branch);
+                orgIdList.add(orgIdModel);
+            }
+        }
+
+        getGrandChildren(treeList,recordList,orgIdList);
+
         //idList = orgIdList;
         return treeList;
     }

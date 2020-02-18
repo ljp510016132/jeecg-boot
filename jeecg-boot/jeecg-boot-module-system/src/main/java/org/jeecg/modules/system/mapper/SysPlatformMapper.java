@@ -13,5 +13,9 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @Version: V1.0
  */
 public interface SysPlatformMapper extends BaseMapper<SysPlatform> {
+    /**
+     * 根据用户ID查询部门集合
+     */
+    public List<SysPlatform> queryUserPlatforms(@Param("userId") String userId,@Param("username") String username);
 
 }

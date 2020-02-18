@@ -136,7 +136,7 @@ public interface ISysUserService extends IService<SysUser> {
 	 * @param username 用户名
 	 * @return 权限集合
 	 */
-	Set<String> getUserPermissionsSet(String username);
+	Set<String> getUserPermissionsSet(String username,String platformCode);
 	
 	/**
 	 * 根据用户名设置部门ID
@@ -144,7 +144,14 @@ public interface ISysUserService extends IService<SysUser> {
 	 * @param orgCode
 	 */
 	void updateUserOrg(String username,String orgCode);
-	
+
+	/**
+	 * 根据用户名设置平台code
+	 * @param username
+	 * @param platformCode
+	 */
+	void updateUserPlatform(String username,String platformCode);
+
 	/**
 	 * 根据手机号获取用户名和密码
 	 */

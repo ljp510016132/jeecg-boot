@@ -24,6 +24,12 @@ public interface ISysOrgService extends IService<SysOrg>{
     List<SysOrgTreeModel> queryTreeList();
 
     /**
+     * 查询所有部门信息,并分节点进行显示
+     * @return
+     */
+    List<SysOrgTreeModel> queryTreeList(String userId);
+
+    /**
      * 查询所有部门OrgId信息,并分节点进行显示
      * @return
      */

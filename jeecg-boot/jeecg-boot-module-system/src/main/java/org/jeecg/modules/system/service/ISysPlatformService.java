@@ -3,6 +3,8 @@ package org.jeecg.modules.system.service;
 import org.jeecg.modules.system.entity.SysPlatform;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * @Description: 平台表
  * @Author: jeecg-boot
@@ -11,4 +13,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ISysPlatformService extends IService<SysPlatform> {
 
+    /**
+     * 查询SysPlatform集合
+     * @param userId
+     * @return
+     */
+    List<SysPlatform> queryUserPlatforms(String userId,String username);
 }

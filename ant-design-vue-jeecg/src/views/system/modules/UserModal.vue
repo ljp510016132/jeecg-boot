@@ -40,6 +40,20 @@
           <a-input placeholder="请输入用户名称" v-decorator="[ 'realname', validatorRules.realname]" />
         </a-form-item>
 
+        <a-form-item label="所属部门" :labelCol="labelCol" :wrapperCol="wrapperCol" >
+            <a-tree-select
+                showSearch
+                allowClear
+                :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }"
+                :treeData="orgTree"
+                placeholder='请选择所属部门'
+                treeDefaultExpandAll
+                v-decorator="['sysOrgId', validatorRules.sysOrgId]"
+                treeNodeFilterProp="title" 
+            >
+            </a-tree-select>
+        </a-form-item>
+
         <a-form-item label="工号" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input placeholder="请输入工号" v-decorator="[ 'workNo', validatorRules.workNo]" />
         </a-form-item>
@@ -144,7 +158,7 @@
   import { getAction } from '@/api/manage'
   import {addUser,editUser,queryUserRole,queryall } from '@/api/api'
   import { disabledAuthFilter } from "@/utils/authFilter"
-  import {duplicateCheck } from '@/api/api'
+  import {duplicateCheck,queryOrgTreeByUserId } from '@/api/api'
 
   export default {
     name: "UserModal",
@@ -201,6 +215,11 @@
           },
           roles:{},
           //  sex:{initialValue:((!this.model.sex)?"": (this.model.sex+""))}
+          sysOrgId:{
+              rules: [
+                  { required: true, message: '请选择所属部门' },
+              ]
+          },
           workNo: {
             rules: [
               { required: true, message: '请输入工号' },
@@ -238,6 +257,7 @@
           userId:"/sys/user/generateUserId", // 引入生成添加用户情况下的url
           syncUserByUserName:"/process/extActProcess/doSyncUserByUserName",//同步用户到工作流
         },
+        orgTree:[]
       }
     },
     created () {
@@ -262,6 +282,13 @@
           this.modalWidth = 800;
         }
         this.modaltoggleFlag = !this.modaltoggleFlag;
+      },
+      queryOrgTree(){
+        queryOrgTreeByUserId({userId:this.$store.getters.userInfo.id}).then((res)=>{
+            if(res.success){
+            this.orgTree = res.result;
+          }
+        })  
       },
       initialRoleList(){
         queryall().then((res)=>{
@@ -297,6 +324,7 @@
         this.resetScreenSize(); // 调用此方法,根据屏幕宽度自适应调整抽屉的宽度
         let that = this;
         that.initialRoleList();
+        that.queryOrgTree();
         that.checkedOrgNameString = "";
         that.form.resetFields();
         if(record.hasOwnProperty("id")){
@@ -307,7 +335,7 @@
         that.visible = true;
         that.model = Object.assign({}, record);
         that.$nextTick(() => {
-          that.form.setFieldsValue(pick(this.model,'username','sex','realname','email','phone','activitiSync','workNo','telephone','post'))
+          that.form.setFieldsValue(pick(this.model,'username','sex','realname','email','phone','activitiSync','workNo','telephone','post','sysOrgId'))
         });
         // 调用查询用户对应的部门信息的方法
         that.checkedOrgKeys = [];

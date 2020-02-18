@@ -174,9 +174,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 	 * @return 权限集合
 	 */
 	@Override
-	public Set<String> getUserPermissionsSet(String username) {
+	public Set<String> getUserPermissionsSet(String username,String platformCode) {
 		Set<String> permissionSet = new HashSet<>();
-		List<SysPermission> permissionList = sysPermissionMapper.queryByUser(username);
+		List<SysPermission> permissionList = sysPermissionMapper.queryByUser(username,platformCode);
 		for (SysPermission po : permissionList) {
 //			// TODO URL规则有问题？
 //			if (oConvertUtils.isNotEmpty(po.getUrl())) {
@@ -265,6 +265,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 		baseMapper.updateUserOrg(username, orgCode);
 	}
 
+	@Override
+	@CacheEvict(value= {CacheConstant.SYS_USERS_CACHE}, key="#username")
+	public void updateUserPlatform(String username,String platformCode) {
+		baseMapper.updateUserPlatform(username, platformCode);
+	}
 
 	@Override
 	public SysUser getUserByPhone(String phone) {

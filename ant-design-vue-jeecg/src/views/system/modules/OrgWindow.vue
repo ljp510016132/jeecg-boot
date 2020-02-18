@@ -35,7 +35,7 @@
 <script>
   import pick from 'lodash.pick'
   import { getAction } from '@/api/manage'
-  import { queryIdTree } from '@/api/api'
+  import { queryIdTree,queryOrgTreeByUserId } from '@/api/api'
   import userModal from './UserModal'
   export default {
     name: "OrgWindow",
@@ -143,11 +143,16 @@
         console.log('onCheck', checkedKeys, info);
       },
       queryOrgTree(){
-        queryIdTree().then((res)=>{
-          if(res.success){
+        queryOrgTreeByUserId({userId:this.$store.getters.userInfo.id}).then((res)=>{
+            if(res.success){
             this.orgTree = res.result;
           }
-        })
+        })  
+        // queryIdTree().then((res)=>{
+        //   if(res.success){
+        //     this.orgTree = res.result;
+        //   }
+        // })
       },
       modalFormOk(){
 

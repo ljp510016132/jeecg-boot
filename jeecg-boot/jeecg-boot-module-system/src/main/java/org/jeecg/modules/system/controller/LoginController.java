@@ -18,10 +18,12 @@ import org.jeecg.common.util.*;
 import org.jeecg.common.util.encryption.EncryptedString;
 import org.jeecg.modules.shiro.vo.DefContants;
 import org.jeecg.modules.system.entity.SysOrg;
+import org.jeecg.modules.system.entity.SysPlatform;
 import org.jeecg.modules.system.entity.SysUser;
 import org.jeecg.modules.system.model.SysLoginModel;
 import org.jeecg.modules.system.service.ISysOrgService;
 import org.jeecg.modules.system.service.ISysLogService;
+import org.jeecg.modules.system.service.ISysPlatformService;
 import org.jeecg.modules.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -49,7 +51,9 @@ public class LoginController {
     private RedisUtil redisUtil;
 	@Autowired
     private ISysOrgService sysOrgService;
-	
+	@Autowired
+	private ISysPlatformService sysPlatformService;
+
 	private static final String BASE_CHECK_CODES = "qwertyuiplkjhgfdsazxcvbnmQWERTYUPLKJHGFDSAZXCVBNM1234567890";
 
 	@ApiOperation("登录接口")
@@ -205,6 +209,28 @@ public class LoginController {
 	}
 
 	/**
+	 * 登陆成功选择用户当前系统
+	 * @param user
+	 * @return
+	 */
+	@RequestMapping(value = "/selectPlatform", method = RequestMethod.PUT)
+	public Result<JSONObject> selectPlatform(@RequestBody SysUser user) {
+		Result<JSONObject> result = new Result<JSONObject>();
+		String username = user.getUsername();
+		if(oConvertUtils.isEmpty(username)) {
+			LoginUser sysUser = (LoginUser)SecurityUtils.getSubject().getPrincipal();
+			username = sysUser.getUsername();
+		}
+		String platformCode= user.getPlatformCode();
+		this.sysUserService.updateUserPlatform(username, platformCode);
+		SysUser sysUser = sysUserService.getUserByName(username);
+		JSONObject obj = new JSONObject();
+		obj.put("userInfo", sysUser);
+		result.setResult(obj);
+		return result;
+	}
+
+	/**
 	 * 短信登录接口
 	 * 
 	 * @param jsonObject
@@ -341,6 +367,19 @@ public class LoginController {
 		} else {
 			obj.put("multi_org", 2);
 		}
+
+		// 获取用户平台信息
+		List<SysPlatform> platforms = sysPlatformService.queryUserPlatforms(sysUser.getId(),sysUser.getUsername());
+		obj.put("platforms", platforms);
+		if (platforms == null || platforms.size() == 0) {
+			obj.put("multi_platform", 0);
+		} else if (platforms.size() == 1) {
+			sysUserService.updateUserPlatform(username, platforms.get(0).getPlatformCode());
+			obj.put("multi_platform", 1);
+		} else {
+			obj.put("multi_platform", 2);
+		}
+
 		obj.put("token", token);
 		obj.put("userInfo", sysUser);
 		result.setResult(obj);

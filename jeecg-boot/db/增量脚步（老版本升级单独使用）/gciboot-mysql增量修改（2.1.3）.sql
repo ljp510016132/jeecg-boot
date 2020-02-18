@@ -55,5 +55,21 @@ INSERT INTO `sys_platform` VALUES ('0000', '权限管理平台', '0000', '用户
 -- Update of sys_permission，由于增加了表sys_platform因此需要对表sys_permission进行修改
 -- ----------------------------
 ALTER TABLE `sys_permission`
-ADD  `platform_id`  VARCHAR(32) NULL DEFAULT NULL COMMENT '所属平台';
-UPDATE sys_permission p SET p.platform_id='0000'
+ADD  `platform_code`  VARCHAR(32) NULL DEFAULT NULL COMMENT '所属平台';
+UPDATE sys_permission p SET p.platform_id='0000';
+
+
+-- ----------------------------
+-- Table structure for sys_platform_org
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_platform_org`;
+CREATE TABLE `sys_platform_org`  (
+  `ID` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'id',
+  `platform_id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '平台id',
+  `org_id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '部门id',
+  PRIMARY KEY (`ID`) USING BTREE,
+  INDEX `index_org_groupk_platformid`(`platform_id`) USING BTREE,
+  INDEX `index_org_groupk_orgid`(`org_id`) USING BTREE,
+  INDEX `index_org_groupk_platformidandorgid`(`platform_id`, `org_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+

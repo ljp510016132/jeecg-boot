@@ -62,8 +62,8 @@
         platformName:{rules: [{ required: true, message: '请输入平台名称!' }]},
         },
         url: {
-          add: "/system/sysPlatform/add",
-          edit: "/system/sysPlatform/edit",
+          add: "/sys/platform/add",
+          edit: "/sys/platform/edit",
         },
       }
     },

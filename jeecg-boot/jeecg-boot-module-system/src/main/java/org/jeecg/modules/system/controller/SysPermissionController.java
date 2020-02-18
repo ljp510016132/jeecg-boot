@@ -7,11 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.constant.CacheConstant;
 import org.jeecg.common.constant.CommonConstant;
 import org.jeecg.common.system.util.JwtUtil;
+import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.common.util.MD5Util;
 import org.jeecg.common.util.oConvertUtils;
 import org.jeecg.modules.system.entity.SysPermission;
@@ -67,11 +69,12 @@ public class SysPermissionController {
 	 * @return
 	 */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public Result<List<SysPermissionTree>> list() {
+	public Result<List<SysPermissionTree>> list(@RequestParam(value = "platformCode",required = true) String platformCode) {
         long start = System.currentTimeMillis();
 		Result<List<SysPermissionTree>> result = new Result<>();
 		try {
 			LambdaQueryWrapper<SysPermission> query = new LambdaQueryWrapper<SysPermission>();
+			query.eq(SysPermission::getPlatformCode,platformCode);
 			query.eq(SysPermission::getDelFlag, CommonConstant.DEL_FLAG_0);
 			query.orderByAsc(SysPermission::getSortNo);
 			List<SysPermission> list = sysPermissionService.list(query);
@@ -181,7 +184,8 @@ public class SysPermissionController {
 			}
 			log.info(" ------ 通过令牌获取用户拥有的访问菜单 ---- TOKEN ------ " + token);
 			String username = JwtUtil.getUsername(token);
-			List<SysPermission> metaList = sysPermissionService.queryByUser(username);
+			LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+			List<SysPermission> metaList = sysPermissionService.queryByUser(username,sysUser.getPlatformCode());
 			//添加首页路由
 			PermissionDataUtil.addIndexPage(metaList);
 			JSONObject json = new JSONObject();

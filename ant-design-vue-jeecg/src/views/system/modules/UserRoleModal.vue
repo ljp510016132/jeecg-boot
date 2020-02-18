@@ -1,25 +1,17 @@
 <template>
-  <a-drawer
-    :title="title"
-    :maskClosable="true"
-    width=650
-    placement="right"
-    :closable="true"
-    @close="close"
-    :visible="visible"
-    style="height: calc(100% - 55px);overflow: auto;padding-bottom: 53px;">
+  <a-drawer :title="title" :maskClosable="true" width=650 placement="right" :closable="true" @close="close"
+    :visible="visible" style="height: calc(100% - 55px);overflow: auto;padding-bottom: 53px;">
 
     <a-form>
+      <a-form-item label="平台">
+        <a-select labelInValue :value="{key:this.platformSelected.platformCode}" @change="platformChange">
+          <a-select-option v-for="(item, key) in platforms" :key="key" :value="item.platformCode">{{item.platformName}}
+          </a-select-option>
+        </a-select>
+      </a-form-item>
       <a-form-item label='所拥有的权限'>
-        <a-tree
-          checkable
-          @check="onCheck"
-          :checkedKeys="checkedKeys"
-          :treeData="treeData"
-          @expand="onExpand"
-          @select="onTreeNodeSelect"
-          :selectedKeys="selectedKeys"
-          :expandedKeys="expandedKeysss"
+        <a-tree checkable @check="onCheck" :checkedKeys="checkedKeys" :treeData="treeData" @expand="onExpand"
+          @select="onTreeNodeSelect" :selectedKeys="selectedKeys" :expandedKeys="expandedKeysss"
           :checkStrictly="checkStrictly">
           <span slot="hasDatarule" slot-scope="{slotTitle,ruleFlag}">
             {{ slotTitle }}<a-icon v-if="ruleFlag" type="align-left" style="margin-left:5px;color: red;"></a-icon>
@@ -39,7 +31,8 @@
           <a-menu-item key="6" @click="closeAll">合并所有</a-menu-item>
         </a-menu>
         <a-button>
-          树操作 <a-icon type="up" />
+          树操作
+          <a-icon type="up" />
         </a-button>
       </a-dropdown>
       <a-popconfirm title="确定放弃编辑？" @confirm="close" okText="确定" cancelText="取消">
@@ -54,126 +47,157 @@
 
 </template>
 <script>
-  import {queryTreeListForRole,queryRolePermission,saveRolePermission} from '@/api/api'
+  import {
+    queryTreeListForRole,
+    queryRolePermission,
+    saveRolePermission
+  } from '@/api/api'
   import RoleDataruleModal from './RoleDataruleModal.vue'
+  import store from '@/store/'
 
   export default {
     name: "RoleModal",
-    components:{
+    components: {
       RoleDataruleModal
     },
-    data(){
+    data() {
       return {
-        roleId:"",
+        roleId: "",
         treeData: [],
-        defaultCheckedKeys:[],
-        checkedKeys:[],
-        expandedKeysss:[],
-        allTreeKeys:[],
+        defaultCheckedKeys: [],
+        checkedKeys: [],
+        expandedKeysss: [],
+        allTreeKeys: [],
         autoExpandParent: true,
         checkStrictly: true,
-        title:"角色权限配置",
+        title: "角色权限配置",
         visible: false,
         loading: false,
-        selectedKeys:[]
+        selectedKeys: [],
+        platformSelected: {
+          platformCode: "",
+          platformName: ""
+        },
+      }
+    },
+    computed: {
+      platforms() {
+        let userPlatforms = this.$store.getters.userPlatforms
+        //默认选择第一个
+        this.platformSelected.platformCode = userPlatforms[0].platformCode
+        this.platformSelected.platformName = userPlatforms[0].platformName
+        return userPlatforms
       }
     },
     methods: {
-      onTreeNodeSelect(id){
-        if(id && id.length>0){
+      onTreeNodeSelect(id) {
+        if (id && id.length > 0) {
           this.selectedKeys = id
         }
-        this.$refs.datarule.show(this.selectedKeys[0],this.roleId)
+        this.$refs.datarule.show(this.selectedKeys[0], this.roleId)
       },
-      onCheck (o) {
-        if(this.checkStrictly){
+      onCheck(o) {
+        if (this.checkStrictly) {
           this.checkedKeys = o.checked;
-        }else{
+        } else {
           this.checkedKeys = o
         }
       },
-      show(roleId){
-        this.roleId=roleId
+      show(roleId) {
+        this.roleId = roleId
         this.visible = true;
       },
-      close () {
+      close() {
         this.reset()
         this.$emit('close');
         this.visible = false;
       },
-      onExpand(expandedKeys){
+      onExpand(expandedKeys) {
         this.expandedKeysss = expandedKeys;
         this.autoExpandParent = false
       },
-      reset () {
+      reset() {
         this.expandedKeysss = []
         this.checkedKeys = []
         this.defaultCheckedKeys = []
         this.loading = false
       },
-      expandAll () {
+      expandAll() {
         this.expandedKeysss = this.allTreeKeys
       },
-      closeAll () {
+      closeAll() {
         this.expandedKeysss = []
       },
-      checkALL () {
+      checkALL() {
         this.checkedKeys = this.allTreeKeys
       },
-      cancelCheckALL () {
+      cancelCheckALL() {
         //this.checkedKeys = this.defaultCheckedKeys
         this.checkedKeys = []
       },
-      switchCheckStrictly (v) {
-        if(v==1){
+      switchCheckStrictly(v) {
+        if (v == 1) {
           this.checkStrictly = false
-        }else if(v==2){
+        } else if (v == 2) {
           this.checkStrictly = true
         }
       },
-      handleCancel () {
+      handleCancel() {
         this.close()
       },
-      handleSubmit(){
+      handleSubmit() {
         let that = this;
-        let params =  {
-          roleId:that.roleId,
-          permissionIds:that.checkedKeys.join(","),
-          lastpermissionIds:that.defaultCheckedKeys.join(","),
+        let params = {
+          roleId: that.roleId,
+          permissionIds: that.checkedKeys.join(","),
+          lastpermissionIds: that.defaultCheckedKeys.join(","),
         };
         that.loading = true;
-        console.log("请求参数：",params);
-        saveRolePermission(params).then((res)=>{
-          if(res.success){
+        console.log("请求参数：", params);
+        saveRolePermission(params).then((res) => {
+          if (res.success) {
             that.$message.success(res.message);
             that.loading = false;
             that.close();
-          }else {
+          } else {
             that.$message.error(res.message);
             that.loading = false;
             that.close();
           }
         })
       },
-    },
-  watch: {
-    visible () {
-      if (this.visible) {
-        queryTreeListForRole().then((res) => {
-          this.treeData = res.result.treeList
-          this.allTreeKeys = res.result.ids
-          queryRolePermission({roleId:this.roleId}).then((res)=>{
+      platformChange(selVal) {
+        this.platformSelected.platformCode = selVal.key
+        this.platformSelected.platformName = selVal.label
+        this.loadPermissions();
+
+      },
+      loadPermissions() {
+        let params = {
+          platformCode: this.platformSelected.platformCode
+        }
+        if (this.visible) {
+          queryTreeListForRole(params).then((res) => {
+            this.treeData = res.result.treeList
+            this.allTreeKeys = res.result.ids
+            queryRolePermission({
+              roleId: this.roleId
+            }).then((res) => {
               this.checkedKeys = [...res.result];
               this.defaultCheckedKeys = [...res.result];
               this.expandedKeysss = this.allTreeKeys;
               //console.log(this.defaultCheckedKeys)
+            })
           })
-        })
+        }
+      }
+    },
+    watch: {
+      visible() {
+        this.loadPermissions();
       }
     }
   }
-  }
-
 </script>
 <style lang="scss" scoped>
   .drawer-bootom-button {
@@ -187,5 +211,4 @@
     background: #fff;
     border-radius: 0 0 2px 2px;
   }
-
 </style>

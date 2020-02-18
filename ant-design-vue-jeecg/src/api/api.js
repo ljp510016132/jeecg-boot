@@ -5,6 +5,9 @@ import { getAction,deleteAction,putAction,postAction} from '@/api/manage'
 ////图片预览请求地址
 // const imgView = "http://localhost:8080/jeecg-boot/sys/common/view/";
 
+//平台管理
+const getPlatformList = (params)=>getAction("/sys/platform/list",params);
+
 //角色管理
 const addRole = (params)=>postAction("/sys/role/add",params);
 const editRole = (params)=>putAction("/sys/role/edit",params);
@@ -19,6 +22,8 @@ const addUser = (params)=>postAction("/sys/user/add",params);
 const editUser = (params)=>putAction("/sys/user/edit",params);
 const queryUserRole = (params)=>getAction("/sys/user/queryUserRole",params);
 const getUserList = (params)=>getAction("/sys/user/list",params);
+const getUserOrgList = (params)=>getAction("/sys/user/userOrgList",params);
+
 // const deleteUser = (params)=>deleteAction("/sys/user/delete",params);
 // const deleteUserList = (params)=>deleteAction("/sys/user/deleteBatch",params);
 const frozenBatch = (params)=>putAction("/sys/user/frozenBatch",params);
@@ -52,6 +57,7 @@ const queryPermissionRule = (params)=>getAction("/sys/permission/queryPermission
 // 组织机构管理
 const queryOrgTreeList = (params)=>getAction("/sys/sysOrg/queryTreeList",params);
 const queryIdTree = (params)=>getAction("/sys/sysOrg/queryIdTree",params);
+const queryOrgTreeByUserId = (params)=>getAction("/sys/sysOrg/queryTreeListByUserId",params);
 const queryParentName   = (params)=>getAction("/sys/sysOrg/queryParentName",params);
 const searchByKeywords   = (params)=>getAction("/sys/sysOrg/searchBy",params);
 const deleteByOrgId   = (params)=>deleteAction("/sys/sysOrg/delete",params);
@@ -105,6 +111,7 @@ const loadCategoryData = (params)=>getAction("/sys/category/loadAllData",params)
 export {
   // imgView,
   // doMian,
+  getPlatformList,
   addRole,
   editRole,
   checkRoleCode,
@@ -112,6 +119,7 @@ export {
   editUser,
   queryUserRole,
   getUserList,
+  getUserOrgList,
   queryall,
   frozenBatch,
   checkOnlyUser,
@@ -129,6 +137,7 @@ export {
   queryPermissionRule,
   queryOrgTreeList,
   queryIdTree,
+  queryOrgTreeByUserId,
   queryParentName,
   searchByKeywords,
   deleteByOrgId,

@@ -5,7 +5,23 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
+            
+          <a-col :md="6" :sm="12">
 
+            <a-form-item label="所属部门" >
+                <a-tree-select
+                    showSearch
+                    allowClear
+                    :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }"
+                    :treeData="orgTree"
+                    placeholder='请选择所属部门'
+                    treeDefaultExpandAll
+                    v-model="queryParam.sysOrgId"
+                    treeNodeFilterProp="title" 
+                >
+                </a-tree-select>
+            </a-form-item>
+            </a-col>
           <a-col :md="6" :sm="12">
             <a-form-item label="账号">
               <!--<a-input placeholder="请输入账号查询" v-model="queryParam.username"></a-input>-->
@@ -178,7 +194,7 @@
   import UserModal from './modules/UserModal'
   import PasswordModal from './modules/PasswordModal'
   import {putAction} from '@/api/manage';
-  import {frozenBatch} from '@/api/api'
+  import {frozenBatch,queryOrgTreeByUserId} from '@/api/api'
   import {JeecgListMixin} from '@/mixins/JeecgListMixin'
   import SysUserAgentModal from "./modules/SysUserAgentModal";
   import JInput from '@/components/jeecg/JInput'
@@ -194,6 +210,7 @@
     },
     data() {
       return {
+        orgTree:[],
         description: '这是用户管理页面',
         queryParam: {},
         columns: [
@@ -289,7 +306,17 @@
         return `${window._CONFIG['domianURL']}/${this.url.importExcelUrl}`;
       }
     },
+    mounted(){
+        this.queryOrgTree()
+    },
     methods: {
+      queryOrgTree(){
+        queryOrgTreeByUserId({userId:this.$store.getters.userInfo.id}).then((res)=>{
+            if(res.success){
+            this.orgTree = res.result;
+          }
+        })  
+      },
       getAvatarView: function (avatar) {
         return this.url.imgerver + "/" + avatar;
       },

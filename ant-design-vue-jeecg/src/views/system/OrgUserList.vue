@@ -40,7 +40,7 @@
 <script>
   import OrgBaseInfo from './modules/OrgBaseInfo'
   import OrgUserInfo from './modules/OrgUserInfo'
-  import {queryOrgTreeList, searchByKeywords} from '@/api/api'
+  import {queryOrgTreeByUserId, searchByKeywords} from '@/api/api'
   import {JeecgListMixin} from '@/mixins/JeecgListMixin'
 
   export default {
@@ -98,7 +98,7 @@
         var that = this
         that.treeData = []
         that.orgTree = []
-        queryOrgTreeList().then((res) => {
+        queryOrgTreeByUserId({userId:this.$store.getters.userInfo.id}).then((res) => {
           if (res.success) {
             for (let i = 0; i < res.result.length; i++) {
               let temp = res.result[i]

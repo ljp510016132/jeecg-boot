@@ -14,10 +14,12 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.constant.CacheConstant;
+import org.jeecg.common.constant.CommonConstant;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.system.util.JwtUtil;
 import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.system.entity.SysOrg;
+import org.jeecg.modules.system.entity.SysPermission;
 import org.jeecg.modules.system.model.OrgIdModel;
 import org.jeecg.modules.system.model.SysOrgTreeModel;
 import org.jeecg.modules.system.service.ISysOrgService;
@@ -73,6 +75,35 @@ public class SysOrgController {
 //				list = sysOrgService.queryTreeList();
 //			}
 			List<SysOrgTreeModel> list = sysOrgService.queryTreeList();
+			result.setResult(list);
+			result.setSuccess(true);
+		} catch (Exception e) {
+			log.error(e.getMessage(),e);
+		}
+		return result;
+	}
+	/**
+	 * 根据用户查询所授权的部门：查询数据 查出所有部门,并以树结构数据格式响应给前端
+	 *
+	 * @return
+	 */
+	@RequestMapping(value = "/queryTreeListByUserId", method = RequestMethod.GET)
+	public Result<List<SysOrgTreeModel>> queryTreeListByUserId(@RequestParam("userId") String userId) {
+		Result<List<SysOrgTreeModel>> result = new Result<>();
+		try {
+			// 从内存中读取
+//			List<SysOrgTreeModel> list =FindsOrgsChildrenUtil.getSysOrgTreeList();
+//			if (CollectionUtils.isEmpty(list)) {
+//				list = sysOrgService.queryTreeList();
+//			}
+			//超级管理员可以管理所有机构
+			LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+			List<SysOrgTreeModel>  list;
+			if(sysUser.getUsername().equals(CommonConstant.SUPER_ADMIN_NAME)){
+				list = sysOrgService.queryTreeList(null);
+			}else{
+				list = sysOrgService.queryTreeList(userId);
+			}
 			result.setResult(list);
 			result.setSuccess(true);
 		} catch (Exception e) {

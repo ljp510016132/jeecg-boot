@@ -11,6 +11,14 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
 
+         <a-form-item
+          :labelCol="labelCol"
+          :wrapperCol="wrapperCol"
+          label="所属平台"
+          hasFeedback >
+          <a-input v-decorator="[ 'platformName']" :readOnly="true"/>
+        </a-form-item>
+
         <a-form-item label="菜单类型" :labelCol="labelCol" :wrapperCol="wrapperCol" >
           <a-radio-group @change="onChangeMenuType" v-decorator="['menuType',{'initialValue':localMenuType}]">
             <a-radio :value="0">一级菜单</a-radio>
@@ -216,7 +224,7 @@
         form: this.$form.createForm(this),
 
         iconChooseVisible: false,
-        validateStatus:""
+        validateStatus:"",
       }
     },
     computed:{
@@ -250,9 +258,10 @@
           }
         });
       },
-      add () {
+      add (value) {
+        console.log(value)
         // 默认值
-        this.edit({status:'1',permsType:'1',route:true});
+        this.edit({status:'1',permsType:'1',route:true,platformName:value.platformName,platformCode:value.platformCode});
       },
       edit (record) {
         this.resetScreenSize(); // 调用此方法,根据屏幕宽度自适应调整抽屉的宽度
@@ -296,7 +305,7 @@
 
         this.visible = true;
         this.loadTree();
-        let fieldsVal = pick(this.model,'name','perms','permsType','component','url','sortNo','menuType','status');
+        let fieldsVal = pick(this.model,'name','perms','permsType','component','url','sortNo','menuType','status','platformName');
         this.$nextTick(() => {
           this.form.setFieldsValue(fieldsVal)
         });

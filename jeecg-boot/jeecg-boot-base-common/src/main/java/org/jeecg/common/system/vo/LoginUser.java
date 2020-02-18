@@ -49,9 +49,15 @@ public class LoginUser {
 	private String password;
 
      /**
-      * 当前登录部门code
+      * 当前登录组织机构code
       */
     private String orgCode;
+
+	/**
+	 * 当前登录行政机构code
+	 */
+	private String departCode;
+
 	/**
 	 * 头像
 	 */

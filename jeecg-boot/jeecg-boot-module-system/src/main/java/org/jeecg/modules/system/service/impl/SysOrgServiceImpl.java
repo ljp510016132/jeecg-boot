@@ -51,6 +51,14 @@ public class SysOrgServiceImpl extends ServiceImpl<SysOrgMapper, SysOrg> impleme
 		return listResult;
 	}
 
+	@Override
+	public List<SysOrgTreeModel> queryTreeList(String userId) {
+		List<SysOrg> list =baseMapper.queryUserOrgs(userId);
+		// 调用wrapTreeDataToTreeList方法生成树状数据
+		List<SysOrgTreeModel> listResult = FindsOrgsChildrenUtil.wrapTreeDataToTreeList2(list);
+		return listResult;
+	}
+
 	@Cacheable(value = CacheConstant.SYS_ORG_IDS_CACHE)
 	@Override
 	public List<OrgIdModel> queryOrgIdTreeList() {

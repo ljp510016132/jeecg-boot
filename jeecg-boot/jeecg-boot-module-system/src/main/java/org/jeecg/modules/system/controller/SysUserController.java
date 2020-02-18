@@ -26,6 +26,7 @@ import org.jeecg.common.system.api.ISysBaseAPI;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.system.util.JwtUtil;
 import org.jeecg.common.system.vo.LoginUser;
+import org.jeecg.common.system.vo.SysUserCacheInfo;
 import org.jeecg.common.util.PasswordUtil;
 import org.jeecg.common.util.RedisUtil;
 import org.jeecg.common.util.oConvertUtils;
@@ -104,6 +105,11 @@ public class SysUserController {
 									  @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,HttpServletRequest req) {
 		Result<IPage<SysUser>> result = new Result<IPage<SysUser>>();
 		QueryWrapper<SysUser> queryWrapper = QueryGenerator.initQueryWrapper(user, req.getParameterMap());
+        //增加组织过滤
+        String username = JwtUtil.getUserNameByToken(req);
+        SysUserCacheInfo userinfo = sysUserService.getCacheUser(username);
+        String orgsStr=JwtUtil.getUserSystemData("sysMultiOrgCode",userinfo);
+        queryWrapper.in("sys_org_code",(Object[])orgsStr.toString().split(","));
 		Page<SysUser> page = new Page<SysUser>(pageNo, pageSize);
 		IPage<SysUser> pageList = sysUserService.page(page, queryWrapper);
 		result.setSuccess(true);
@@ -125,6 +131,9 @@ public class SysUserController {
 			user.setPassword(passwordEncode);
 			user.setStatus(1);
 			user.setDelFlag("0");
+			//定义部门
+			SysOrg sysOrg=sysOrgService.getById(user.getSysOrgId());
+			user.setSysOrgCode(sysOrg.getOrgCode());
 			sysUserService.addUserWithRole(user, selectedRoles);
             sysUserService.addUserWithOrg(user, selectedOrgs);
 			result.success("添加成功！");

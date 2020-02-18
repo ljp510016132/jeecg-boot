@@ -2,6 +2,8 @@ package org.jeecg.modules.ngalain.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.shiro.SecurityUtils;
+import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.common.util.MD5Util;
 import org.jeecg.common.util.oConvertUtils;
 import org.jeecg.modules.ngalain.mapper.NgAlainMapper;
@@ -29,7 +31,8 @@ public class NgAlainServiceImpl implements NgAlainService {
     }
     @Override
     public JSONArray getJeecgMenu(String id) throws Exception {
-        List<SysPermission> metaList = sysPermissionService.queryByUser(id);
+        LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+        List<SysPermission> metaList = sysPermissionService.queryByUser(id,sysUser.getPlatformCode());
         JSONArray jsonArray = new JSONArray();
         getPermissionJsonArray(jsonArray, metaList, null);
         JSONArray menulist= parseNgAlain(jsonArray);

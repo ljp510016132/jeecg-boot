@@ -47,7 +47,14 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
 	 * @param orgId
 	 */
 	void updateUserOrg(@Param("username") String username,@Param("orgCode") String orgCode);
-	
+
+	/**
+	 * 根据用户名设置平台Code
+	 * @param username
+	 * @param platformCode
+	 */
+	void updateUserPlatform(@Param("username") String username,@Param("platformCode") String platformCode);
+
 	/**
 	 * 根据手机号查询用户信息
 	 * @param phone
