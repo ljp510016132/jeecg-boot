@@ -1,12 +1,19 @@
 package org.jeecg.modules.system.service.impl;
 
-import org.jeecg.common.constant.CommonConstant;
-import org.jeecg.modules.system.entity.SysPlatform;
-import org.jeecg.modules.system.mapper.SysPlatformMapper;
-import org.jeecg.modules.system.service.ISysPlatformService;
-import org.springframework.stereotype.Service;
-
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.jeecg.common.constant.CacheConstant;
+import org.jeecg.common.constant.CommonConstant;
+import org.jeecg.common.util.oConvertUtils;
+import org.jeecg.modules.system.entity.SysPlatform;
+import org.jeecg.modules.system.entity.SysPlatformOrg;
+import org.jeecg.modules.system.mapper.SysPlatformMapper;
+import org.jeecg.modules.system.mapper.SysPlatformOrgMapper;
+import org.jeecg.modules.system.service.ISysPlatformService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,8 +26,11 @@ import java.util.List;
 @Service
 public class SysPlatformServiceImpl extends ServiceImpl<SysPlatformMapper, SysPlatform> implements ISysPlatformService {
 
+    @Autowired
+    SysPlatformOrgMapper sysPlatformOrgMapper;
+
     @Override
-    public List<SysPlatform> queryUserPlatforms(String userId,String username) {
+    public List<SysPlatform> queryUserPlatforms(String userId, String username) {
         //如果用户是超级管理员则拥有所有平台
         if(username.equals(CommonConstant.SUPER_ADMIN_NAME)){
             return baseMapper.queryUserPlatforms(userId,null);
@@ -28,4 +38,20 @@ public class SysPlatformServiceImpl extends ServiceImpl<SysPlatformMapper, SysPl
             return baseMapper.queryUserPlatforms(userId,username);
         }
     }
+
+    @Override
+    @Transactional
+    @CacheEvict(value={CacheConstant.SYS_USERS_CACHE}, allEntries=true)
+    public void editPlatformOrgs(String platformId, String orgs) {
+        //先删后加
+        sysPlatformOrgMapper.delete(new QueryWrapper<SysPlatformOrg>().lambda().eq(SysPlatformOrg::getPlatformId, platformId));
+        if(oConvertUtils.isNotEmpty(orgs)) {
+            String[] arr = orgs.split(",");
+            for (String orgId : arr) {
+                SysPlatformOrg platformOrg = new SysPlatformOrg(platformId, orgId);
+                sysPlatformOrgMapper.insert(platformOrg);
+            }
+        }
+    }
+
 }

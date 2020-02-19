@@ -7,6 +7,7 @@ import { getAction,deleteAction,putAction,postAction} from '@/api/manage'
 
 //平台管理
 const getPlatformList = (params)=>getAction("/sys/platform/list",params);
+const editPlatformOrgs = (params)=>postAction("/sys/platform/editPlatformOrgs",params);
 
 //角色管理
 const addRole = (params)=>postAction("/sys/role/add",params);
@@ -112,6 +113,7 @@ export {
   // imgView,
   // doMian,
   getPlatformList,
+  editPlatformOrgs,
   addRole,
   editRole,
   checkRoleCode,

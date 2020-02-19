@@ -19,4 +19,11 @@ public interface ISysPlatformService extends IService<SysPlatform> {
      * @return
      */
     List<SysPlatform> queryUserPlatforms(String userId,String username);
+
+    /**
+     * 更新平台组织机构
+     * @param platformId
+     * @param orgs
+     */
+    void editPlatformOrgs(String platformId, String orgs);
 }

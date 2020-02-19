@@ -17,7 +17,9 @@
         multiple
         treeCheckable="tree"
         checkable
+        autoExpandParent
         :checkedKeys="checkedKeys"
+        :expandedKeys.sync="expandedKeys"
         allowClear="true"
         :checkStrictly="true"
         @check="onCheck"
@@ -44,6 +46,7 @@
     },
     data () {
       return {
+        expandedKeys:[],//展开指定的树节点
         checkedKeys:[], // 存储选中的部门id
         userId:"", // 存储用户id
         model:{}, // 存储SysUserOrgsVO表
@@ -72,6 +75,7 @@
     methods: {
       add (checkedOrgKeys,userId) {
         this.checkedKeys = checkedOrgKeys;
+        this.expandedKeys = this.checkedKeys;
         this.userId = userId;
         this.edit({});
       },
