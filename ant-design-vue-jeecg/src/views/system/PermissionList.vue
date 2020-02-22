@@ -239,6 +239,7 @@ export default {
       this.$refs.modalForm.edit({ status: '1', permsType: '1', route: true, parentId: record.id,platformName:this.platformSelected.platformName,platformCode:this.platformSelected.platformCode})
     },
     platformChange(selVal) {
+        console.log(selVal)
       this.platformSelected.platformCode = selVal.key
       this.platformSelected.platformName=selVal.label
     },

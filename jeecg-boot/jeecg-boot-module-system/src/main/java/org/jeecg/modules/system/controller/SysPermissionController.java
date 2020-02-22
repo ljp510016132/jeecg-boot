@@ -41,6 +41,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 
 import lombok.extern.slf4j.Slf4j;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * <p>
  * 菜单权限表 前端控制器
@@ -302,15 +304,25 @@ public class SysPermissionController {
 	 * @return
 	 */
 	@RequestMapping(value = "/queryTreeList", method = RequestMethod.GET)
-	public Result<Map<String, Object>> queryTreeList() {
+	public Result<Map<String, Object>> queryTreeList(@RequestParam("platformCode") String platformCode, HttpServletRequest request) {
 		Result<Map<String, Object>> result = new Result<>();
 		// 全部权限ids
 		List<String> ids = new ArrayList<>();
 		try {
-			LambdaQueryWrapper<SysPermission> query = new LambdaQueryWrapper<SysPermission>();
-			query.eq(SysPermission::getDelFlag, CommonConstant.DEL_FLAG_0);
-			query.orderByAsc(SysPermission::getSortNo);
-			List<SysPermission> list = sysPermissionService.list(query);
+//			LambdaQueryWrapper<SysPermission> query = new LambdaQueryWrapper<SysPermission>();
+//			query.eq(SysPermission::getDelFlag, CommonConstant.DEL_FLAG_0);
+//			query.orderByAsc(SysPermission::getSortNo);
+//			List<SysPermission> list = sysPermissionService.list(query);
+
+			//根据用户查询可以所具有的权限，只有自己拥有的权限才能向下传递
+			LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+			List<SysPermission> list;
+			if(sysUser.getUsername().equals(CommonConstant.SUPER_ADMIN_NAME)){
+				list = sysPermissionService.queryByUser(null,platformCode);
+			}else{
+				list = sysPermissionService.queryByUser(sysUser.getUsername(),platformCode);
+			}
+
 			for (SysPermission sysPer : list) {
 				ids.add(sysPer.getId());
 			}

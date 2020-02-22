@@ -7,7 +7,15 @@
           <!-- 搜索区域 -->
           <a-form layout="inline" @keyup.enter.native="searchQuery">
             <a-row :gutter="24">
-              <a-col :md="12" :sm="8">
+              <a-col :md="6" :sm="12">
+                <a-form-item label="平台">
+                  <a-select labelInValue :value="{key:this.platformSelected.platformCode}" @change="platformChange">
+                    <a-select-option v-for="(item, key) in platforms" :key="key" :value="item.platformCode">
+                      {{item.platformName}}</a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="12">
                 <a-form-item label="角色名称" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
                   <a-input placeholder="" v-model="queryParam.roleName"></a-input>
                 </a-form-item>
@@ -22,11 +30,11 @@
               </a-col>
               -->
               <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-            <a-col :md="12" :sm="24">
-               <a-button type="primary" @click="searchQuery" icon="search" style="margin-left: 21px">查询</a-button>
-              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
-            </a-col>
-          </span>
+                <a-col :md="6" :sm="24">
+                  <a-button type="primary" @click="searchQuery" icon="search" style="margin-left: 21px">查询</a-button>
+                  <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+                </a-col>
+              </span>
             </a-row>
           </a-form>
         </div>
@@ -34,7 +42,8 @@
         <div class="table-operator" style="margin: 5px 0 10px 2px">
           <a-button @click="handleAdd" type="primary" icon="plus">角色录入</a-button>
           <!--<a-button @click="handleEdit(model1)" type="primary" icon="plus">角色编辑</a-button>-->
-          <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
+          <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader"
+            :action="importExcelUrl" @change="handleImportExcel">
             <a-button type="primary" icon="import">导入</a-button>
           </a-upload>
           <a-button type="primary" icon="download" @click="handleExportXls">导出</a-button>
@@ -47,40 +56,33 @@
         </div>
 
         <div style="margin-top: 15px">
-          <a-table
-            style="height:500px"
-            ref="table"
-            size="middle"
-            bordered
-            rowKey="id"
-            :columns="columns"
-            :dataSource="dataSource"
-            :pagination="ipagination"
-            :loading="loading"
+          <a-table style="height:500px" ref="table" size="middle" bordered rowKey="id" :columns="columns"
+            :dataSource="dataSource" :pagination="ipagination" :loading="loading"
             :rowSelection="{selectedRowKeys: selectedRowKeys1, onChange: onSelectChange1, type:'radio'}"
             @change="handleTableChange">
-          <span slot="action" slot-scope="text, record">
-          <a @click="handleOpen(record)">用户</a>
-          <a-divider type="vertical"/>
-          <a-dropdown>
-            <a class="ant-dropdown-link">
-              更多 <a-icon type="down"/>
-            </a>
-            <a-menu slot="overlay">
-              <a-menu-item>
-                <a @click="handlePerssion(record.id)">授权</a>
-              </a-menu-item>
-              <a-menu-item>
-                <a @click="handleEdit(record)">编辑</a>
-              </a-menu-item>
-              <a-menu-item>
-                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete1(record.id)">
-                  <a>删除</a>
-                </a-popconfirm>
-              </a-menu-item>
-            </a-menu>
-          </a-dropdown>
-        </span>
+            <span slot="action" slot-scope="text, record">
+              <a @click="handleOpen(record)">用户</a>
+              <a-divider type="vertical" />
+              <a-dropdown>
+                <a class="ant-dropdown-link">
+                  更多
+                  <a-icon type="down" />
+                </a>
+                <a-menu slot="overlay">
+                  <a-menu-item>
+                    <a @click="handlePerssion(record)">授权</a>
+                  </a-menu-item>
+                  <a-menu-item>
+                    <a @click="handleEdit(record)">编辑</a>
+                  </a-menu-item>
+                  <a-menu-item>
+                    <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete1(record.id)">
+                      <a>删除</a>
+                    </a-popconfirm>
+                  </a-menu-item>
+                </a-menu>
+              </a-dropdown>
+            </span>
           </a-table>
         </div>
         <!-- 右侧的角色权限配置 -->
@@ -104,12 +106,12 @@
                 </a-form-item>
               </a-col>
               <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-            <a-col :md="9" :sm="24">
-             <a-button type="primary" @click="searchQuery2" icon="search" style="margin-left: 21px">查询</a-button>
-              <a-button type="primary" @click="searchReset2" icon="reload" style="margin-left: 8px">重置</a-button>
+                <a-col :md="9" :sm="24">
+                  <a-button type="primary" @click="searchQuery2" icon="search" style="margin-left: 21px">查询</a-button>
+                  <a-button type="primary" @click="searchReset2" icon="reload" style="margin-left: 8px">重置</a-button>
 
-            </a-col>
-          </span>
+                </a-col>
+              </span>
             </a-row>
           </a-form>
         </div>
@@ -122,12 +124,12 @@
           <a-dropdown v-if="selectedRowKeys2.length > 0">
             <a-menu slot="overlay">
               <a-menu-item key="1" @click="batchDel2">
-                <a-icon type="delete"/>
+                <a-icon type="delete" />
                 删除
               </a-menu-item>
             </a-menu>
             <a-button style="margin-left: 8px"> 批量操作
-              <a-icon type="down"/>
+              <a-icon type="down" />
             </a-button>
           </a-dropdown>
         </div>
@@ -138,34 +140,26 @@
             selectedRowKeys2.length }}</a>项
             <a style="margin-left: 24px" @click="onClearSelected2">清空</a>
           </div>
-          <a-table
-            style="height:500px"
-            ref="table2"
-            bordered
-            size="middle"
-            rowKey="id"
-            :columns="columns2"
-            :dataSource="dataSource2"
-            :pagination="ipagination2"
-            :loading="loading2"
-            :rowSelection="{selectedRowKeys: selectedRowKeys2, onChange: onSelectChange2}"
-            @change="handleTableChange2">
-           <span slot="action" slot-scope="text, record">
-           <a @click="handleEdit2(record)">编辑</a>
-          <a-divider type="vertical"/>
-          <a-dropdown>
-            <a class="ant-dropdown-link">
-              更多 <a-icon type="down"/>
-            </a>
-            <a-menu slot="overlay">
-              <a-menu-item>
-                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete2(record.id)">
-                  <a>删除</a>
-                </a-popconfirm>
-              </a-menu-item>
-            </a-menu>
-          </a-dropdown>
-        </span>
+          <a-table style="height:500px" ref="table2" bordered size="middle" rowKey="id" :columns="columns2"
+            :dataSource="dataSource2" :pagination="ipagination2" :loading="loading2"
+            :rowSelection="{selectedRowKeys: selectedRowKeys2, onChange: onSelectChange2}" @change="handleTableChange2">
+            <span slot="action" slot-scope="text, record">
+              <a @click="handleEdit2(record)">编辑</a>
+              <a-divider type="vertical" />
+              <a-dropdown>
+                <a class="ant-dropdown-link">
+                  更多
+                  <a-icon type="down" />
+                </a>
+                <a-menu slot="overlay">
+                  <a-menu-item>
+                    <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete2(record.id)">
+                      <a>删除</a>
+                    </a-popconfirm>
+                  </a-menu-item>
+                </a-menu>
+              </a-dropdown>
+            </span>
           </a-table>
         </div>
         <!-- 表单区域 -->
@@ -177,14 +171,25 @@
   </a-row>
 </template>
 <script>
-  import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import { deleteAction, postAction, getAction } from '@/api/manage'
+  import {
+    JeecgListMixin
+  } from '@/mixins/JeecgListMixin'
+  import {
+    deleteAction,
+    postAction,
+    getAction
+  } from '@/api/manage'
   import SelectUserModal from './modules/SelectUserModal'
   import RoleModal from './modules/RoleModal'
   import UserModal from './modules/UserModal'
-  import { filterObj } from '@/utils/util'
+  import {
+    filterObj
+  } from '@/utils/util'
   import UserRoleModal from './modules/UserRoleModal'
   import moment from 'moment'
+  import {
+    getPlatformList
+  } from '@/api/api'
 
   export default {
     name: 'RoleUserList',
@@ -198,6 +203,11 @@
     },
     data() {
       return {
+        platformSelected: {
+          platformCode: "",
+          platformName: ""
+        },
+        platforms: null,
         model1: {},
         model2: {},
         currentRoleId: '',
@@ -243,42 +253,42 @@
         selectedRowKeys2: [],
         selectionRows1: [],
         selectionRows2: [],
-        test:{},
-        rightcolval:0,
-        columns:
-          [
-            {
-              title: '角色编码',
-              align: 'center',
-              dataIndex: 'roleCode'
-            },
-            {
-              title: '角色名称',
-              align: 'center',
-              dataIndex: 'roleName'
-            },
-            {
-              title: '创建时间',
-              dataIndex: 'createTime',
-              align:"center",
-              sorter: true,
-              customRender: (text) => {
-                return moment(text).format('YYYY-MM-DD')
-              }
-            },
-            {
-              title: '操作',
-              dataIndex: 'action',
-              align: 'center',
-              scopedSlots: { customRender: 'action' }
+        test: {},
+        rightcolval: 0,
+        columns: [{
+            title: '角色编码',
+            align: 'center',
+            dataIndex: 'roleCode'
+          },
+          {
+            title: '角色名称',
+            align: 'center',
+            dataIndex: 'roleName'
+          },
+          {
+            title: '创建时间',
+            dataIndex: 'createTime',
+            align: "center",
+            sorter: true,
+            customRender: (text) => {
+              return moment(text).format('YYYY-MM-DD')
             }
-          ],
+          },
+          {
+            title: '操作',
+            dataIndex: 'action',
+            align: 'center',
+            scopedSlots: {
+              customRender: 'action'
+            }
+          }
+        ],
         columns2: [{
-          title: '用户账号',
-          align: 'center',
-          dataIndex: 'username',
-          width: 120
-        },
+            title: '用户账号',
+            align: 'center',
+            dataIndex: 'username',
+            width: 120
+          },
           {
             title: '用户名称',
             align: 'center',
@@ -295,10 +305,13 @@
           {
             title: '操作',
             dataIndex: 'action',
-            scopedSlots: { customRender: 'action' },
+            scopedSlots: {
+              customRender: 'action'
+            },
             align: 'center',
             width: 120
-          }],
+          }
+        ],
 
 
         url: {
@@ -314,7 +327,7 @@
       }
     },
     computed: {
-      importExcelUrl: function() {
+      importExcelUrl: function () {
         return `${window._CONFIG['domianURL']}/${this.url.importExcelUrl}`
       },
       leftColMd() {
@@ -324,7 +337,59 @@
         return this.selectedRowKeys1.length === 0 ? 0 : 12
       }
     },
+    create() {
+      // this.loadPlatformList()
+      // this.platforms = this.$store.getters.userPlatforms
+
+    },
     methods: {
+      loadPlatformList() {
+        this.platforms = this.$store.getters.userPlatforms
+        if (this.platformSelected.platformCode == "") {
+          this.platformSelected.platformCode = this.platforms[0].platformCode
+          this.platformSelected.platformName = this.platforms[0].platformName
+        }
+        this.queryParam.platformCode = this.platformSelected.platformCode
+      },
+      loadData(arg) {
+        this.loadPlatformList()
+        if (!this.url.list) {
+          this.$message.error("请设置url.list属性!")
+          return
+        }
+        //加载数据 若传入参数1则加载第一页的内容
+        if (arg === 1) {
+          this.ipagination.current = 1;
+        }
+        var params = this.getQueryParams(); //查询条件
+        this.loading = true;
+        getAction(this.url.list, params).then((res) => {
+          if (res.success) {
+            this.dataSource = res.result.records;
+            this.ipagination.total = res.result.total;
+          }
+          if (res.code === 510) {
+            this.$message.warning(res.message)
+          }
+          this.loading = false;
+        })
+      },
+      // async loadPlatformList() {
+      //   await getPlatformList().then(res => {
+      //     if (res.success) {
+      //       console.log(res.result)
+      //       if (res.result.records.length > 0) {
+      //         this.platforms = res.result.records
+      //         if (this.platformSelected.platformCode == "") {
+      //           this.platformSelected.platformCode = res.result.records[0].platformCode
+      //           this.platformSelected.platformName = res.result.records[0].platformName
+      //         }
+      //       }
+      //     }
+      //   })
+      //   this.queryParam.platformCode = this.platformSelected.platformCode
+      //   this.loadData()
+      // },
       onSelectChange2(selectedRowKeys, selectionRows) {
         this.selectedRowKeys2 = selectedRowKeys
         this.selectionRows2 = selectionRows
@@ -346,8 +411,7 @@
         this.currentRoleId = selectedRowKeys[0]
         this.loadData2()
       },
-      onClearSelected() {
-      },
+      onClearSelected() {},
 
       getQueryParams2() {
         //获取查询条件
@@ -364,17 +428,34 @@
       getQueryField2() {
         //TODO 字段权限控制
         var str = 'id,'
-        this.columns2.forEach(function(value) {
+        this.columns2.forEach(function (value) {
           str += ',' + value.dataIndex
         })
         return str
       },
-      handleEdit2: function(record) {
+      handleAdd: function () {
+        this.$refs.modalForm.add(this.platformSelected);
+        this.$refs.modalForm.title = "新增";
+        this.$refs.modalForm.disableSubmit = false;
+      },
+      handleEdit: function (record) {
+        record = Object.assign(record, this.platformSelected)
+        this.$refs.modalForm.edit(record);
+        this.$refs.modalForm.title = "编辑";
+        this.$refs.modalForm.disableSubmit = false;
+      },
+      handleDetail: function (record) {
+        record = Object.assign(record, this.platformSelected)
+        this.$refs.modalForm.edit(record);
+        this.$refs.modalForm.title = "详情";
+        this.$refs.modalForm.disableSubmit = true;
+      },
+      handleEdit2: function (record) {
         this.$refs.modalForm2.title = '编辑'
         this.$refs.modalForm2.roleDisabled = true
         this.$refs.modalForm2.edit(record)
       },
-      handleAdd2: function() {
+      handleAdd2: function () {
         if (this.currentRoleId == '') {
           this.$message.error('请选择一个角色!')
         } else {
@@ -400,7 +481,7 @@
           this.ipagination2.current = 1
         }
         if (this.currentRoleId === '') return
-        let params = this.getQueryParams2()//查询条件
+        let params = this.getQueryParams2() //查询条件
         params.roleId = this.currentRoleId
         this.loading2 = true
         getAction(this.url.list2, params).then((res) => {
@@ -413,18 +494,21 @@
         })
 
       },
-      handleDelete1: function(id) {
+      handleDelete1: function (id) {
         this.handleDelete(id)
         this.dataSource2 = []
         this.currentRoleId = ''
       },
-      handleDelete2: function(id) {
+      handleDelete2: function (id) {
         if (!this.url.delete2) {
           this.$message.error('请设置url.delete2属性!')
           return
         }
         var that = this
-        deleteAction(that.url.delete2, { roleId: this.currentRoleId, userId: id }).then((res) => {
+        deleteAction(that.url.delete2, {
+          roleId: this.currentRoleId,
+          userId: id
+        }).then((res) => {
           if (res.success) {
             that.$message.success(res.message)
             that.loadData2()
@@ -433,7 +517,7 @@
           }
         })
       },
-      batchDel2: function() {
+      batchDel2: function () {
 
         if (!this.url.deleteBatch2) {
           this.$message.error('请设置url.deleteBatch2属性!')
@@ -452,8 +536,11 @@
           this.$confirm({
             title: '确认删除',
             content: '是否删除选中数据?',
-            onOk: function() {
-              deleteAction(that.url.deleteBatch2, { roleId: that.currentRoleId, userIds: ids }).then((res) => {
+            onOk: function () {
+              deleteAction(that.url.deleteBatch2, {
+                roleId: that.currentRoleId,
+                userIds: ids
+              }).then((res) => {
                 if (res.success) {
                   that.$message.success(res.message)
                   that.loadData2()
@@ -524,13 +611,19 @@
         this.ipagination2 = pagination
         this.loadData2()
       },
-      hideUserList(){
+      hideUserList() {
         //this.rightcolval = 0
         this.selectedRowKeys1 = []
       },
-      handlePerssion(roleId){
-        this.$refs.modalUserRole.show(roleId);
-      }
+      handlePerssion(role) {
+        this.$refs.modalUserRole.show(role);
+      },
+      platformChange(selVal) {
+        console.log(selVal)
+        this.platformSelected.platformCode = selVal.key
+        this.platformSelected.platformName = selVal.label
+        this.queryParam.platformCode = this.platformSelected.platformCode
+      },
     }
   }
 </script>

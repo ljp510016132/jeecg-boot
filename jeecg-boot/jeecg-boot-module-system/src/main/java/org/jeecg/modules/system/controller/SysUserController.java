@@ -101,15 +101,23 @@ public class SysUserController {
 	private RedisUtil redisUtil;
 	
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public Result<IPage<SysUser>> queryPageList(SysUser user,@RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
-									  @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,HttpServletRequest req) {
+	public Result<IPage<SysUser>> queryPageList(SysUser user,
+                                                @RequestParam(value = "selectedOrgCodes",required = false) String selectedOrgCodes,
+                                                @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
+									            @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
+                                                HttpServletRequest req) {
 		Result<IPage<SysUser>> result = new Result<IPage<SysUser>>();
 		QueryWrapper<SysUser> queryWrapper = QueryGenerator.initQueryWrapper(user, req.getParameterMap());
         //增加组织过滤
         String username = JwtUtil.getUserNameByToken(req);
         SysUserCacheInfo userinfo = sysUserService.getCacheUser(username);
         String orgsStr=JwtUtil.getUserSystemData("sysMultiOrgCode",userinfo);
-        queryWrapper.in("sys_org_code",(Object[])orgsStr.toString().split(","));
+        if(!oConvertUtils.isEmpty(selectedOrgCodes)){
+            queryWrapper.in("sys_org_code",(Object[])selectedOrgCodes.toString().split(","));
+        }else if(!CommonConstant.SUPER_ADMIN_NAME.equals(username)){
+            //超级管理员可以查看多有用户，普通管理员只能查看自己拥有部门权限的用户
+            queryWrapper.in("sys_org_code",(Object[])orgsStr.toString().split(","));
+        }
 		Page<SysUser> page = new Page<SysUser>(pageNo, pageSize);
 		IPage<SysUser> pageList = sysUserService.page(page, queryWrapper);
 		result.setSuccess(true);
@@ -374,7 +382,7 @@ public class SysUserController {
      * 导出excel
      *
      * @param request
-     * @param response
+     * @param request
      */
     @RequestMapping(value = "/exportXls")
     public ModelAndView exportXls(SysUser sysUser,HttpServletRequest request) {
@@ -796,8 +804,8 @@ public class SysUserController {
 	}
 
 	/**
-	 * 
-	 * @param 根据用户名或手机号查询用户信息
+	 * 根据用户名或手机号查询用户信息
+	 * @param
 	 * @return
 	 */
 	@GetMapping("/querySysUser")

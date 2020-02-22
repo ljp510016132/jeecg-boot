@@ -18,7 +18,7 @@ public interface ISysPlatformOrgService extends IService<SysPlatformOrg> {
 	
 
 	/**
-	 * 根据指定用户id查询部门信息
+	 * 根据平台Id查询拥有的机构树
 	 * @param platformId
 	 * @return
 	 */

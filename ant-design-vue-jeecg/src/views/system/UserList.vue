@@ -5,23 +5,16 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
-            
+
           <a-col :md="6" :sm="12">
 
-            <a-form-item label="所属部门" >
-                <a-tree-select
-                    showSearch
-                    allowClear
-                    :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }"
-                    :treeData="orgTree"
-                    placeholder='请选择所属部门'
-                    treeDefaultExpandAll
-                    v-model="queryParam.sysOrgId"
-                    treeNodeFilterProp="title" 
-                >
-                </a-tree-select>
+            <a-form-item label="所属部门">
+              <a-tree-select showSearch allowClear multiple :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }"
+                :treeData="orgTree" placeholder='请选择所属部门' treeDefaultExpandAll v-model="sysOrgIds"
+                treeNodeFilterProp="title" @change="onChange" @search="onSearch" @select="onSelect">
+              </a-tree-select>
             </a-form-item>
-            </a-col>
+          </a-col>
           <a-col :md="6" :sm="12">
             <a-form-item label="账号">
               <!--<a-input placeholder="请输入账号查询" v-model="queryParam.username"></a-input>-->
@@ -70,7 +63,7 @@
               <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
               <a @click="handleToggleSearch" style="margin-left: 8px">
                 {{ toggleSearchStatus ? '收起' : '展开' }}
-                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+                <a-icon :type="toggleSearchStatus ? 'up' : 'down'" />
               </a>
             </span>
           </a-col>
@@ -83,27 +76,28 @@
     <div class="table-operator" style="border-top: 5px">
       <a-button @click="handleAdd" type="primary" icon="plus">添加用户</a-button>
       <a-button type="primary" icon="download" @click="handleExportXls('用户信息')">导出</a-button>
-      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
+      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl"
+        @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay" @click="handleMenuClick">
           <a-menu-item key="1">
-            <a-icon type="delete" @click="batchDel"/>
+            <a-icon type="delete" @click="batchDel" />
             删除
           </a-menu-item>
           <a-menu-item key="2">
-            <a-icon type="lock" @click="batchFrozen('2')"/>
+            <a-icon type="lock" @click="batchFrozen('2')" />
             冻结
           </a-menu-item>
           <a-menu-item key="3">
-            <a-icon type="unlock" @click="batchFrozen('1')"/>
+            <a-icon type="unlock" @click="batchFrozen('1')" />
             解冻
           </a-menu-item>
         </a-menu>
         <a-button style="margin-left: 8px">
           批量操作
-          <a-icon type="down"/>
+          <a-icon type="down" />
         </a-button>
       </a-dropdown>
     </div>
@@ -111,36 +105,30 @@
     <!-- table区域-begin -->
     <div>
       <div class="ant-alert ant-alert-info" style="margin-bottom: 16px;">
-        <i class="anticon anticon-info-circle ant-alert-icon"></i>已选择&nbsp;<a style="font-weight: 600">{{ selectedRowKeys.length }}</a>项&nbsp;&nbsp;
+        <i class="anticon anticon-info-circle ant-alert-icon"></i>已选择&nbsp;<a
+          style="font-weight: 600">{{ selectedRowKeys.length }}</a>项&nbsp;&nbsp;
         <a style="margin-left: 24px" @click="onClearSelected">清空</a>
       </div>
 
-      <a-table
-        ref="table"
-        bordered
-        size="middle"
-        rowKey="id"
-        :columns="columns"
-        :dataSource="dataSource"
-        :pagination="ipagination"
-        :loading="loading"
-        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-        @change="handleTableChange">
+      <a-table ref="table" bordered size="middle" rowKey="id" :columns="columns" :dataSource="dataSource"
+        :pagination="ipagination" :loading="loading"
+        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}" @change="handleTableChange">
 
         <template slot="avatarslot" slot-scope="text, record, index">
           <div class="anty-img-wrap">
-            <a-avatar shape="square" :src="getAvatarView(record.avatar)" icon="user"/>
+            <a-avatar shape="square" :src="getAvatarView(record.avatar)" icon="user" />
           </div>
         </template>
 
         <span slot="action" slot-scope="text, record">
           <a @click="handleEdit(record)">编辑</a>
 
-          <a-divider type="vertical"/>
+          <a-divider type="vertical" />
 
           <a-dropdown>
             <a class="ant-dropdown-link">
-              更多 <a-icon type="down"/>
+              更多
+              <a-icon type="down" />
             </a>
             <a-menu slot="overlay">
               <a-menu-item>
@@ -193,9 +181,17 @@
 <script>
   import UserModal from './modules/UserModal'
   import PasswordModal from './modules/PasswordModal'
-  import {putAction} from '@/api/manage';
-  import {frozenBatch,queryOrgTreeByUserId} from '@/api/api'
-  import {JeecgListMixin} from '@/mixins/JeecgListMixin'
+  import {
+    putAction,
+    getAction
+  } from '@/api/manage';
+  import {
+    frozenBatch,
+    queryOrgTreeByUserId
+  } from '@/api/api'
+  import {
+    JeecgListMixin
+  } from '@/mixins/JeecgListMixin'
   import SysUserAgentModal from "./modules/SysUserAgentModal";
   import JInput from '@/components/jeecg/JInput'
 
@@ -210,7 +206,8 @@
     },
     data() {
       return {
-        orgTree:[],
+        sysOrgIds: [],
+        orgTree: [],
         description: '这是用户管理页面',
         queryParam: {},
         columns: [
@@ -241,7 +238,9 @@
             align: "center",
             width: 120,
             dataIndex: 'avatar',
-            scopedSlots: {customRender: "avatarslot"}
+            scopedSlots: {
+              customRender: "avatarslot"
+            }
           },
 
           {
@@ -274,17 +273,19 @@
             width: 80,
             dataIndex: 'status_dictText'
           },
-         /* {
-            title: '创建时间',
-            align: "center",
-            width: 150,
-            dataIndex: 'createTime',
-            sorter: true
-          },*/
+          /* {
+             title: '创建时间',
+             align: "center",
+             width: 150,
+             dataIndex: 'createTime',
+             sorter: true
+           },*/
           {
             title: '操作',
             dataIndex: 'action',
-            scopedSlots: {customRender: 'action'},
+            scopedSlots: {
+              customRender: 'action'
+            },
             align: "center",
             width: 170
           }
@@ -302,20 +303,51 @@
       }
     },
     computed: {
-      importExcelUrl: function(){
+      importExcelUrl: function () {
         return `${window._CONFIG['domianURL']}/${this.url.importExcelUrl}`;
       }
     },
-    mounted(){
-        this.queryOrgTree()
+    mounted() {
+      this.queryOrgTree()
     },
     methods: {
-      queryOrgTree(){
-        queryOrgTreeByUserId({userId:this.$store.getters.userInfo.id}).then((res)=>{
-            if(res.success){
-            this.orgTree = res.result;
+      loadData(arg) {
+        if (!this.url.list) {
+          this.$message.error("请设置url.list属性!")
+          return
+        }
+        //加载数据 若传入参数1则加载第一页的内容
+        if (arg === 1) {
+          this.ipagination.current = 1;
+        }
+        var params = this.getQueryParams(); //查询条件
+        params.selectedOrgCodes = this.sysOrgIds.join(',')
+        this.loading = true;
+        getAction(this.url.list, params).then((res) => {
+          if (res.success) {
+            this.dataSource = res.result.records;
+            this.ipagination.total = res.result.total;
           }
-        })  
+          if (res.code === 510) {
+            this.$message.warning(res.message)
+          }
+          this.loading = false;
+        })
+      },
+      queryOrgTree() {
+        queryOrgTreeByUserId({
+          userId: this.$store.getters.userInfo.id
+        }).then((res) => {
+          if (res.success) {
+            //由于这里需要orgcode，因此把节点的Id
+            res.result.forEach(item => {
+              item.key = item.orgCode
+              item.value = item.orgCode
+            })
+            this.orgTree = res.result;
+            console.log(this.orgTree)
+          }
+        })
       },
       getAvatarView: function (avatar) {
         return this.url.imgerver + "/" + avatar;
@@ -345,7 +377,10 @@
             title: "确认操作",
             content: "是否" + (status == 1 ? "解冻" : "冻结") + "选中账号?",
             onOk: function () {
-              frozenBatch({ids: ids, status: status}).then((res) => {
+              frozenBatch({
+                ids: ids,
+                status: status
+              }).then((res) => {
                 if (res.success) {
                   that.$message.success(res.message);
                   that.loadData();
@@ -374,7 +409,10 @@
           that.$message.warning('管理员账号不允许此操作！');
           return;
         }
-        frozenBatch({ids: id, status: status}).then((res) => {
+        frozenBatch({
+          ids: id,
+          status: status
+        }).then((res) => {
           if (res.success) {
             that.$message.success(res.message);
             that.loadData();
@@ -386,13 +424,23 @@
       handleChangePassword(username) {
         this.$refs.passwordmodal.show(username);
       },
-      handleAgentSettings(username){
+      handleAgentSettings(username) {
         this.$refs.sysUserAgentModal.agentSettings(username);
         this.$refs.sysUserAgentModal.title = "用户代理人设置";
       },
       passwordModalOk() {
         //TODO 密码修改完成 不需要刷新页面，可以把datasource中的数据更新一下
-      }
+      },
+      onChange(value) {
+        console.log(value)
+        this.value = value
+      },
+      onSearch() {
+        console.log(...arguments)
+      },
+      onSelect() {
+        console.log(...arguments)
+      },
     }
 
   }

@@ -83,4 +83,8 @@ public class SysRole implements Serializable {
      */
     private String sysOrgCode;
 
+    /**
+     * 所属平台
+     */
+    private String platformCode;
 }

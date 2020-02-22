@@ -174,7 +174,9 @@ public class JwtUtil {
 		//替换为系统用户所拥有的所有机构编码
 		else if (key.equals(DataBaseConstant.SYS_MULTI_ORG_CODE)|| key.equals(DataBaseConstant.SYS_MULTI_ORG_CODE_TABLE)) {
 			if(user.isOneOrg()) {
-				returnValue = user.getSysMultiOrgCode().get(0);
+				if(user.getSysMultiOrgCode().size()>0) {
+					returnValue = user.getSysMultiOrgCode().get(0);
+				}
 			}else {
 				returnValue = Joiner.on(",").join(user.getSysMultiOrgCode());
 			}

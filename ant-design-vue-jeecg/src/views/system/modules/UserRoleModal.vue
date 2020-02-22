@@ -4,8 +4,8 @@
 
     <a-form>
       <a-form-item label="平台">
-        <a-select labelInValue :value="{key:this.platformSelected.platformCode}" @change="platformChange">
-          <a-select-option v-for="(item, key) in platforms" :key="key" :value="item.platformCode">{{item.platformName}}
+        <a-select labelInValue :value="{key:this.platformSelected.platformCode}" @change="platformChange"  >
+          <a-select-option v-for="(item, key) in userPlatforms" :key="key" :value="item.platformCode">{{item.platformName}}
           </a-select-option>
         </a-select>
       </a-form-item>
@@ -78,16 +78,11 @@
           platformCode: "",
           platformName: ""
         },
+        userPlatforms:[]
       }
     },
-    computed: {
-      platforms() {
-        let userPlatforms = this.$store.getters.userPlatforms
-        //默认选择第一个
-        this.platformSelected.platformCode = userPlatforms[0].platformCode
-        this.platformSelected.platformName = userPlatforms[0].platformName
-        return userPlatforms
-      }
+    mounted() {
+        this.userPlatforms = this.$store.getters.userPlatforms
     },
     methods: {
       onTreeNodeSelect(id) {
@@ -103,8 +98,15 @@
           this.checkedKeys = o
         }
       },
-      show(roleId) {
-        this.roleId = roleId
+      show(role) {
+        for(var i=0;i<this.userPlatforms.length;i++){
+            if(this.userPlatforms[i].platformCode===role.platformCode){
+                //只赋值
+                this.platformSelected= Object.assign({}, this.userPlatforms[i])
+                break;
+            }
+        }
+        this.roleId = role.id
         this.visible = true;
       },
       close() {

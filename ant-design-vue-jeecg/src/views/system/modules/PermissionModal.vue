@@ -244,7 +244,10 @@
     methods: {
       loadTree(){
         var that = this;
-        queryTreeList().then((res)=>{
+        let params = {
+          platformCode: this.model.platformCode
+        }
+        queryTreeList(params).then((res)=>{
           if(res.success){
             console.log('----queryTreeList---')
             console.log(res)

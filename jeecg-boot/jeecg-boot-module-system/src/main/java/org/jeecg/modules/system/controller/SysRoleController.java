@@ -105,13 +105,44 @@ public class SysRoleController {
 		SysUserCacheInfo userinfo = sysUserService.getCacheUser(username);
 		String orgsStr=JwtUtil.getUserSystemData("sysMultiOrgCode",userinfo);
 		queryWrapper.in("sys_org_code",(Object[])orgsStr.toString().split(","));
+//		List<String> userRoleList=sysUserService.getRole(username);
+//		queryWrapper.or().in("role_code",userRoleList);
 		Page<SysRole> page = new Page<SysRole>(pageNo, pageSize);
 		IPage<SysRole> pageList = sysRoleService.page(page, queryWrapper);
 		result.setSuccess(true);
 		result.setResult(pageList);
 		return result;
 	}
-	
+
+	/**
+	 * 分页列表查询:包含自己拥有的角色列表
+	 * @param role
+	 * @param pageNo
+	 * @param pageSize
+	 * @param req
+	 * @return
+	 */
+	@RequestMapping(value = "/listContainOwn", method = RequestMethod.GET)
+	public Result<IPage<SysRole>> queryPageListContainOwn(SysRole role,
+												@RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
+												@RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
+												HttpServletRequest req) {
+		Result<IPage<SysRole>> result = new Result<IPage<SysRole>>();
+		QueryWrapper<SysRole> queryWrapper = QueryGenerator.initQueryWrapper(role, req.getParameterMap());
+		//增加组织过滤
+		String username = JwtUtil.getUserNameByToken(req);
+		SysUserCacheInfo userinfo = sysUserService.getCacheUser(username);
+		String orgsStr=JwtUtil.getUserSystemData("sysMultiOrgCode",userinfo);
+		queryWrapper.in("sys_org_code",(Object[])orgsStr.toString().split(","));
+		List<String> userRoleList=sysUserService.getRole(username);
+		queryWrapper.or().in("role_code",userRoleList);
+		Page<SysRole> page = new Page<SysRole>(pageNo, pageSize);
+		IPage<SysRole> pageList = sysRoleService.page(page, queryWrapper);
+		result.setSuccess(true);
+		result.setResult(pageList);
+		return result;
+	}
+
 	/**
 	  *   添加
 	 * @param role
@@ -201,14 +232,19 @@ public class SysRoleController {
 	}
 	
 	@RequestMapping(value = "/queryall", method = RequestMethod.GET)
-	public Result<List<SysRole>> queryall(HttpServletRequest req) {
+	public Result<List<SysRole>> queryall(@RequestParam(value = "platformCode",required = false) String platformCode, HttpServletRequest req) {
 		Result<List<SysRole>> result = new Result<>();
-		//增加组织过滤
+		//增加组织过滤,用户所有拥有的角色+用户可以管理的部门所建立的角色
 		QueryWrapper<SysRole> queryWrapper=new QueryWrapper();
 		String username = JwtUtil.getUserNameByToken(req);
 		SysUserCacheInfo userinfo = sysUserService.getCacheUser(username);
 		String orgsStr=JwtUtil.getUserSystemData("sysMultiOrgCode",userinfo);
+		if(!oConvertUtils.isEmpty(platformCode)){
+			queryWrapper.eq("platform_code",platformCode);
+		}
 		queryWrapper.in("sys_org_code",(Object[])orgsStr.toString().split(","));
+		List<String> userRoleList=sysUserService.getRole(username);
+		queryWrapper.or().in("role_code",userRoleList);
 		List<SysRole> list = sysRoleService.list(queryWrapper);
 		if(list==null||list.size()<=0) {
 			result.error500("未找到角色信息");

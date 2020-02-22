@@ -178,7 +178,7 @@ public class SysPlatformController extends JeecgController<SysPlatform, ISysPlat
         return result;
     }
     /**
-     * 查询平台关联的部门数据
+     * 查询平台关联的机构数据
      *
      * @param platformId
      * @return

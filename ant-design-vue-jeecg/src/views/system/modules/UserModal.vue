@@ -1,13 +1,6 @@
 <template>
-  <a-drawer
-    :title="title"
-    :maskClosable="true"
-    :width="drawerWidth"
-    placement="right"
-    :closable="true"
-    @close="handleCancel"
-    :visible="visible"
-    style="height: calc(100% - 55px);overflow: auto;padding-bottom: 53px;">
+  <a-drawer :title="title" :maskClosable="true" :width="drawerWidth" placement="right" :closable="true"
+    @close="handleCancel" :visible="visible" style="height: calc(100% - 55px);overflow: auto;padding-bottom: 53px;">
 
     <template slot="title">
       <div style="width: 100%;">
@@ -23,35 +16,29 @@
       <a-form :form="form">
 
         <a-form-item label="用户账号" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input placeholder="请输入用户账号" v-decorator="[ 'username', validatorRules.username]" :readOnly="!!model.id"/>
+          <a-input placeholder="请输入用户账号" v-decorator="[ 'username', validatorRules.username]" :readOnly="!!model.id" />
         </a-form-item>
 
         <template v-if="!model.id">
-          <a-form-item label="登陆密码" :labelCol="labelCol" :wrapperCol="wrapperCol" >
+          <a-form-item label="登陆密码" :labelCol="labelCol" :wrapperCol="wrapperCol">
             <a-input type="password" placeholder="请输入登陆密码" v-decorator="[ 'password', validatorRules.password]" />
           </a-form-item>
 
-          <a-form-item label="确认密码" :labelCol="labelCol" :wrapperCol="wrapperCol" >
-            <a-input type="password" @blur="handleConfirmBlur" placeholder="请重新输入登陆密码" v-decorator="[ 'confirmpassword', validatorRules.confirmpassword]"/>
+          <a-form-item label="确认密码" :labelCol="labelCol" :wrapperCol="wrapperCol">
+            <a-input type="password" @blur="handleConfirmBlur" placeholder="请重新输入登陆密码"
+              v-decorator="[ 'confirmpassword', validatorRules.confirmpassword]" />
           </a-form-item>
         </template>
 
-        <a-form-item label="用户名字" :labelCol="labelCol" :wrapperCol="wrapperCol" >
+        <a-form-item label="用户名字" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input placeholder="请输入用户名称" v-decorator="[ 'realname', validatorRules.realname]" />
         </a-form-item>
 
-        <a-form-item label="所属部门" :labelCol="labelCol" :wrapperCol="wrapperCol" >
-            <a-tree-select
-                showSearch
-                allowClear
-                :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }"
-                :treeData="orgTree"
-                placeholder='请选择所属部门'
-                treeDefaultExpandAll
-                v-decorator="['sysOrgId', validatorRules.sysOrgId]"
-                treeNodeFilterProp="title" 
-            >
-            </a-tree-select>
+        <a-form-item label="所属部门" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-tree-select showSearch allowClear :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }"
+            :treeData="orgTree" placeholder='请选择所属部门' treeDefaultExpandAll
+            v-decorator="['sysOrgId', validatorRules.sysOrgId]" treeNodeFilterProp="title">
+          </a-tree-select>
         </a-form-item>
 
         <a-form-item label="工号" :labelCol="labelCol" :wrapperCol="wrapperCol">
@@ -59,10 +46,10 @@
         </a-form-item>
 
         <a-form-item label="职务" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-select-position placeholder="请选择职务" :multiple="false" v-decorator="['post', {}]"/>
+          <j-select-position placeholder="请选择职务" :multiple="false" v-decorator="['post', {}]" />
         </a-form-item>
 
-        <a-form-item label="角色分配" :labelCol="labelCol" :wrapperCol="wrapperCol" v-show="!roleDisabled" >
+        <!-- <a-form-item label="角色分配" :labelCol="labelCol" :wrapperCol="wrapperCol" v-show="!roleDisabled" >
           <a-select
             mode="multiple"
             style="width: 100%"
@@ -73,30 +60,26 @@
               {{ role.roleName }}
             </a-select-option>
           </a-select>
+        </a-form-item> -->
+        <!-- <a-form-item label="选择角色" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-tree-select showSearch allowClear multiple :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }"
+            :treeData="roleList" placeholder='请选角色' treeDefaultExpandAll v-model="selectedroles"
+            treeNodeFilterProp="title">
+          </a-tree-select>
+        </a-form-item> -->
+        <a-form-item label="选择角色"  :labelCol="labelCol" :wrapperCol="wrapperCol">
+              <j-select-role v-model="selectedroles"></j-select-role>
         </a-form-item>
-
         <!--部门分配-->
         <a-form-item label="部门分配" :labelCol="labelCol" :wrapperCol="wrapperCol" v-show="!orgDisabled">
-          <a-input-search
-            placeholder="点击右侧按钮选择部门"
-            v-model="checkedOrgNameString"
-            disabled
-            @search="onSearch">
+          <a-input-search placeholder="点击右侧按钮选择部门" v-model="checkedOrgNameString" disabled @search="onSearch">
             <a-button slot="enterButton" icon="search">选择</a-button>
           </a-input-search>
         </a-form-item>
         <a-form-item label="头像" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-upload
-            listType="picture-card"
-            class="avatar-uploader"
-            :showUploadList="false"
-            :action="uploadAction"
-            :data="{'isup':1}"
-            :headers="headers"
-            :beforeUpload="beforeUpload"
-            @change="handleChange"
-          >
-            <img v-if="picUrl" :src="getAvatarView()" alt="头像" style="height:104px;max-width:300px"/>
+          <a-upload listType="picture-card" class="avatar-uploader" :showUploadList="false" :action="uploadAction"
+            :data="{'isup':1}" :headers="headers" :beforeUpload="beforeUpload" @change="handleChange">
+            <img v-if="picUrl" :src="getAvatarView()" alt="头像" style="height:104px;max-width:300px" />
             <div v-else>
               <a-icon :type="uploadLoading ? 'loading' : 'plus'" />
               <div class="ant-upload-text">上传</div>
@@ -105,10 +88,8 @@
         </a-form-item>
 
         <a-form-item label="生日" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-date-picker
-            style="width: 100%"
-            placeholder="请选择生日"
-            v-decorator="['birthday', {initialValue:!model.birthday?null:moment(model.birthday,dateFormat)}]"/>
+          <a-date-picker style="width: 100%" placeholder="请选择生日"
+            v-decorator="['birthday', {initialValue:!model.birthday?null:moment(model.birthday,dateFormat)}]" />
         </a-form-item>
 
         <a-form-item label="性别" :labelCol="labelCol" :wrapperCol="wrapperCol">
@@ -123,15 +104,17 @@
         </a-form-item>
 
         <a-form-item label="手机号码" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input placeholder="请输入手机号码" :disabled="isDisabledAuth('user:form:phone')" v-decorator="[ 'phone', validatorRules.phone]" />
+          <a-input placeholder="请输入手机号码" :disabled="isDisabledAuth('user:form:phone')"
+            v-decorator="[ 'phone', validatorRules.phone]" />
         </a-form-item>
 
         <a-form-item label="座机" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input placeholder="请输入座机" v-decorator="[ 'telephone', validatorRules.telephone]"/>
+          <a-input placeholder="请输入座机" v-decorator="[ 'telephone', validatorRules.telephone]" />
         </a-form-item>
 
         <a-form-item label="工作流引擎" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <j-dict-select-tag  v-decorator="['activitiSync', {}]" placeholder="请选择是否同步工作流引擎" :type="'radio'" :triggerChange="true" dictCode="activiti_sync"/>
+          <j-dict-select-tag v-decorator="['activitiSync', {}]" placeholder="请选择是否同步工作流引擎" :type="'radio'"
+            :triggerChange="true" dictCode="activiti_sync" />
         </a-form-item>
 
       </a-form>
@@ -154,180 +137,239 @@
   // 引入搜索部门弹出框的组件
   import orgWindow from './OrgWindow'
   import JSelectPosition from '@/components/jeecgbiz/JSelectPosition'
-  import { ACCESS_TOKEN } from "@/store/mutation-types"
-  import { getAction } from '@/api/manage'
-  import {addUser,editUser,queryUserRole,queryall } from '@/api/api'
-  import { disabledAuthFilter } from "@/utils/authFilter"
-  import {duplicateCheck,queryOrgTreeByUserId } from '@/api/api'
+  import {
+    ACCESS_TOKEN
+  } from "@/store/mutation-types"
+  import {
+    getAction
+  } from '@/api/manage'
+  import {
+    addUser,
+    editUser,
+    queryUserRole,
+    queryall
+  } from '@/api/api'
+  import {
+    disabledAuthFilter
+  } from "@/utils/authFilter"
+  import {
+    duplicateCheck,
+    queryOrgTreeByUserId
+  } from '@/api/api'
+  import JSelectRole from '@/components/jeecgbiz/JSelectRole'
 
   export default {
     name: "UserModal",
     components: {
       orgWindow,
-      JSelectPosition
+      JSelectPosition,
+      JSelectRole
     },
-    data () {
+    data() {
       return {
         orgDisabled: false, //是否是我的部门调用该页面
         roleDisabled: false, //是否是角色维护调用该页面
-        modalWidth:800,
-        drawerWidth:700,
-        modaltoggleFlag:true,
+        modalWidth: 800,
+        drawerWidth: 700,
+        modaltoggleFlag: true,
         confirmDirty: false,
-        selectedOrgKeys:[], //保存用户选择部门id
-        checkedOrgKeys:[],
-        checkedOrgNames:[], // 保存部门的名称 =>title
-        checkedOrgNameString:"", // 保存部门的名称 =>title
-        userId:"", //保存用户id
-        disableSubmit:false,
-        userOrgModel:{userId:'',orgIdList:[]}, // 保存SysUserOrg的用户部门中间表数据需要的对象
-        dateFormat:"YYYY-MM-DD",
-        validatorRules:{
-          username:{
+        selectedOrgKeys: [], //保存用户选择部门id
+        checkedOrgKeys: [],
+        checkedOrgNames: [], // 保存部门的名称 =>title
+        checkedOrgNameString: "", // 保存部门的名称 =>title
+        userId: "", //保存用户id
+        disableSubmit: false,
+        userOrgModel: {
+          userId: '',
+          orgIdList: []
+        }, // 保存SysUserOrg的用户部门中间表数据需要的对象
+        dateFormat: "YYYY-MM-DD",
+        validatorRules: {
+          username: {
             rules: [{
-              required: true, message: '请输入用户账号!'
-            },{
+              required: true,
+              message: '请输入用户账号!'
+            }, {
               validator: this.validateUsername,
             }]
           },
-          password:{
+          password: {
             rules: [{
               required: true,
-              pattern:/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[~!@#$%^&*()_+`\-={}:";'<>?,./]).{8,}$/,
+              pattern: /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[~!@#$%^&*()_+`\-={}:";'<>?,./]).{8,}$/,
               message: '密码由8位数字、大小写字母和特殊符号组成!'
             }, {
               validator: this.validateToNextPassword,
             }],
           },
-          confirmpassword:{
+          confirmpassword: {
             rules: [{
-              required: true, message: '请重新输入登陆密码!',
+              required: true,
+              message: '请重新输入登陆密码!',
             }, {
               validator: this.compareToFirstPassword,
             }],
           },
-          realname:{rules: [{ required: true, message: '请输入用户名称!' }]},
-          phone:{rules: [{validator: this.validatePhone}]},
-          email:{
+          realname: {
+            rules: [{
+              required: true,
+              message: '请输入用户名称!'
+            }]
+          },
+          phone: {
+            rules: [{
+              validator: this.validatePhone
+            }]
+          },
+          email: {
             rules: [{
               validator: this.validateEmail
             }],
           },
-          roles:{},
+          roles: {},
           //  sex:{initialValue:((!this.model.sex)?"": (this.model.sex+""))}
-          sysOrgId:{
-              rules: [
-                  { required: true, message: '请选择所属部门' },
-              ]
+          sysOrgId: {
+            rules: [{
+              required: true,
+              message: '请选择所属部门'
+            }, ]
           },
           workNo: {
-            rules: [
-              { required: true, message: '请输入工号' },
-              { validator: this.validateWorkNo }
+            rules: [{
+                required: true,
+                message: '请输入工号'
+              },
+              {
+                validator: this.validateWorkNo
+              }
             ]
           },
           telephone: {
-            rules: [
-              { pattern: /^0\d{2,3}-[1-9]\d{6,7}$/, message: '请输入正确的座机号码' },
-            ]
+            rules: [{
+              pattern: /^0\d{2,3}-[1-9]\d{6,7}$/,
+              message: '请输入正确的座机号码'
+            }, ]
           }
         },
-        title:"操作",
+        title: "操作",
         visible: false,
         model: {},
-        roleList:[],
-        selectedRole:[],
+        roleList: [],
+        selectedroles: '',
         labelCol: {
-          xs: { span: 24 },
-          sm: { span: 5 },
+          xs: {
+            span: 24
+          },
+          sm: {
+            span: 5
+          },
         },
         wrapperCol: {
-          xs: { span: 24 },
-          sm: { span: 16 },
+          xs: {
+            span: 24
+          },
+          sm: {
+            span: 16
+          },
         },
-        uploadLoading:false,
+        uploadLoading: false,
         confirmLoading: false,
-        headers:{},
-        form:this.$form.createForm(this),
+        headers: {},
+        form: this.$form.createForm(this),
         picUrl: "",
         url: {
-          fileUpload: window._CONFIG['domianURL']+"/sys/common/upload",
-          imgerver: window._CONFIG['domianURL']+"/sys/common/view",
+          fileUpload: window._CONFIG['domianURL'] + "/sys/common/upload",
+          imgerver: window._CONFIG['domianURL'] + "/sys/common/view",
           userWithOrg: "/sys/user/userOrgList", // 引入为指定用户查看部门信息需要的url
-          userId:"/sys/user/generateUserId", // 引入生成添加用户情况下的url
-          syncUserByUserName:"/process/extActProcess/doSyncUserByUserName",//同步用户到工作流
+          userId: "/sys/user/generateUserId", // 引入生成添加用户情况下的url
+          syncUserByUserName: "/process/extActProcess/doSyncUserByUserName", //同步用户到工作流
         },
-        orgTree:[]
+        orgTree: []
       }
     },
-    created () {
+    created() {
       const token = Vue.ls.get(ACCESS_TOKEN);
-      this.headers = {"X-Access-Token":token}
+      this.headers = {
+        "X-Access-Token": token
+      }
 
     },
-    computed:{
-      uploadAction:function () {
+    computed: {
+      uploadAction: function () {
         return this.url.fileUpload;
       }
     },
     methods: {
-      isDisabledAuth(code){
+      isDisabledAuth(code) {
         return disabledAuthFilter(code);
       },
       //窗口最大化切换
-      toggleScreen(){
-        if(this.modaltoggleFlag){
+      toggleScreen() {
+        if (this.modaltoggleFlag) {
           this.modalWidth = window.innerWidth;
-        }else{
+        } else {
           this.modalWidth = 800;
         }
         this.modaltoggleFlag = !this.modaltoggleFlag;
       },
-      queryOrgTree(){
-        queryOrgTreeByUserId({userId:this.$store.getters.userInfo.id}).then((res)=>{
-            if(res.success){
+      queryOrgTree() {
+        queryOrgTreeByUserId({
+          userId: this.$store.getters.userInfo.id
+        }).then((res) => {
+          if (res.success) {
             this.orgTree = res.result;
           }
-        })  
+        })
       },
-      initialRoleList(){
-        queryall().then((res)=>{
-          if(res.success){
-            this.roleList = res.result;
-          }else{
+      initialRoleList() {
+        queryall().then((res) => {
+          if (res.success) {
+            let roles=res.result;
+            roles.forEach(item=>{
+              item.key=item.id
+              item.value=item.id
+              item.title=item.roleName
+            })
+            this.roleList = roles;
+
+          } else {
             console.log(res.message);
           }
         });
       },
-      loadUserRoles(userid){
-        queryUserRole({userid:userid}).then((res)=>{
-          if(res.success){
-            this.selectedRole = res.result;
-          }else{
+      loadUserRoles(userid) {
+        queryUserRole({
+          userid: userid
+        }).then((res) => {
+          if (res.success) {
+            this.selectedroles = res.result.length > 0 ? res.result.join(",") : '';;
+          } else {
             console.log(res.message);
           }
         });
       },
-      refresh () {
-          this.selectedOrgKeys=[];
-          this.checkedOrgKeys=[];
-          this.checkedOrgNames=[];
-          this.checkedOrgNameString = "";
-          this.userId=""
+      refresh() {
+        this.selectedOrgKeys = [];
+        this.checkedOrgKeys = [];
+        this.checkedOrgNames = [];
+        this.checkedOrgNameString = "";
+        this.userId = ""
       },
-      add () {
+      add() {
         this.picUrl = "";
         this.refresh();
-        this.edit({activitiSync:'1'});
+        this.edit({
+          activitiSync: '1'
+        });
       },
-      edit (record) {
+      edit(record) {
         this.resetScreenSize(); // 调用此方法,根据屏幕宽度自适应调整抽屉的宽度
         let that = this;
-        that.initialRoleList();
+        // that.initialRoleList();
         that.queryOrgTree();
         that.checkedOrgNameString = "";
         that.form.resetFields();
-        if(record.hasOwnProperty("id")){
+        if (record.hasOwnProperty("id")) {
           that.loadUserRoles(record.id);
           this.picUrl = "Has no pic url yet";
         }
@@ -335,43 +377,51 @@
         that.visible = true;
         that.model = Object.assign({}, record);
         that.$nextTick(() => {
-          that.form.setFieldsValue(pick(this.model,'username','sex','realname','email','phone','activitiSync','workNo','telephone','post','sysOrgId'))
+          that.form.setFieldsValue(pick(this.model, 'username', 'sex', 'realname', 'email', 'phone', 'activitiSync',
+            'workNo', 'telephone', 'post', 'sysOrgId'))
         });
         // 调用查询用户对应的部门信息的方法
         that.checkedOrgKeys = [];
         that.loadCheckedOrgs();
       },
       //
-      loadCheckedOrgs(){
+      loadCheckedOrgs() {
         let that = this;
-        if(!that.userId){return}
-        getAction(that.url.userWithOrg,{userId:that.userId}).then((res)=>{
+        if (!that.userId) {
+          return
+        }
+        getAction(that.url.userWithOrg, {
+          userId: that.userId
+        }).then((res) => {
           that.checkedOrgNames = [];
-          if(res.success){
+          if (res.success) {
             for (let i = 0; i < res.result.length; i++) {
               that.checkedOrgNames.push(res.result[i].title);
               this.checkedOrgNameString = this.checkedOrgNames.join(",");
               that.checkedOrgKeys.push(res.result[i].key);
             }
             that.userOrgModel.orgIdList = that.checkedOrgKeys
-          }else{
+          } else {
             console.log(res.message);
           }
         })
       },
-      close () {
+      close() {
         this.$emit('close');
         this.visible = false;
         this.disableSubmit = false;
-        this.selectedRole = [];
-        this.userOrgModel = {userId:'',orgIdList:[]};
+        this.selectedroles = '';
+        this.userOrgModel = {
+          userId: '',
+          orgIdList: []
+        };
         this.checkedOrgNames = [];
-        this.checkedOrgNameString='';
+        this.checkedOrgNameString = '';
         this.checkedOrgKeys = [];
         this.selectedOrgKeys = [];
       },
       moment,
-      handleSubmit () {
+      handleSubmit() {
 
         const that = this;
         // 触发表单验证
@@ -379,35 +429,39 @@
           if (!err) {
             that.confirmLoading = true;
             let avatar = that.model.avatar;
-            if(!values.birthday){
+            if (!values.birthday) {
               values.birthday = '';
-            }else{
+            } else {
               values.birthday = values.birthday.format(this.dateFormat);
             }
             let formData = Object.assign(this.model, values);
             formData.avatar = avatar;
-            formData.selectedroles = this.selectedRole.length>0?this.selectedRole.join(","):'';
-            formData.selectedorgs = this.userOrgModel.orgIdList.length>0?this.userOrgModel.orgIdList.join(","):'';
+            formData.selectedroles = this.selectedroles;
+            formData.selectedorgs = this.userOrgModel.orgIdList.length > 0 ? this.userOrgModel.orgIdList.join(",") :
+              '';
 
             // that.addOrgsToUser(that,formData); // 调用根据当前用户添加部门信息的方法
             let obj;
-            if(!this.model.id){
+            if (!this.model.id) {
               formData.id = this.userId;
-              obj=addUser(formData);
-            }else{
-              obj=editUser(formData);
+              obj = addUser(formData);
+            } else {
+              obj = editUser(formData);
             }
-            obj.then((res)=>{
-              if(res.success){
+            obj.then((res) => {
+              if (res.success) {
                 that.$message.success(res.message);
                 that.$emit('ok');
-              }else{
+              } else {
                 that.$message.warning(res.message);
               }
             }).finally(() => {
               that.confirmLoading = false;
               that.checkedOrgNames = [];
-              that.userOrgModel.orgIdList = {userId:'',orgIdList:[]};
+              that.userOrgModel.orgIdList = {
+                userId: '',
+                orgIdList: []
+              };
 
               that.close();
             })
@@ -415,22 +469,24 @@
           }
         })
       },
-      handleCancel () {
+      handleCancel() {
         this.close()
       },
-      validateToNextPassword  (rule, value, callback) {
+      validateToNextPassword(rule, value, callback) {
         const form = this.form;
-        const confirmpassword=form.getFieldValue('confirmpassword');
+        const confirmpassword = form.getFieldValue('confirmpassword');
 
         if (value && confirmpassword && value !== confirmpassword) {
           callback('两次输入的密码不一样！');
         }
         if (value && this.confirmDirty) {
-          form.validateFields(['confirm'], { force: true })
+          form.validateFields(['confirm'], {
+            force: true
+          })
         }
         callback();
       },
-      compareToFirstPassword  (rule, value, callback) {
+      compareToFirstPassword(rule, value, callback) {
         const form = this.form;
         if (value && value !== form.getFieldValue('password')) {
           callback('两次输入的密码不一样！');
@@ -438,12 +494,12 @@
           callback()
         }
       },
-      validatePhone(rule, value, callback){
-        if(!value){
+      validatePhone(rule, value, callback) {
+        if (!value) {
           callback()
-        }else{
+        } else {
           //update-begin--Author:kangxiaolin  Date:20190826 for：[05] 手机号不支持199号码段--------------------
-          if(new RegExp(/^1[3|4|5|7|8|9][0-9]\d{8}$/).test(value)){
+          if (new RegExp(/^1[3|4|5|7|8|9][0-9]\d{8}$/).test(value)) {
             //update-end--Author:kangxiaolin  Date:20190826 for：[05] 手机号不支持199号码段--------------------
 
             var params = {
@@ -459,16 +515,18 @@
                 callback("手机号已存在!")
               }
             })
-          }else{
+          } else {
             callback("请输入正确格式的手机号码!");
           }
         }
       },
-      validateEmail(rule, value, callback){
-        if(!value){
+      validateEmail(rule, value, callback) {
+        if (!value) {
           callback()
-        }else{
-          if(new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/).test(value)){
+        } else {
+          if (new RegExp(
+              /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+              ).test(value)) {
             var params = {
               tableName: 'sys_user',
               fieldName: 'email',
@@ -483,12 +541,12 @@
                 callback("邮箱已存在!")
               }
             })
-          }else{
+          } else {
             callback("请输入正确格式的邮箱!")
           }
         }
       },
-      validateUsername(rule, value, callback){
+      validateUsername(rule, value, callback) {
         var params = {
           tableName: 'sys_user',
           fieldName: 'username',
@@ -497,13 +555,13 @@
         };
         duplicateCheck(params).then((res) => {
           if (res.success) {
-          callback()
-        } else {
-          callback("用户名已存在!")
-        }
-      })
+            callback()
+          } else {
+            callback("用户名已存在!")
+          }
+        })
       },
-      validateWorkNo(rule, value, callback){
+      validateWorkNo(rule, value, callback) {
         var params = {
           tableName: 'sys_user',
           fieldName: 'work_no',
@@ -518,27 +576,27 @@
           }
         })
       },
-      handleConfirmBlur  (e) {
+      handleConfirmBlur(e) {
         const value = e.target.value;
         this.confirmDirty = this.confirmDirty || !!value
       },
 
-      normFile  (e) {
+      normFile(e) {
         console.log('Upload event:', e);
         if (Array.isArray(e)) {
           return e
         }
         return e && e.fileList
       },
-      beforeUpload: function(file){
+      beforeUpload: function (file) {
         var fileType = file.type;
-        if(fileType.indexOf('image')<0){
+        if (fileType.indexOf('image') < 0) {
           this.$message.warning('请上传图片');
           return false;
         }
         //TODO 验证文件大小
       },
-      handleChange (info) {
+      handleChange(info) {
         this.picUrl = "";
         if (info.file.status === 'uploading') {
           this.uploadLoading = true;
@@ -548,24 +606,24 @@
           var response = info.file.response;
           this.uploadLoading = false;
           console.log(response);
-          if(response.success){
+          if (response.success) {
             this.model.avatar = response.message;
             this.picUrl = "Has no pic url yet";
-          }else{
+          } else {
             this.$message.warning(response.message);
           }
         }
       },
-      getAvatarView(){
-        return this.url.imgerver +"/"+ this.model.avatar;
+      getAvatarView() {
+        return this.url.imgerver + "/" + this.model.avatar;
       },
       // 搜索用户对应的部门API
-      onSearch(){
-        this.$refs.orgWindow.add(this.checkedOrgKeys,this.userId);
+      onSearch() {
+        this.$refs.orgWindow.add(this.checkedOrgKeys, this.userId);
       },
 
       // 获取用户对应部门弹出框提交给返回的数据
-      modalFormOk (formData) {
+      modalFormOk(formData) {
         this.checkedOrgNames = [];
         this.selectedOrgKeys = [];
         this.checkedOrgNameString = '';
@@ -577,14 +635,14 @@
           this.checkedOrgNameString = this.checkedOrgNames.join(",");
         }
         this.userOrgModel.orgIdList = this.selectedOrgKeys;
-        this.checkedOrgKeys = this.selectedOrgKeys  //更新当前的选择keys
-       },
+        this.checkedOrgKeys = this.selectedOrgKeys //更新当前的选择keys
+      },
       // 根据屏幕变化,设置抽屉尺寸
-      resetScreenSize(){
+      resetScreenSize() {
         let screenWidth = document.body.clientWidth;
-        if(screenWidth < 500){
+        if (screenWidth < 500) {
           this.drawerWidth = screenWidth;
-        }else{
+        } else {
           this.drawerWidth = 700;
         }
       },
@@ -593,10 +651,11 @@
 </script>
 
 <style scoped>
-  .avatar-uploader > .ant-upload {
-    width:104px;
-    height:104px;
+  .avatar-uploader>.ant-upload {
+    width: 104px;
+    height: 104px;
   }
+
   .ant-upload-select-picture-card i {
     font-size: 49px;
     color: #999;
@@ -607,9 +666,9 @@
     color: #666;
   }
 
-  .ant-table-tbody .ant-table-row td{
-    padding-top:10px;
-    padding-bottom:10px;
+  .ant-table-tbody .ant-table-row td {
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
 
   .drawer-bootom-button {
