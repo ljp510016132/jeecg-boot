@@ -14,7 +14,17 @@
 
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
-
+        <a-form-item label="用户类型" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-select placeholder="请选择用户类型" :disabled="userTypeDisabled" v-decorator="['type', validatorRules.type]">
+            <a-select-option value="">请选择</a-select-option>
+            <a-select-option v-for="(item, key) in userTypeOptions" :key="key" :value="item.value">
+              <span style="display: inline-block;width: 100%" :title=" item.text || item.label ">
+                {{ item.text || item.label }}
+              </span>
+            </a-select-option>
+          </a-select>
+          <!-- <j-dict-select-tag ref="dictSelectTag" :disabled="userTypeDisabled" v-decorator="['type', validatorRules.type]" :triggerChange="true" placeholder="请选择用户类型" dictCode="user_type" /> -->
+        </a-form-item>
         <a-form-item label="用户账号" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input placeholder="请输入用户账号" v-decorator="[ 'username', validatorRules.username]" :readOnly="!!model.id" />
         </a-form-item>
@@ -67,8 +77,8 @@
             treeNodeFilterProp="title">
           </a-tree-select>
         </a-form-item> -->
-        <a-form-item label="选择角色"  :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <j-select-role v-model="selectedroles"></j-select-role>
+        <a-form-item label="选择角色" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <j-select-role v-model="selectedroles"></j-select-role>
         </a-form-item>
         <!--部门分配-->
         <a-form-item label="部门分配" :labelCol="labelCol" :wrapperCol="wrapperCol" v-show="!orgDisabled">
@@ -135,7 +145,7 @@
   import moment from 'moment'
   import Vue from 'vue'
   // 引入搜索部门弹出框的组件
-  import orgWindow from './OrgWindow'
+  import OrgWindow from './OrgWindow'
   import JSelectPosition from '@/components/jeecgbiz/JSelectPosition'
   import {
     ACCESS_TOKEN
@@ -147,7 +157,8 @@
     addUser,
     editUser,
     queryUserRole,
-    queryall
+    queryall,
+    ajaxGetDictItems
   } from '@/api/api'
   import {
     disabledAuthFilter
@@ -161,7 +172,7 @@
   export default {
     name: "UserModal",
     components: {
-      orgWindow,
+      OrgWindow,
       JSelectPosition,
       JSelectRole
     },
@@ -185,6 +196,12 @@
         }, // 保存SysUserOrg的用户部门中间表数据需要的对象
         dateFormat: "YYYY-MM-DD",
         validatorRules: {
+          type: {
+            rules: [{
+              required: true,
+              message: '请选择用户类型!'
+            }]
+          },
           username: {
             rules: [{
               required: true,
@@ -284,7 +301,8 @@
           userId: "/sys/user/generateUserId", // 引入生成添加用户情况下的url
           syncUserByUserName: "/process/extActProcess/doSyncUserByUserName", //同步用户到工作流
         },
-        orgTree: []
+        orgTree: [],
+        userTypeOptions:[]
       }
     },
     created() {
@@ -297,7 +315,10 @@
     computed: {
       uploadAction: function () {
         return this.url.fileUpload;
-      }
+      },
+      userTypeDisabled: function () {
+        return this.model.username==='admin'?true:false;
+      },
     },
     methods: {
       isDisabledAuth(code) {
@@ -324,11 +345,11 @@
       initialRoleList() {
         queryall().then((res) => {
           if (res.success) {
-            let roles=res.result;
-            roles.forEach(item=>{
-              item.key=item.id
-              item.value=item.id
-              item.title=item.roleName
+            let roles = res.result;
+            roles.forEach(item => {
+              item.key = item.id
+              item.value = item.id
+              item.title = item.roleName
             })
             this.roleList = roles;
 
@@ -376,15 +397,31 @@
         that.userId = record.id;
         that.visible = true;
         that.model = Object.assign({}, record);
+        //DictSelectTag值需要String类型，因此这里做一个转换，防止报错
+        that.model.type=that.model.type.toString();
         that.$nextTick(() => {
-          that.form.setFieldsValue(pick(this.model, 'username', 'sex', 'realname', 'email', 'phone', 'activitiSync',
+          that.form.setFieldsValue(pick(this.model, 'type','username', 'sex', 'realname', 'email', 'phone', 'activitiSync',
             'workNo', 'telephone', 'post', 'sysOrgId'))
         });
         // 调用查询用户对应的部门信息的方法
         that.checkedOrgKeys = [];
+        that.loadUserTypes();
         that.loadCheckedOrgs();
       },
-      //
+      //加载用户类型数据
+      loadUserTypes(){
+        //根据字典Code, 初始化字典数组
+        ajaxGetDictItems('user_type', null).then((res) => {
+          if (res.success) {
+            this.userTypeOptions = res.result.filter((item)=>{
+              if(this.$store.getters.userInfo.type=='9999'||item.value!='9999'||this.model.type=='9999'){
+                return item
+              }
+            });
+          }
+        })
+      },
+      //加载已选择的机构
       loadCheckedOrgs() {
         let that = this;
         if (!that.userId) {
@@ -526,7 +563,7 @@
         } else {
           if (new RegExp(
               /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-              ).test(value)) {
+            ).test(value)) {
             var params = {
               tableName: 'sys_user',
               fieldName: 'email',

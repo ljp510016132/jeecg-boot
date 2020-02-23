@@ -34,7 +34,9 @@
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
           label="机构类型">
-          <template v-if="seen">
+          <j-dict-select-tag  v-decorator="['orgCategory', {}]" type="radio" :triggerChange="true" placeholder="请选择机构类型"
+                  dictCode="org_category"/>
+          <!-- <template v-if="seen">
           <a-radio-group v-decorator="['orgCategory',validatorRules.orgCategory]" placeholder="请选择机构类型">
             <a-radio value="1">
               公司
@@ -50,7 +52,7 @@
                 岗位
               </a-radio>
             </a-radio-group>
-          </template>
+          </template> -->
         </a-form-item>
         <a-form-item
           :labelCol="labelCol"

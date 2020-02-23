@@ -1,10 +1,16 @@
 package org.jeecg.modules.system.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.modules.system.entity.SysRole;
+import org.jeecg.modules.system.model.AnnouncementSendModel;
+import org.jeecg.modules.system.vo.SysRolePage;
 import org.jeecgframework.poi.excel.entity.ImportParams;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 /**
  * <p>
@@ -39,5 +45,12 @@ public interface ISysRoleService extends IService<SysRole> {
      * @return
      */
     public boolean deleteBatchRole(String[] roleids);
+
+    /**
+     * 自定义列表查询，实现多表关联
+     * @param queryWrapper
+     * @return
+     */
+    public Page<SysRolePage> listPage(Page<SysRolePage> page,QueryWrapper queryWrapper);
 
 }

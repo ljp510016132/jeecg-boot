@@ -15,7 +15,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 public interface SysPlatformMapper extends BaseMapper<SysPlatform> {
     /**
      * 根据用户ID查询部门集合
+     * @param superAdmin 是否为超级管理员
      */
-    public List<SysPlatform> queryUserPlatforms(@Param("userId") String userId,@Param("username") String username);
+    public List<SysPlatform> queryUserPlatforms(@Param("userId") String userId,@Param("superAdmin") boolean superAdmin);
 
 }

@@ -1,11 +1,18 @@
 package org.jeecg.modules.system.mapper;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.toolkit.Constants;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.jeecg.modules.system.entity.SysRole;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.jeecg.modules.system.vo.SysRolePage;
+
+import java.util.List;
 
 /**
  * <p>
@@ -34,4 +41,13 @@ public interface SysRoleMapper extends BaseMapper<SysRole> {
     @Delete("delete from sys_role_permission where role_id = #{roleId}")
     void deleteRolePermissionRelation(@Param("roleId") String roleId);
 
+    /**
+     * 自定义列表查询，实现多表关联
+     * 使用@Select注解，将SQL的where条件部分用${ew.customSqlSegment}代替
+     * @param wrapper
+     * @return
+     */
+    @Select("SELECT * FROM (SELECT r.*,p.platform_name " +
+            "FROM sys_role r LEFT JOIN sys_platform p ON r.platform_code=p.platform_code) a  ${ew.customSqlSegment}")
+    List<SysRolePage> listPage(Page<SysRolePage> page,@Param(Constants.WRAPPER) Wrapper wrapper);
 }

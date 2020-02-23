@@ -30,8 +30,10 @@ public class SysOrg implements Serializable {
     
 	/**ID*/
 	@TableId(type = IdType.ID_WORKER_STR)
+	@Excel(name="ID",width=15)
 	private String id;
 	/**父机构ID*/
+	@Excel(name="父机构ID",width=15)
 	private String parentId;
 	/**机构/部门名称*/
 	@Excel(name="机构/部门名称",width=15)
@@ -40,6 +42,7 @@ public class SysOrg implements Serializable {
 	@Excel(name="英文名",width=15)
 	private String orgNameEn;
 	/**缩写*/
+	@Excel(name="缩写",width=15)
 	private String orgNameAbbr;
 	/**排序*/
 	@Excel(name="排序",width=15)

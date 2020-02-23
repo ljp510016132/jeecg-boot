@@ -99,7 +99,7 @@ public class SysOrgController {
 			//超级管理员可以管理所有机构
 			LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
 			List<SysOrgTreeModel>  list;
-			if(sysUser.getUsername().equals(CommonConstant.SUPER_ADMIN_NAME)){
+			if(sysUser.getType().equals(CommonConstant.SUPER_ADMIN_TYPE)){
 				list = sysOrgService.queryTreeList(null);
 			}else{
 				list = sysOrgService.queryTreeList(userId);

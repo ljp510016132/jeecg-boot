@@ -2,8 +2,10 @@ package org.jeecg.modules.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.constant.CacheConstant;
 import org.jeecg.common.constant.CommonConstant;
+import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.common.util.oConvertUtils;
 import org.jeecg.modules.system.entity.SysPlatform;
 import org.jeecg.modules.system.entity.SysPlatformOrg;
@@ -30,12 +32,12 @@ public class SysPlatformServiceImpl extends ServiceImpl<SysPlatformMapper, SysPl
     SysPlatformOrgMapper sysPlatformOrgMapper;
 
     @Override
-    public List<SysPlatform> queryUserPlatforms(String userId, String username) {
+    public List<SysPlatform> queryUserPlatforms(String userId,Integer userType) {
         //如果用户是超级管理员则拥有所有平台
-        if(username.equals(CommonConstant.SUPER_ADMIN_NAME)){
-            return baseMapper.queryUserPlatforms(userId,null);
+        if(userType.equals(CommonConstant.SUPER_ADMIN_TYPE)){
+            return baseMapper.queryUserPlatforms(userId,true);
         }else{
-            return baseMapper.queryUserPlatforms(userId,username);
+            return baseMapper.queryUserPlatforms(userId,false);
         }
     }
 

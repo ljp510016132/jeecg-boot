@@ -1,6 +1,8 @@
 package org.jeecg.modules.system.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.util.PmsUtil;
@@ -8,6 +10,7 @@ import org.jeecg.modules.system.entity.SysRole;
 import org.jeecg.modules.system.mapper.SysRoleMapper;
 import org.jeecg.modules.system.mapper.SysUserMapper;
 import org.jeecg.modules.system.service.ISysRoleService;
+import org.jeecg.modules.system.vo.SysRolePage;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
 import org.jeecgframework.poi.excel.entity.ImportParams;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,5 +114,15 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
         //3.删除角色
         this.removeByIds(Arrays.asList(roleIds));
         return true;
+    }
+
+    /**
+     * 自定义列表查询，实现多表关联
+     * @param queryWrapper
+     * @return
+     */
+    @Override
+    public Page<SysRolePage> listPage(Page<SysRolePage> page,QueryWrapper queryWrapper){
+         return page.setRecords(sysRoleMapper.listPage(page,queryWrapper));
     }
 }

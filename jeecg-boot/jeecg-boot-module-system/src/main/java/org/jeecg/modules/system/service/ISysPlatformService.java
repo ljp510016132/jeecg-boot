@@ -18,7 +18,7 @@ public interface ISysPlatformService extends IService<SysPlatform> {
      * @param userId
      * @return
      */
-    List<SysPlatform> queryUserPlatforms(String userId,String username);
+    List<SysPlatform> queryUserPlatforms(String userId,Integer userType);
 
     /**
      * 更新平台组织机构

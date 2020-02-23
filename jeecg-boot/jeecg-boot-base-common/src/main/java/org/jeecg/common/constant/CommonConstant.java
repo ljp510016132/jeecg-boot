@@ -6,6 +6,10 @@ public interface CommonConstant {
      * 超级管理员用户名，修改需要慎重，由于该用户名涉及超级管理员权限，具有该用户名则用户具有系统所有权限
      */
     public static final String SUPER_ADMIN_NAME="admin";
+    /**
+     * 超级管理员用户type为9999
+     */
+    public static final Integer SUPER_ADMIN_TYPE=9999;
 	/**
 	 * 正常状态
 	 */

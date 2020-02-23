@@ -369,7 +369,7 @@ public class LoginController {
 		}
 
 		// 获取用户平台信息
-		List<SysPlatform> platforms = sysPlatformService.queryUserPlatforms(sysUser.getId(),sysUser.getUsername());
+		List<SysPlatform> platforms = sysPlatformService.queryUserPlatforms(sysUser.getId(),sysUser.getType());
 		obj.put("platforms", platforms);
 		if (platforms == null || platforms.size() == 0) {
 			obj.put("multi_platform", 0);

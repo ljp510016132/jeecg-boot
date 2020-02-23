@@ -38,12 +38,8 @@
   import pick from 'lodash.pick'
   import { getAction } from '@/api/manage'
   import { queryIdTree,queryOrgTreeByUserId } from '@/api/api'
-  import userModal from './UserModal'
   export default {
     name: "OrgWindow",
-    components: {
-      userModal,
-    },
     data () {
       return {
         expandedKeys:[],//展开指定的树节点

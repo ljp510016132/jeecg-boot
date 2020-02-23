@@ -225,13 +225,20 @@
             title: '用户账号',
             align: "center",
             dataIndex: 'username',
-            width: 120
+            width: 120,
+            sorter: true
           },
           {
             title: '真实姓名',
             align: "center",
             width: 100,
             dataIndex: 'realname',
+          },
+          {
+            title: '类型',
+            align: "center",
+            width: 100,
+            dataIndex: 'type_dictText',
           },
           {
             title: '头像',
@@ -271,7 +278,20 @@
             title: '状态',
             align: "center",
             width: 80,
-            dataIndex: 'status_dictText'
+            dataIndex: 'status_dictText',
+            sorter: true
+          },
+           {
+            title: '创建人',
+            align: "center",
+            dataIndex: 'createBy',
+            sorter: true
+          },
+           {
+            title: '创建时间',
+            align: "center",
+            dataIndex: 'createTime',
+            sorter: true,
           },
           /* {
              title: '创建时间',

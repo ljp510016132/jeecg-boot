@@ -51,12 +51,12 @@ CREATE TABLE `sys_platform`  (
 -- ----------------------------
 INSERT INTO `sys_platform` VALUES ('0000', '权限管理平台', '0000', '用户权限管理，各个系统的基础平台', NULL, NULL, NULL, NULL);
 
--- ----------------------------
--- Update of sys_permission，由于增加了表sys_platform因此需要对表sys_permission进行修改
--- ----------------------------
-ALTER TABLE `sys_permission`
-ADD  `platform_code`  VARCHAR(32) NULL DEFAULT NULL COMMENT '所属平台';
-UPDATE sys_permission p SET p.platform_id='0000';
+# -- ----------------------------
+# -- Update of sys_permission，由于增加了表sys_platform因此需要对表sys_permission进行修改
+# -- ----------------------------
+# ALTER TABLE `sys_permission`
+# ADD  `platform_code`  VARCHAR(32) NULL DEFAULT NULL COMMENT '所属平台';
+# UPDATE sys_permission p SET p.platform_id='0000';
 
 
 -- ----------------------------
@@ -104,6 +104,9 @@ INSERT INTO `sys_role_permission` VALUES ('gci171fda43adfe24840959b1d048d4d', 'f
 INSERT INTO `sys_role_permission` VALUES ('gci4f91fb61911ba8ce40afa7c02369f', 'f6817f48af4fb3af11b9e8bf182f618b', '1231170454372827137', NULL,null);
 
 
+
+-- 添加用户类型
+alter table sys_user add type varchar(32) NULL DEFAULT NULL COMMENT '用户类型';
 
 -- 添加租户标示
 alter table sys_platform_org add tenant_id varchar(32) NULL DEFAULT NULL COMMENT '租户ID';

@@ -172,4 +172,10 @@ public class SysUser implements Serializable {
      * 所属组织机构
      */
     private String sysOrgCode;
+
+    /**
+     * 用户类型
+     */
+    @Dict(dicCode = "user_type")
+    private Integer type;
 }

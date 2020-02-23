@@ -24,6 +24,8 @@
 
       </a-form>
     </a-spin>
+    <org-select ref="orgSelect" :closable="true" title="部门切换"></org-select>
+
   </a-modal>
 </template>
 
@@ -34,9 +36,13 @@
     editRole,
     duplicateCheck
   } from '@/api/api'
+  import OrgSelect from '@/components/tools/OrgSelect'
 
   export default {
     name: "RoleModal",
+    components: {
+      OrgSelect
+    },
     data() {
       return {
         title: "操作",
@@ -142,7 +148,27 @@
         this.$emit('close');
         this.visible = false;
       },
+      showConfirm: function () {
+        let that = this
+        this.$confirm({
+          title: '提示',
+          content: '您没有设置当前管理部门,请选择角色需要添加到的部门！',
+          onOk() {
+            that.$refs.orgSelect.show();
+          },
+          onCancel() {
+
+          },
+          class: 'test',
+        });
+      },
       handleOk() {
+        console.log(this.$store.getters.userInfo.orgCode);
+        if (this.$store.getters.userInfo.orgCode === undefined || this.$store.getters.userInfo.orgCode === '') {
+          this.showConfirm();
+          return;
+        }
+
         const that = this;
         // 触发表单验证
         this.form.validateFields((err, values) => {

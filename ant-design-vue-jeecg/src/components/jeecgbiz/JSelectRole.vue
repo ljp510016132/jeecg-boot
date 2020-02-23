@@ -16,7 +16,7 @@
       return {
         returnKeys: ['id', 'roleCode'],
         url: {
-          list: '/sys/role/listContainOwn'
+          list: '/sys/role/listContainOwn2'
         },
         columns: [{
             title: '角色名称',
@@ -32,7 +32,7 @@
           },
           {
             title: '平台名称',
-            dataIndex: 'platformCode',
+            dataIndex: 'platformName',
             align: 'center',
             width: 120
           },

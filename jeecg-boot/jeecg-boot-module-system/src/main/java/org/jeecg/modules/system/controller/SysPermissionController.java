@@ -317,7 +317,7 @@ public class SysPermissionController {
 			//根据用户查询可以所具有的权限，只有自己拥有的权限才能向下传递
 			LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
 			List<SysPermission> list;
-			if(sysUser.getUsername().equals(CommonConstant.SUPER_ADMIN_NAME)){
+			if(sysUser.getType().equals(CommonConstant.SUPER_ADMIN_TYPE)){
 				list = sysPermissionService.queryByUser(null,platformCode);
 			}else{
 				list = sysPermissionService.queryByUser(sysUser.getUsername(),platformCode);

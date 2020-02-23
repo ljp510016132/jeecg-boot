@@ -32,6 +32,7 @@ import org.jeecg.common.util.RedisUtil;
 import org.jeecg.common.util.oConvertUtils;
 import org.jeecg.modules.system.entity.*;
 import org.jeecg.modules.system.model.OrgIdModel;
+import org.jeecg.modules.system.model.SysOrgTreeModel;
 import org.jeecg.modules.system.model.SysUserSysOrgModel;
 import org.jeecg.modules.system.service.ISysOrgService;
 import org.jeecg.modules.system.service.ISysUserOrgService;
@@ -109,12 +110,13 @@ public class SysUserController {
 		Result<IPage<SysUser>> result = new Result<IPage<SysUser>>();
 		QueryWrapper<SysUser> queryWrapper = QueryGenerator.initQueryWrapper(user, req.getParameterMap());
         //增加组织过滤
-        String username = JwtUtil.getUserNameByToken(req);
-        SysUserCacheInfo userinfo = sysUserService.getCacheUser(username);
+        //超级管理员可以管理所有机构
+        LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+        SysUserCacheInfo userinfo = sysUserService.getCacheUser(sysUser.getUsername());
         String orgsStr=JwtUtil.getUserSystemData("sysMultiOrgCode",userinfo);
         if(!oConvertUtils.isEmpty(selectedOrgCodes)){
             queryWrapper.in("sys_org_code",(Object[])selectedOrgCodes.toString().split(","));
-        }else if(!CommonConstant.SUPER_ADMIN_NAME.equals(username)){
+        }else if(!sysUser.getType().equals(CommonConstant.SUPER_ADMIN_TYPE)){
             //超级管理员可以查看多有用户，普通管理员只能查看自己拥有部门权限的用户
             queryWrapper.in("sys_org_code",(Object[])orgsStr.toString().split(","));
         }
@@ -128,11 +130,17 @@ public class SysUserController {
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public Result<SysUser> add(@RequestBody JSONObject jsonObject) {
 		Result<SysUser> result = new Result<SysUser>();
+		//只有超级管理员才可以给用户赋予超级管理员权限
+        if(!hasSuperAdminPermission(jsonObject.getInteger("type"))){
+            result.error500("您无权管理超级管理员！");
+            return result;
+        }
 		String selectedRoles = jsonObject.getString("selectedroles");
 		String selectedOrgs = jsonObject.getString("selectedorgs");
 		try {
 			SysUser user = JSON.parseObject(jsonObject.toJSONString(), SysUser.class);
-			user.setCreateTime(new Date());//设置创建时间
+            //设置创建时间
+			user.setCreateTime(new Date());
 			String salt = oConvertUtils.randomGen(8);
 			user.setSalt(salt);
 			String passwordEncode = PasswordUtil.encrypt(user.getUsername(), user.getPassword(), salt);
@@ -152,9 +160,32 @@ public class SysUserController {
 		return result;
 	}
 
+    /**
+     * 是否为超级管理员
+     * @param type
+     * @return
+     */
+	private boolean hasSuperAdminPermission(Integer type){
+        //只有超级管理员才可以给用户赋予超级管理员权限
+        if(CommonConstant.SUPER_ADMIN_TYPE.equals(type)){
+            LoginUser user = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+            if(!user.getType().equals(CommonConstant.SUPER_ADMIN_TYPE)){
+                return false;
+            }
+        }
+        return true;
+    }
 	@RequestMapping(value = "/edit", method = RequestMethod.PUT)
 	public Result<SysUser> edit(@RequestBody JSONObject jsonObject) {
 		Result<SysUser> result = new Result<SysUser>();
+        //只有超级管理员才可以给用户赋予超级管理员权限
+        if(!hasSuperAdminPermission(jsonObject.getInteger("type"))){
+            result.error500("您无权管理超级管理员！");
+            return result;
+        }else if(jsonObject.getString("username").equals(CommonConstant.SUPER_ADMIN_NAME)){
+            result.error500("系统保留账户您无权管理超级管理员！");
+            return result;
+        }
 		try {
 			SysUser sysUser = sysUserService.getById(jsonObject.getString("id"));
 			sysBaseAPI.addLog("编辑用户，id： " +jsonObject.getString("id") ,CommonConstant.LOG_TYPE_2, 2);

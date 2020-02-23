@@ -4,7 +4,7 @@
     <select id="queryUserPlatforms" parameterType="String" resultType="org.jeecg.modules.system.entity.SysPlatform">
         select * from sys_platform
         <!--如果用户名为空，则查询所有平台信息-->
-        <if test="username!=null">
+        <if test="!superAdmin">
         where platform_code in (
                    SELECT DISTINCT platform_code
                    FROM  sys_permission p

@@ -11,6 +11,8 @@
           <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
             <a-button type="primary" icon="import">导入</a-button>
           </a-upload>
+          <a-button @click="refresh()" type="primary">刷新</a-button>
+
           <a-button title="删除多条数据" @click="batchDel" type="default">批量删除</a-button>
           <!--<a-button @click="refresh" type="default" icon="reload" :loading="loading">刷新</a-button>-->
         </a-row>
@@ -94,13 +96,15 @@
             :labelCol="labelCol"
             :wrapperCol="wrapperCol"
             label="机构编码">
-            <a-input disabled placeholder="请输入机构编码" v-decorator="['orgCode', validatorRules.orgCode ]"/>
+            <a-input  placeholder="请输入机构编码" v-decorator="['orgCode', validatorRules.orgCode ]"/>
           </a-form-item>
           <a-form-item
             :labelCol="labelCol"
             :wrapperCol="wrapperCol"
             label="机构类型">
-            <template v-if="orgCategoryDisabled">
+            <j-dict-select-tag  v-decorator="['orgCategory', {}]" type="radio" :triggerChange="true" placeholder="请选择机构类型"
+                  dictCode="org_category"/>
+            <!-- <template v-if="orgCategoryDisabled">
               <a-radio-group v-decorator="['orgCategory',validatorRules.orgCategory]" placeholder="请选择机构类型">
                 <a-radio value="1">
                   公司
@@ -116,7 +120,7 @@
                   岗位
                 </a-radio>
               </a-radio-group>
-            </template>
+            </template> -->
           </a-form-item>
           <a-form-item
             :labelCol="labelCol"
@@ -158,6 +162,8 @@
   import {queryOrgTreeList, searchByKeywords, deleteByOrgId} from '@/api/api'
   import {httpAction, deleteAction} from '@/api/manage'
   import {JeecgListMixin} from '@/mixins/JeecgListMixin'
+  import JDictSelectTag from '@/components/dict/JDictSelectTag'
+
   // 表头
   const columns = [
     {
@@ -201,7 +207,8 @@
     name: 'OrgList',
     mixins: [JeecgListMixin],
     components: {
-      OrgModal
+      OrgModal,
+      JDictSelectTag
     },
     data() {
       return {
@@ -227,7 +234,7 @@
         currSelected: {},
 
         allTreeKeys:[],
-        checkStrictly: true,
+        checkStrictly: false,
 
         form: this.$form.createForm(this),
         labelCol: {
@@ -277,7 +284,8 @@
               let temp = res.result[i]
               that.treeData.push(temp)
               that.orgTree.push(temp)
-              that.setThisExpandedKeys(temp)
+              // 设置默认不展开，当机构树多的时候页面很长
+              // that.setThisExpandedKeys(temp)
               that.getAllKeys(temp);
               // console.log(temp.id)
             }
@@ -469,6 +477,9 @@
       openSelect() {
         this.$refs.sysDirectiveModal.show()
       },
+      handleRefresh(){
+        load()
+      },
       handleAdd(num) {
         if (num == 1) {
           this.$refs.orgModal.add()
@@ -525,7 +536,7 @@
         this.iExpandedKeys = []
       },
       checkALL () {
-        this.checkStriccheckStrictlytly = false
+        this.checkStrictly = false
         this.checkedKeys = this.allTreeKeys
       },
       cancelCheckALL () {

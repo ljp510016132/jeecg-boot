@@ -22,6 +22,10 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 public class LoginUser {
+	/**
+	 * 用户类型：0超级管理员、1租户超级管理员、2、租户管理员、3普通用户
+	 */
+	private Integer type;
 
 	/**
 	 * 平台code

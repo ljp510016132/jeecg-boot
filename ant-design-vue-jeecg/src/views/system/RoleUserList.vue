@@ -10,8 +10,8 @@
               <a-col :md="6" :sm="12">
                 <a-form-item label="平台">
                   <a-select labelInValue :value="{key:this.platformSelected.platformCode}" @change="platformChange">
-                    <a-select-option v-for="(item, key) in platforms" :key="key" :value="item.platformCode">
-                      {{item.platformName}}</a-select-option>
+                    <a-select-option value="">请选择</a-select-option>
+                    <a-select-option v-for="(item, key) in platforms" :key="key" :value="item.platformCode">{{item.platformName}}</a-select-option>
                   </a-select>
                 </a-form-item>
               </a-col>
@@ -207,7 +207,7 @@
           platformCode: "",
           platformName: ""
         },
-        platforms: null,
+        platforms: [],
         model1: {},
         model2: {},
         currentRoleId: '',
@@ -255,15 +255,30 @@
         selectionRows2: [],
         test: {},
         rightcolval: 0,
-        columns: [{
+        columns: [
+          {
+            title: '所属平台',
+            align: 'center',
+            dataIndex: 'platformName',
+            sorter: true
+          },
+          {
             title: '角色编码',
             align: 'center',
-            dataIndex: 'roleCode'
+            dataIndex: 'roleCode',
+            sorter: true
           },
           {
             title: '角色名称',
             align: 'center',
-            dataIndex: 'roleName'
+            dataIndex: 'roleName',
+            sorter: true
+          },
+          {
+            title: '创建人',
+            dataIndex: 'createBy',
+            align: "center",
+            sorter: true
           },
           {
             title: '创建时间',
@@ -315,7 +330,7 @@
 
 
         url: {
-          list: '/sys/role/list',
+          list: '/sys/role/list2',
           delete: '/sys/role/delete',
           list2: '/sys/user/userRoleList',
           addUserRole: '/sys/user/addSysUserRole',
@@ -338,17 +353,15 @@
       }
     },
     create() {
-      // this.loadPlatformList()
-      // this.platforms = this.$store.getters.userPlatforms
 
     },
     methods: {
       loadPlatformList() {
         this.platforms = this.$store.getters.userPlatforms
-        if (this.platformSelected.platformCode == "") {
-          this.platformSelected.platformCode = this.platforms[0].platformCode
-          this.platformSelected.platformName = this.platforms[0].platformName
-        }
+        // if (this.platformSelected.platformCode == "") {
+        //   this.platformSelected.platformCode = this.platforms[0].platformCode
+        //   this.platformSelected.platformName = this.platforms[0].platformName
+        // }
         this.queryParam.platformCode = this.platformSelected.platformCode
       },
       loadData(arg) {
@@ -434,12 +447,16 @@
         return str
       },
       handleAdd: function () {
+        if(this.platformSelected.platformCode==''){
+          this.$message.error('请选择平台！')
+          return
+        }
         this.$refs.modalForm.add(this.platformSelected);
         this.$refs.modalForm.title = "新增";
         this.$refs.modalForm.disableSubmit = false;
       },
       handleEdit: function (record) {
-        record = Object.assign(record, this.platformSelected)
+        // record = Object.assign(record, this.platformSelected)
         this.$refs.modalForm.edit(record);
         this.$refs.modalForm.title = "编辑";
         this.$refs.modalForm.disableSubmit = false;
