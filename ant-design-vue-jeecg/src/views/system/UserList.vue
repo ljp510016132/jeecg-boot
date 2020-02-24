@@ -112,7 +112,8 @@
 
       <a-table ref="table" bordered size="middle" rowKey="id" :columns="columns" :dataSource="dataSource"
         :pagination="ipagination" :loading="loading"
-        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}" @change="handleTableChange">
+        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange,getCheckboxProps:getCheckboxProps}"
+        @change="handleTableChange">
 
         <template slot="avatarslot" slot-scope="text, record, index">
           <div class="anty-img-wrap">
@@ -139,7 +140,7 @@
                 <a href="javascript:;" @click="handleChangePassword(record.username)">密码</a>
               </a-menu-item>
 
-              <a-menu-item>
+              <a-menu-item v-if="record.username==1">
                 <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
                   <a>删除</a>
                 </a-popconfirm>
@@ -281,13 +282,13 @@
             dataIndex: 'status_dictText',
             sorter: true
           },
-           {
+          {
             title: '创建人',
             align: "center",
             dataIndex: 'createBy',
             sorter: true
           },
-           {
+          {
             title: '创建时间',
             align: "center",
             dataIndex: 'createTime',
@@ -355,15 +356,15 @@
         })
       },
       //机构树key,value采用orgcode表示，默认为id
-      orgTreeNodeFromIdToCode(node){
-         node.forEach(item => {
-              item.key = item.orgCode
-              item.value = item.orgCode
-              if(item.children){
-                this.orgTreeNodeFromIdToCode(item.children)
-              }
-              return item
-         })
+      orgTreeNodeFromIdToCode(node) {
+        node.forEach(item => {
+          item.key = item.orgCode
+          item.value = item.orgCode
+          if (item.children) {
+            this.orgTreeNodeFromIdToCode(item.children)
+          }
+          return item
+        })
       },
       queryOrgTree() {
         queryOrgTreeByUserId({
@@ -469,6 +470,11 @@
       onSelect() {
         console.log(...arguments)
       },
+      getCheckboxProps: record => ({
+        props: {
+          disabled: record.username === 'admin', // Column configuration not to be checked
+        }
+      }),
     }
 
   }

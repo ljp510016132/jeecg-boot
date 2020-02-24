@@ -181,8 +181,12 @@ public class SysUserController {
             result.error500("您无权管理超级管理员！");
             return result;
         }else if(jsonObject.getString("username").equals(CommonConstant.SUPER_ADMIN_NAME)){
-            result.error500("系统保留账户您无权管理超级管理员！");
-            return result;
+            LoginUser user = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+            //admin为系统保留账户，只有自己可以改
+            if(!user.getUsername().equals(CommonConstant.SUPER_ADMIN_NAME)){
+                result.error500("系统保留账户您无权管理超级管理员！");
+                return result;
+            }
         }
 		try {
 			SysUser sysUser = sysUserService.getById(jsonObject.getString("id"));

@@ -80,7 +80,7 @@
           <j-select-role v-model="selectedroles"></j-select-role>
         </a-form-item>
         <!--部门分配-->
-        <a-form-item label="部门分配" :labelCol="labelCol" :wrapperCol="wrapperCol" v-show="!orgDisabled">
+        <a-form-item label="负责部门" :labelCol="labelCol" :wrapperCol="wrapperCol" v-show="!orgDisabled">
           <a-input-search placeholder="点击右侧按钮选择部门" v-model="checkedOrgNameString" disabled @search="onSearch">
             <a-button slot="enterButton" icon="search">选择</a-button>
           </a-input-search>
@@ -400,7 +400,6 @@
         // that.initialRoleList();
         that.queryOrgTree();
         that.loadUserTypes();
-        that.loadCheckedOrgs();
         that.checkedOrgNameString = "";
         that.form.resetFields();
         if (record.hasOwnProperty("id")) {
@@ -421,6 +420,7 @@
         });
         // 调用查询用户对应的部门信息的方法
         that.checkedOrgKeys = [];
+        that.loadCheckedOrgs();
       },
       //加载用户类型数据
       loadUserTypes() {
@@ -437,7 +437,7 @@
         })
       },
       //加载已选择的机构
-      loadCheckedOrgs() {
+     loadCheckedOrgs() {
         let that = this;
         if (!that.userId) {
           return
