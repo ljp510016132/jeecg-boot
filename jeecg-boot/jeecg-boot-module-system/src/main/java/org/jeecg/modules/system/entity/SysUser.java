@@ -98,7 +98,7 @@ public class SysUser implements Serializable {
     private String phone;
 
     /**
-     * 组织机构code
+     * 当前用户选择的组织机构code
      */
     private String orgCode;
 
@@ -162,11 +162,6 @@ public class SysUser implements Serializable {
      * 所属平台code
      */
     private String platformCode;
-
-    /**
-     * 所属组织机构
-     */
-    private String sysOrgId;
 
     /**
      * 所属组织机构

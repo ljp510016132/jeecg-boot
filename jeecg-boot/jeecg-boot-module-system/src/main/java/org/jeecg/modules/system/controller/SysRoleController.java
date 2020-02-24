@@ -110,11 +110,9 @@ public class SysRoleController {
 		//增加组织过滤
 		//超级管理员可以管理所有机构
 		LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-		SysUserCacheInfo userinfo = sysUserService.getCacheUser(sysUser.getUsername());
-		String orgsStr=JwtUtil.getUserSystemData("sysMultiOrgCode",userinfo);
 		if(!sysUser.getType().equals(CommonConstant.SUPER_ADMIN_TYPE)){
 			//超级管理员可以查看所有角色，普通管理员只能查看自己所拥有部门建立的角色
-			queryWrapper.in("sys_org_code",(Object[])orgsStr.toString().split(","));
+			queryWrapper.in("sys_org_code",sysUserService.getCacheUser(sysUser.getUsername()).getSysMultiOrgCode());
 		}
 
 		Page<SysRole> page = new Page<SysRole>(pageNo, pageSize);
@@ -148,11 +146,9 @@ public class SysRoleController {
 		//增加组织过滤
 		//超级管理员可以管理所有机构
 		LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-		SysUserCacheInfo userinfo = sysUserService.getCacheUser(sysUser.getUsername());
-		String orgsStr=JwtUtil.getUserSystemData("sysMultiOrgCode",userinfo);
 		if(!sysUser.getType().equals(CommonConstant.SUPER_ADMIN_TYPE)){
 			//超级管理员可以查看所有角色，普通管理员只能查看自己所拥有部门建立的角色
-			queryWrapper.in("sys_org_code",(Object[])orgsStr.toString().split(","));
+			queryWrapper.in("sys_org_code",sysUserService.getCacheUser(sysUser.getUsername()).getSysMultiOrgCode());
 		}
 
 		Page<SysRolePage> page = new Page<SysRolePage>(pageNo, pageSize);
@@ -186,11 +182,9 @@ public class SysRoleController {
 		//增加组织过滤
 		//超级管理员可以管理所有机构
 		LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-		SysUserCacheInfo userinfo = sysUserService.getCacheUser(sysUser.getUsername());
-		String orgsStr=JwtUtil.getUserSystemData("sysMultiOrgCode",userinfo);
 		if(!sysUser.getType().equals(CommonConstant.SUPER_ADMIN_TYPE)){
 			//超级管理员可以查看所有角色，普通管理员只能查看自己所拥有部门建立的角色
-			queryWrapper.in("sys_org_code",(Object[])orgsStr.toString().split(","));
+			queryWrapper.in("sys_org_code",sysUserService.getCacheUser(sysUser.getUsername()).getSysMultiOrgCode());
 			List<String> userRoleList=sysUserService.getRole(sysUser.getUsername());
 			queryWrapper.or().in("role_code",userRoleList);
 		}
@@ -226,11 +220,9 @@ public class SysRoleController {
 		//增加组织过滤
 		//超级管理员可以管理所有机构
 		LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-		SysUserCacheInfo userinfo = sysUserService.getCacheUser(sysUser.getUsername());
-		String orgsStr=JwtUtil.getUserSystemData("sysMultiOrgCode",userinfo);
 		if(!sysUser.getType().equals(CommonConstant.SUPER_ADMIN_TYPE)){
 			//超级管理员可以查看所有角色，普通管理员只能查看自己所拥有部门建立的角色
-			queryWrapper.in("sys_org_code",(Object[])orgsStr.toString().split(","));
+			queryWrapper.in("sys_org_code",sysUserService.getCacheUser(sysUser.getUsername()).getSysMultiOrgCode());
 			List<String> userRoleList=sysUserService.getRole(sysUser.getUsername());
 			queryWrapper.or().in("role_code",userRoleList);
 		}
@@ -335,12 +327,10 @@ public class SysRoleController {
 		//增加组织过滤,用户所有拥有的角色+用户可以管理的部门所建立的角色
 		QueryWrapper<SysRole> queryWrapper=new QueryWrapper();
 		String username = JwtUtil.getUserNameByToken(req);
-		SysUserCacheInfo userinfo = sysUserService.getCacheUser(username);
-		String orgsStr=JwtUtil.getUserSystemData("sysMultiOrgCode",userinfo);
 		if(!oConvertUtils.isEmpty(platformCode)){
 			queryWrapper.eq("platform_code",platformCode);
 		}
-		queryWrapper.in("sys_org_code",(Object[])orgsStr.toString().split(","));
+		queryWrapper.in("sys_org_code",sysUserService.getCacheUser(username).getSysMultiOrgCode());
 		List<String> userRoleList=sysUserService.getRole(username);
 		queryWrapper.or().in("role_code",userRoleList);
 		List<SysRole> list = sysRoleService.list(queryWrapper);

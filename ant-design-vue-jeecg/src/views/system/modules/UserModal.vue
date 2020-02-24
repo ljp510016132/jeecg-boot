@@ -16,7 +16,6 @@
       <a-form :form="form">
         <a-form-item label="用户类型" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-select placeholder="请选择用户类型" :disabled="userTypeDisabled" v-decorator="['type', validatorRules.type]">
-            <a-select-option value="">请选择</a-select-option>
             <a-select-option v-for="(item, key) in userTypeOptions" :key="key" :value="item.value">
               <span style="display: inline-block;width: 100%" :title=" item.text || item.label ">
                 {{ item.text || item.label }}
@@ -47,7 +46,7 @@
         <a-form-item label="所属部门" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-tree-select showSearch allowClear :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }"
             :treeData="orgTree" placeholder='请选择所属部门' treeDefaultExpandAll
-            v-decorator="['sysOrgId', validatorRules.sysOrgId]" treeNodeFilterProp="title">
+            v-decorator="['sysOrgCode', validatorRules.sysOrgCode]" treeNodeFilterProp="title">
           </a-tree-select>
         </a-form-item>
 
@@ -245,7 +244,7 @@
           },
           roles: {},
           //  sex:{initialValue:((!this.model.sex)?"": (this.model.sex+""))}
-          sysOrgId: {
+          sysOrgCode: {
             rules: [{
               required: true,
               message: '请选择所属部门'
@@ -302,7 +301,7 @@
           syncUserByUserName: "/process/extActProcess/doSyncUserByUserName", //同步用户到工作流
         },
         orgTree: [],
-        userTypeOptions:[]
+        userTypeOptions: []
       }
     },
     created() {
@@ -317,7 +316,7 @@
         return this.url.fileUpload;
       },
       userTypeDisabled: function () {
-        return this.model.username==='admin'?true:false;
+        return this.model.username === 'admin' ? true : false;
       },
     },
     methods: {
@@ -333,11 +332,23 @@
         }
         this.modaltoggleFlag = !this.modaltoggleFlag;
       },
+      //机构树key,value采用orgcode表示，默认为id
+      orgTreeNodeFromIdToCode(node) {
+        node.forEach(item => {
+          item.key = item.orgCode
+          item.value = item.orgCode
+          if (item.children) {
+            this.orgTreeNodeFromIdToCode(item.children)
+          }
+          return item
+        })
+      },
       queryOrgTree() {
         queryOrgTreeByUserId({
           userId: this.$store.getters.userInfo.id
         }).then((res) => {
           if (res.success) {
+            this.orgTreeNodeFromIdToCode(res.result)
             this.orgTree = res.result;
           }
         })
@@ -388,6 +399,8 @@
         let that = this;
         // that.initialRoleList();
         that.queryOrgTree();
+        that.loadUserTypes();
+        that.loadCheckedOrgs();
         that.checkedOrgNameString = "";
         that.form.resetFields();
         if (record.hasOwnProperty("id")) {
@@ -398,23 +411,25 @@
         that.visible = true;
         that.model = Object.assign({}, record);
         //DictSelectTag值需要String类型，因此这里做一个转换，防止报错
-        that.model.type=that.model.type.toString();
+        if (that.model.type) {
+          that.model.type = that.model.type + ''
+        }
         that.$nextTick(() => {
-          that.form.setFieldsValue(pick(this.model, 'type','username', 'sex', 'realname', 'email', 'phone', 'activitiSync',
-            'workNo', 'telephone', 'post', 'sysOrgId'))
+          that.form.setFieldsValue(pick(this.model, 'type', 'username', 'sex', 'realname', 'email', 'phone',
+            'activitiSync',
+            'workNo', 'telephone', 'post', 'sysOrgCode'))
         });
         // 调用查询用户对应的部门信息的方法
         that.checkedOrgKeys = [];
-        that.loadUserTypes();
-        that.loadCheckedOrgs();
       },
       //加载用户类型数据
-      loadUserTypes(){
+      loadUserTypes() {
         //根据字典Code, 初始化字典数组
         ajaxGetDictItems('user_type', null).then((res) => {
           if (res.success) {
-            this.userTypeOptions = res.result.filter((item)=>{
-              if(this.$store.getters.userInfo.type=='9999'||item.value!='9999'||this.model.type=='9999'){
+            this.userTypeOptions = res.result.filter((item) => {
+              if (this.$store.getters.userInfo.type == '9999' || item.value != '9999' || this.model.type ==
+                '9999') {
                 return item
               }
             });

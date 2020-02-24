@@ -112,13 +112,11 @@ public class SysUserController {
         //增加组织过滤
         //超级管理员可以管理所有机构
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        SysUserCacheInfo userinfo = sysUserService.getCacheUser(sysUser.getUsername());
-        String orgsStr=JwtUtil.getUserSystemData("sysMultiOrgCode",userinfo);
         if(!oConvertUtils.isEmpty(selectedOrgCodes)){
             queryWrapper.in("sys_org_code",(Object[])selectedOrgCodes.toString().split(","));
         }else if(!sysUser.getType().equals(CommonConstant.SUPER_ADMIN_TYPE)){
             //超级管理员可以查看多有用户，普通管理员只能查看自己拥有部门权限的用户
-            queryWrapper.in("sys_org_code",(Object[])orgsStr.toString().split(","));
+            queryWrapper.in("sys_org_code",sysUserService.getCacheUser(sysUser.getUsername()).getSysMultiOrgCode());
         }
 		Page<SysUser> page = new Page<SysUser>(pageNo, pageSize);
 		IPage<SysUser> pageList = sysUserService.page(page, queryWrapper);
@@ -148,8 +146,8 @@ public class SysUserController {
 			user.setStatus(1);
 			user.setDelFlag("0");
 			//定义部门
-			SysOrg sysOrg=sysOrgService.getById(user.getSysOrgId());
-			user.setSysOrgCode(sysOrg.getOrgCode());
+//			SysOrg sysOrg=sysOrgService.getById(user.getSysOrgId());
+//			user.setSysOrgCode(sysOrg.getOrgCode());
 			sysUserService.addUserWithRole(user, selectedRoles);
             sysUserService.addUserWithOrg(user, selectedOrgs);
 			result.success("添加成功！");

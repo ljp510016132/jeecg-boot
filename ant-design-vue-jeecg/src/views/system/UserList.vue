@@ -354,18 +354,26 @@
           this.loading = false;
         })
       },
+      //机构树key,value采用orgcode表示，默认为id
+      orgTreeNodeFromIdToCode(node){
+         node.forEach(item => {
+              item.key = item.orgCode
+              item.value = item.orgCode
+              if(item.children){
+                this.orgTreeNodeFromIdToCode(item.children)
+              }
+              return item
+         })
+      },
       queryOrgTree() {
         queryOrgTreeByUserId({
           userId: this.$store.getters.userInfo.id
         }).then((res) => {
           if (res.success) {
             //由于这里需要orgcode，因此把节点的Id
-            res.result.forEach(item => {
-              item.key = item.orgCode
-              item.value = item.orgCode
-            })
+            this.orgTreeNodeFromIdToCode(res.result)
             this.orgTree = res.result;
-            console.log(this.orgTree)
+            // console.log(this.orgTree)
           }
         })
       },

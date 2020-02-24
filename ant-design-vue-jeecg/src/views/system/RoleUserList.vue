@@ -9,8 +9,9 @@
             <a-row :gutter="24">
               <a-col :md="6" :sm="12">
                 <a-form-item label="平台">
-                  <a-select labelInValue :value="{key:this.platformSelected.platformCode}" @change="platformChange">
-                    <a-select-option value="">请选择</a-select-option>
+                  <a-select allowClear labelInValue :value="{key:this.platformSelected.platformCode}"
+                    @change="platformChange">
+                    <a-select-option value="">请选择所属平台</a-select-option>
                     <a-select-option v-for="(item, key) in platforms" :key="key" :value="item.platformCode">{{item.platformName}}</a-select-option>
                   </a-select>
                 </a-form-item>
@@ -255,8 +256,7 @@
         selectionRows2: [],
         test: {},
         rightcolval: 0,
-        columns: [
-          {
+        columns: [{
             title: '所属平台',
             align: 'center',
             dataIndex: 'platformName',
@@ -447,7 +447,7 @@
         return str
       },
       handleAdd: function () {
-        if(this.platformSelected.platformCode==''){
+        if (this.platformSelected.platformCode == '') {
           this.$message.error('请选择平台！')
           return
         }
@@ -636,10 +636,16 @@
         this.$refs.modalUserRole.show(role);
       },
       platformChange(selVal) {
-        console.log(selVal)
-        this.platformSelected.platformCode = selVal.key
-        this.platformSelected.platformName = selVal.label
-        this.queryParam.platformCode = this.platformSelected.platformCode
+        if (selVal) {
+          this.platformSelected.platformCode = selVal.key
+          this.platformSelected.platformName = selVal.label
+          this.queryParam.platformCode = this.platformSelected.platformCode
+        }else{
+          this.platformSelected.platformCode = ''
+          this.platformSelected.platformName = ''
+          this.queryParam.platformCode = this.platformSelected.platformCode
+        }
+
       },
     }
   }
