@@ -140,7 +140,7 @@
                 <a href="javascript:;" @click="handleChangePassword(record.username)">密码</a>
               </a-menu-item>
 
-              <a-menu-item v-if="record.username==1">
+              <a-menu-item v-if="record.username!='admin'">
                 <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
                   <a>删除</a>
                 </a-popconfirm>
